@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc;
+package frc.robot;
 
 /**
  * Add your docs here.
@@ -13,4 +13,5 @@ package frc;
 public class ConstantsMap {
     public static final double ROBOT_WHEEL_RADIUS_INCHES = Float.NaN;
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * Math.PI)/(128));
+    public static final double TURTLE_SPEED = Float.NaN;
 }
