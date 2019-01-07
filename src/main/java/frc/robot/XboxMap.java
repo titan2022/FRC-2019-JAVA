@@ -75,4 +75,8 @@ public class XboxMap {
 	public double left() {
 		return oi.ps4.getLeftY();
 	}
+
+	public boolean interruptFollowLine() {
+		return false;
+	}
 }
