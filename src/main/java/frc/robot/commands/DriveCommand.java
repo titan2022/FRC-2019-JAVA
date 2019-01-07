@@ -26,6 +26,7 @@ public class DriveCommand extends Command {
 	boolean turtlemode = false;	
 	boolean brakeState = false;
 	long lastPressed = 0;
+	FollowLineCommand fLC = new FollowLineCommand();
 	
     public DriveCommand() {
     	requires(driveSubsystem);
@@ -35,7 +36,8 @@ public class DriveCommand extends Command {
     protected void initialize() {
     	System.out.println("Drive Comand init");
     	driveSubsystem.resetEncoders();
-    	driveSubsystem.resetGyro();
+		driveSubsystem.resetGyro();
+		fLC.initialize();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -44,42 +46,48 @@ public class DriveCommand extends Command {
     	/*if(attack3Map.turtleButton()) {
     		turtlemode = !turtlemode;
     	} */
-    	
-    	double speedLeft = xboxMap.left();
-    	speedLeft *= -1;
-    	if(Math.abs(speedLeft) < 0.1){
-    		speedLeft = 0;
-    	}
-    	if(xboxMap.shiftHigh()) {
-    		driveSubsystem.shiftHigh();
-    	}
-    	if(xboxMap.shiftLow()) {
-    		driveSubsystem.shiftLow();
-    	}
-    	double speedRight = xboxMap.right();
-    	//speedRight *= -1;
-    	if(Math.abs(speedRight) < 0.1){
-    		speedRight = 0; 
-    	}
-    	if(turtlemode) {
-    		speedLeft *= ConstantsMap.TURTLE_SPEED;
-    		speedRight *= ConstantsMap.TURTLE_SPEED;
-    	}
-    	driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
-    	driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
+		if(!fLC.isFinished()) {
+			fLC.execute();
+		}	
+		else {
+			double speedLeft = xboxMap.left();
+			speedLeft *= -1;
+			if(Math.abs(speedLeft) < 0.1){
+				speedLeft = 0;
+			}
+			if(xboxMap.shiftHigh()) {
+				driveSubsystem.shiftHigh();
+			}
+			if(xboxMap.shiftLow()) {
+				driveSubsystem.shiftLow();
+			}
+			double speedRight = xboxMap.right();
+			//speedRight *= -1;
+			if(Math.abs(speedRight) < 0.1){
+				speedRight = 0; 
+			}
+			if(turtlemode) {
+				speedLeft *= ConstantsMap.TURTLE_SPEED;
+				speedRight *= ConstantsMap.TURTLE_SPEED;
+			}
+			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
+			driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
 
-    	//Auto Brake Mode
-    	//attack3Map.startAutoBrakerSystem();
-    	if(xboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
-    		brakeState = !brakeState;
-    		lastPressed = System.currentTimeMillis();
-    	}
-    	if(brakeState){
-			driveSubsystem.enableBrake();
+			//Auto Brake Mode
+			//attack3Map.startAutoBrakerSystem();
+			if(xboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+				brakeState = !brakeState;
+				lastPressed = System.currentTimeMillis();
+			}
+			if(brakeState){
+				driveSubsystem.enableBrake();
+			}
+			else if(!brakeState){
+				driveSubsystem.disableBrake();
+			}
 		}
-		else if(!brakeState){
-			driveSubsystem.disableBrake();
-		}
+
+
     	
     	//Putting Data up
     	displayData();
@@ -114,5 +122,5 @@ public class DriveCommand extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
     	driveSubsystem.stop();
-    }
+	}
 }
