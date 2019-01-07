@@ -20,12 +20,29 @@ public class FollowLineSubsystem extends Subsystem{
         // setDefaultCommand(new MySpecialCommand());
     }
 
-    protected boolean[] getSensors() {
+    //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
+    public boolean[] getCameraData(int strip) {
         boolean[] sensors = new boolean[8];
 
         //get shit like bossP        
 
         return sensors;
+    }
+
+    public double getCameraAverage(int strip){
+        boolean[] isFrontCameraOnStrip = getCameraData(strip);
+        
+        double sum = 0.0d;
+        int camerasOn = 0;
+
+        for(int i = 0; i < 8; i++){
+            if(isFrontCameraOnStrip[i]){
+                sum+=i;
+                camerasOn++;
+            }
+        }
+        
+        return sum/camerasOn;
     }
 
 }

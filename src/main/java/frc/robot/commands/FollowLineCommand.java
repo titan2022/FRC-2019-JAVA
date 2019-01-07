@@ -8,14 +8,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.ConstantsMap;
 import frc.robot.Robot;
 import frc.robot.subsystems.FollowLineSubsystem;
+import java.lang.Math.*;
 
 /**
  * Add your docs here.
  */
 public class FollowLineCommand extends Command {
     FollowLineSubsystem followLineSubsystem = Robot.followLineSubsystem;
+
+    protected boolean visionStageComplete = false;
+    protected boolean oneSensorStageComplete = false;
+    protected boolean twoSensorStageComplete = false;
+
+    protected double estimatedDistanceToWall;
 
     public FollowLineCommand() {
         // Use requires() here to declare subsystem dependencies
@@ -32,21 +40,53 @@ public class FollowLineCommand extends Command {
     @Override
     protected void execute() {
         System.out.println("FollowLineCommand execute");
+
+        if(!visionStageComplete){
+            visionStage();
+        } else if(!oneSensorStageComplete){
+            oneSensorStage();
+        } else if(!twoSensorStageComplete){
+            twoSensorStage();
+        } else{
+            //we are finished, idk what to do
+        }
+
     }
 
     // Called by execute to approach the tape using vision
     protected void visionStage () {
-
+        //i have no clude as of yet, this is a different problem
+        visionStageComplete = true;
     }
     
     // Called by execute to line up when only 1 sensor has seen tape
     protected void oneSensorStage () {
+        boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
+        boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
 
+        for(boolean b: isBackCameraOnStrip){
+            if(b){
+                oneSensorStageComplete = true;
+                return;
+            }
+        }
+
+        //actually implement the turning and math
     }
 
     // Called by execute to line up when both sensors see tape
     protected void twoSensorStage () {
+        double frontAverage = followLineSubsystem.getCameraAverage(1);
+        double backAverage = followLineSubsystem.getCameraAverage(2);
 
+        double diff = backAverage - frontAverage;
+
+        double theta = Math.acos(diff / Math.sqrt(diff * diff + ConstantsMap.DISTANCE_BETWEEN_SENSORS * ConstantsMap.DISTANCE_BETWEEN_SENSORS));
+
+        double leftWheelDistance = estimatedDistanceToWall + theta * ConstantsMap.ROBOT_WIDTH;
+        double rightWheelDistance = estimatedDistanceToWall - theta * ConstantsMap.ROBOT_WIDTH;
+        
+        //actually implement the turning
     } 
   
     // Make this return true when this Command no longer needs to run execute()
