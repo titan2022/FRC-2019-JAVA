@@ -13,13 +13,19 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Add your docs here.
  */
 public class FollowLineSubsystem extends Subsystem{
-    
+
     @Override
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
 
-    
+    protected boolean[] getSensors() {
+        boolean[] sensors = new boolean[8];
+
+        //get shit like bossP        
+
+        return sensors;
+    }
 
 }
