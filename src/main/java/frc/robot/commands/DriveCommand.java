@@ -62,11 +62,11 @@ public class DriveCommand extends Command {
     		speedRight = 0; 
     	}
     	if(turtlemode) {
-    		speedLeft *= ConstantsMap.TurtleSpeed;
-    		speedRight *= ConstantsMap.TurtleSpeed;
+    		speedLeft *= ConstantsMap.TURTLE_SPEED;
+    		speedRight *= ConstantsMap.TURTLE_SPEED;
     	}
-    	driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TurtleSpeed);
-    	driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TurtleSpeed);
+    	driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
+    	driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
 
     	//Auto Brake Mode
     	//attack3Map.startAutoBrakerSystem();
