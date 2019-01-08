@@ -165,9 +165,8 @@ public class FollowLineCommand extends Command {
         double frontAverage = followLineSubsystem.getCameraAverage(1);
         double backAverage = followLineSubsystem.getCameraAverage(2);
 
-        double diff = backAverage - frontAverage;
-
-        //TODO: CONVERT THE DIFF TO ACTUAL UNITS(INCHES), NOT JUST OUR ARBITRARY ONES. THIS IS VERY VERY IMPORTANT. i would now, but i need measurements
+        //Diff is in units of inches (1 camera distance is 1/2 an inch)
+        double diff = (backAverage - frontAverage) * (ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS);
 
         //get the error angle
         double theta = Math.acos(diff / Math.sqrt(diff * diff + ConstantsMap.DISTANCE_BETWEEN_SENSORS * ConstantsMap.DISTANCE_BETWEEN_SENSORS));
