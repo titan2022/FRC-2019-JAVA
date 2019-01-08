@@ -15,6 +15,8 @@ import frc.robot.subsystems.FollowLineSubsystem;
 import java.lang.Math;
 import java.util.ArrayList;
 
+import com.kauailabs.navx.frc.AHRS;
+
 /**
  * Add your docs here.
  */
@@ -32,6 +34,9 @@ public class FollowLineCommand extends Command {
     int[] jumpIndices; // these will be the index after the change
     int[] jumpEncoderCount; // relative to the start of stage 2
     long startTime;
+
+    //Stuff for stage one 
+    AHRS gyro;
 
 
     protected double estimatedDistanceToWall;
