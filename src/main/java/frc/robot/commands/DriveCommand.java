@@ -46,13 +46,12 @@ public class DriveCommand extends Command {
     	/*if(attack3Map.turtleButton()) {
     		turtlemode = !turtlemode;
 		} */
-		
 
 		if(!fLC.isFinished()) {
-			fLC.execute();
-
 			if(xboxMap.interruptFollowLine()) {
 				fLC.kill();//Make this a thing
+			}else{
+				fLC.execute();
 			}
 		}	
 		else {
