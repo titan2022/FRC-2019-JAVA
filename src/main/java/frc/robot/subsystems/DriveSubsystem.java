@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveSubsystem extends Subsystem {
 
-	private WPI_TalonSRX left1,left2,left3,right1,right2, right3;
+	private WPI_TalonSRX left1,left2,right1,right2;
 	private Encoder leftEncoder, rightEncoder;
 
 	private AHRS ahrs;
