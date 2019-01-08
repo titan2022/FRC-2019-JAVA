@@ -35,7 +35,7 @@ public class FollowLineCommand extends Command {
     int[] jumpEncoderCount; // relative to the start of stage 2
     long startTime;
 
-    //Stuff for stage one 
+    //Stuff for one sensor stages 
     AHRS gyro;
 
 
@@ -78,7 +78,13 @@ public class FollowLineCommand extends Command {
             oneSensorStage();
         } else if(!twoSensorStageComplete){
             twoSensorStage();
-        } else{
+        } else if(!twoSensorStageComplete){
+            twoSensorStage();
+        }else if(!twoSensorStageComplete){
+            twoSensorStage();
+        }else if(!twoSensorStageComplete){
+            twoSensorStage();
+        }else{
             //we are finished, idk what to do
         }
 
