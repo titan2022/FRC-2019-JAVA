@@ -104,7 +104,7 @@ public class FollowLineCommand extends Command {
             }
         }
 
-        if(oSSPreviousAverages.size())
+        //if(oSSPreviousAverages.size())
 
         //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be 
         //done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we
