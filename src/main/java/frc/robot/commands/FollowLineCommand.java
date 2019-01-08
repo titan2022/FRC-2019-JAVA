@@ -28,6 +28,18 @@ public class FollowLineCommand extends Command {
     protected boolean oneSensorStageComplete;
     protected boolean twoSensorStageComplete;
 
+    //stage one variables
+
+    //stage two variables
+    double leftEncoderDistanceGoal;
+    double rightEncoderDistanceGoal;
+
+    //stage three variables
+
+    //stage four variables
+    //stage five variables
+    //stage six variables
+    
     //stuff for stage 2
     ArrayList<Double> oSSPreviousAverages;
     int numOfJumps; 
@@ -37,6 +49,8 @@ public class FollowLineCommand extends Command {
 
     //Stuff for stage one 
     AHRS gyro;
+
+    
 
 
     protected double estimatedDistanceToWall;
@@ -88,9 +102,9 @@ public class FollowLineCommand extends Command {
 
     }
 
-    // Called by execute to approach the tape using vision
-    protected void visionStage () {
-
+    //vision stage, get us closer to the line
+    protected void stageOne(){
+        
         //TODO: use vision somehow....
         //i have no clue as of yet, this is a different problem for somebody else
 
@@ -99,6 +113,43 @@ public class FollowLineCommand extends Command {
         //from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it.
         //any questions or ideas on how to do this better, talk to me(jake).
         visionStageComplete = true;
+    }
+
+    //once we hit the line, make sure we go forward 2 inches
+    protected void stageTwo(){
+        //set target
+        if(leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0){
+            leftEncoderDistanceGoal = driveSubsystem.getLeftEncoderDistance() + 2;
+            rightEncoderDistanceGoal = driveSubsystem.getRightEncoderDistance() + 2;
+
+            driveSubsystem.enableBrake();
+        }
+
+        driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
+        driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
+
+        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)){
+        }
+    }
+
+    //once we are over the line, then watch for the horizontal change
+    protected void stageThree(){
+
+    }
+
+    //once we get change and calculate the angle, then move forward to approximate the swing
+    protected void stageFour(){
+
+    }
+
+    //now turn the robot to the desired angle
+    protected void stageFive(){
+
+    }
+
+    //now move to the wall, and use the old two sensor stage
+    protected void stageSix(){
+
     }
     
     // Called by execute to line up when only 1 sensor has seen tape
