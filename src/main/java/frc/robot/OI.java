@@ -19,7 +19,7 @@ public class OI {
 
 	public OI(){
 		xbox = new Xbox(0);
-		ps4 = new Xbox(1);
+		//ps4 = new Xbox(1);
 
 		//attack3_L = new Attack3(3);
 		//attack3_R = new Attack3(4);

@@ -56,25 +56,32 @@ public class XboxMap {
 	public boolean outTake() {
 		return oi.xbox.getBValue();
 	}
-	public boolean shiftLow() {
-		return oi.ps4.getBValue();
-	}
-	public boolean shiftHigh() {
-		return oi.ps4.getAValue();
-	}
-	
-	
-	public double actuate() {
-		return oi.xbox.getLeftY();
-	}
-	
 	public double right() {
-		return oi.ps4.getRightY();
+		return oi.xbox.getRightY();
 	}
 	
 	public double left() {
-		return oi.ps4.getLeftY();
+		return oi.xbox.getLeftY();
 	}
+	//public boolean shiftLow() {
+	// 	return oi.ps4.getBValue();
+	// }
+	// public boolean shiftHigh() {
+	// 	return oi.ps4.getAValue();
+	// }
+	
+	
+	// public double actuate() {
+	// 	return oi.xbox.getLeftY();
+	// }
+	
+	// public double right() {
+	// 	return oi.ps4.getRightY();
+	// }
+	
+	// public double left() {
+	// 	return oi.ps4.getLeftY();
+	// }
 
 	public boolean interruptFollowLine() {
 		return false;

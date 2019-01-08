@@ -36,6 +36,7 @@ public class DriveSubsystem extends Subsystem {
 	private Solenoid shift_high,shift_low;
 
 	public DriveSubsystem() {
+        System.out.println("Drive Subsystem Init");
 
 		//Instantiate motors		
 		left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_1);
@@ -47,8 +48,8 @@ public class DriveSubsystem extends Subsystem {
 		left1.setInverted(false);
 		left2.setInverted(false);
 		//left3.setInverted(false);
-		right1.setInverted(false);
-		right2.setInverted(false);
+		right1.setInverted(true);
+		right2.setInverted(true);
 		//right3.setInverted(false);
 
 		//Instantiate Encoders
@@ -66,8 +67,7 @@ public class DriveSubsystem extends Subsystem {
 		SmartDashboard.putData(leftEncoder);
 		SmartDashboard.putData(rightEncoder);
 		
-		shift_high = new Solenoid(2);
-		shift_low = new Solenoid(3);
+		
 	}
 	
     public void initDefaultCommand() {
@@ -75,18 +75,7 @@ public class DriveSubsystem extends Subsystem {
     	//setDefaultCommand(new DriveCommand());
     }
 	
-	//sets the gear to high by changing the solonoids on and off
-    public void shiftHigh() {
-    	shift_high.set(true);
-    	shift_low.set(false);
-	}
-	
-	//sets the gear to low by changing the solonoids on and off
-    public void shiftLow() {
-    	shift_high.set(false);
-    	shift_low.set(true);
-    }
-   
+
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
 		left1.set(speed);

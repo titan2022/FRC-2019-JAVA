@@ -63,12 +63,12 @@ public class DriveCommand extends Command {
 			if(Math.abs(speedLeft) < 0.1){
 				speedLeft = 0;
 			}
-			if(xboxMap.shiftHigh()) {
-				driveSubsystem.shiftHigh();
-			}
-			if(xboxMap.shiftLow()) {
-				driveSubsystem.shiftLow();
-			}
+			// if(xboxMap.shiftHigh()) {
+			// 	driveSubsystem.shiftHigh();
+			// }
+			// if(xboxMap.shiftLow()) {
+			// 	driveSubsystem.shiftLow();
+			// }
 			double speedRight = xboxMap.right();
 			//speedRight *= -1;
 			if(Math.abs(speedRight) < 0.1){

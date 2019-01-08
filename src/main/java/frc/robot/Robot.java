@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", chooser);
-    driveCommand = new  DriveCommand();
+    driveCommand = new DriveCommand();
   }
 
   /**
