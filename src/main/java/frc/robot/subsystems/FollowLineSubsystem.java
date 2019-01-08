@@ -41,7 +41,7 @@ public class FollowLineSubsystem extends Subsystem{
         return Arrays.toString(data);
     }
     //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
-    public boolean[] getCameraData(int strip) {
+    public boolean[] getLineData(int strip) {
         boolean[] sensors = new boolean[8];
 
         byte[] fromSensor = new byte[16];
@@ -58,9 +58,8 @@ public class FollowLineSubsystem extends Subsystem{
 
         return sensors;
     }
-
-    public double getCameraAverage(int strip){
-        boolean[] isFrontCameraOnStrip = getCameraData(strip);
+    public double getLineAverage(int strip){
+        boolean[] isFrontCameraOnStrip = getLineData(strip);
         
         double sum = 0.0d;
         int camerasOn = 0;

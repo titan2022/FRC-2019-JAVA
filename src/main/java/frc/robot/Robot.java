@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -57,8 +59,14 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
+  int count = 0;
   @Override
   public void robotPeriodic() {
+    // count++;
+    // if(count == 20){
+    //   System.out.println(Arrays.toString(followLineSubsystem.getLineData(1)));
+    //   count = 0;
+    // }
   }
 
   /**

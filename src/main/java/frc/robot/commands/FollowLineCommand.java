@@ -166,8 +166,8 @@ public class FollowLineCommand extends Command {
 
     //once we are over the line, then watch for the horizontal change
     protected void stageThree() {
-        boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
-        boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
+        boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
+        boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
 
         for(boolean b: isBackCameraOnStrip){
             if(b){ // jump to stage 6
@@ -197,7 +197,7 @@ public class FollowLineCommand extends Command {
         //this gets the jumps in average
         if(numOfJumps < 2)
         {
-            double frontAverage = followLineSubsystem.getCameraAverage(1);
+            double frontAverage = followLineSubsystem.getLineAverage(1);
             oSSPreviousAverages.add(frontAverage);
             int oSSSize = oSSPreviousAverages.size();
 
@@ -268,8 +268,8 @@ public class FollowLineCommand extends Command {
     
     // Called by execute to line up when only 1 sensor has seen tape
     protected void oneSensorStage() {
-        boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
-        boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
+        boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
+        boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
 
         for(boolean b: isBackCameraOnStrip){
             if(b){
@@ -298,7 +298,7 @@ public class FollowLineCommand extends Command {
         //this gets the jumps in average
         if(numOfJumps < 2)
         {
-            double frontAverage = followLineSubsystem.getCameraAverage(1);
+            double frontAverage = followLineSubsystem.getLineAverage(1);
             oSSPreviousAverages.add(frontAverage);
             int oSSSize = oSSPreviousAverages.size();
 
@@ -337,8 +337,8 @@ public class FollowLineCommand extends Command {
             twoSensorStageComplete = true;
         }*/
 
-        double frontAverage = followLineSubsystem.getCameraAverage(1);
-        double backAverage = followLineSubsystem.getCameraAverage(2);
+        double frontAverage = followLineSubsystem.getLineAverage(1);
+        double backAverage = followLineSubsystem.getLineAverage(2);
 
         //Diff is in units of inches (1 camera distance is 1/2 an inch)
         double diff = (backAverage - frontAverage) * (ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS);
