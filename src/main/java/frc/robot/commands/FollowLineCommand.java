@@ -126,9 +126,9 @@ public class FollowLineCommand extends Command {
     }
 
     //once we hit the line, make sure we go forward 2 inches
-    protected void stageTwo(){
+    protected void stageTwo() {
         //set target
-        if(leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0){
+        if(leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0) {
             leftEncoderDistanceGoal = driveSubsystem.getLeftEncoderDistance() + 2;
             rightEncoderDistanceGoal = driveSubsystem.getRightEncoderDistance() + 2;
 
@@ -138,32 +138,34 @@ public class FollowLineCommand extends Command {
         driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
         driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
 
-        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)){
+        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)) {
         }
+
+        stageTwoComplete = true;
     }
 
     //once we are over the line, then watch for the horizontal change
-    protected void stageThree(){
+    protected void stageThree() {
 
     }
 
     //once we get change and calculate the angle, then move forward to approximate the swing
-    protected void stageFour(){
+    protected void stageFour() {
 
     }
 
     //now turn the robot to the desired angle
-    protected void stageFive(){
+    protected void stageFive() {
 
     }
 
     //now move to the wall, and use the old two sensor stage
-    protected void stageSix(){
+    protected void stageSix() {
 
     }
     
     // Called by execute to line up when only 1 sensor has seen tape
-    protected void oneSensorStage () {
+    protected void oneSensorStage() {
         boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
         boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
 
