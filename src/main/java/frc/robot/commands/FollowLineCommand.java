@@ -72,6 +72,10 @@ public class FollowLineCommand extends Command {
     protected void execute() {
         System.out.println("FollowLineCommand execute");
 
+        /*if(limit switch hit){
+            setupForRun();//reset for next run
+            somehow mark that we are done, maybe interrrupt?
+        }else{*/
         if(!visionStageComplete){
             visionStage();
         } else if(!oneSensorStageComplete){
@@ -147,7 +151,11 @@ public class FollowLineCommand extends Command {
         //start to use ith
         double deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
         double deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
-        //double distanceTraveled = 
+        double deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
+        
+        double angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
+
+
 
         
         //TODO: actually implement the turning and math
