@@ -8,6 +8,8 @@
 package frc.robot.subsystems;
 
 
+import java.util.Arrays;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -18,16 +20,24 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class FollowLineSubsystem extends Subsystem{
     I2C i2c;
     public FollowLineSubsystem(){
+        System.out.println("Line Follow Subsystem Init");
         i2c = new I2C(Port.kOnboard, 0x09);
-        byte[] fromSensor = new byte[1];
-        i2c.read(0x09, 1, fromSensor);
-        System.out.println(fromSensor.toString());
+        
 
     }
 
     @Override
     public void initDefaultCommand() {
         
+    }
+    public String getData(){
+        byte[] fromSensor = new byte[16];
+        i2c.readOnly(fromSensor,16);
+        int[] data = new int[8];
+        for(int i= 0;i<8;i++){
+            data[i] = fromSensor[2*i] & 0xFF;
+        }
+        return Arrays.toString(data);
     }
     //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
     public boolean[] getCameraData(int strip) {

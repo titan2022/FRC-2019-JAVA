@@ -11,6 +11,7 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.ConstantsMap;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
+	FollowLineSubsystem lineSubsystem = Robot.followLineSubsystem;
 	XboxMap xboxMap = new XboxMap();
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
@@ -38,6 +40,7 @@ public class DriveCommand extends Command {
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
 		fLC.initialize();
+		System.out.println(lineSubsystem.getData());	
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -47,14 +50,14 @@ public class DriveCommand extends Command {
     		turtlemode = !turtlemode;
 		} */
 
-		if(!fLC.isFinished()) {
-			if(xboxMap.interruptFollowLine()) {
-				fLC.kill();//Make this a thing
-			}else{
-				fLC.execute();
-			}
-		}	
-		else {
+		// if(!fLC.isFinished()) {
+		// 	if(xboxMap.interruptFollowLine()) {
+		// 		fLC.kill();//Make this a thing
+		// 	}else{
+		// 		fLC.execute();
+		// 	}
+		// }	
+		// else {
 			double speedLeft = xboxMap.left();
 			speedLeft *= -1;
 			if(Math.abs(speedLeft) < 0.1){
@@ -90,7 +93,7 @@ public class DriveCommand extends Command {
 			else if(!brakeState){
 				driveSubsystem.disableBrake();
 			}
-		}
+		//}
 
 
     	
