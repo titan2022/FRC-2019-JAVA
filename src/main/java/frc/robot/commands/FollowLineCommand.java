@@ -24,21 +24,25 @@ public class FollowLineCommand extends Command {
     FollowLineSubsystem followLineSubsystem = Robot.followLineSubsystem;
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
 
-    protected boolean visionStageComplete;
-    protected boolean oneSensorStageComplete;
-    protected boolean twoSensorStageComplete;
-
-    //stage one variables
+    //stage one variables (Vision Stage)
+    protected boolean stageOneComplete;
 
     //stage two variables
+    protected boolean stageTwoComplete;
     double leftEncoderDistanceGoal;
     double rightEncoderDistanceGoal;
 
     //stage three variables
+    protected boolean stageThreeComplete;
 
     //stage four variables
+    protected boolean stageFourComplete;
+
     //stage five variables
+    protected boolean stageFiveComplete;
+
     //stage six variables
+    protected boolean stageSixComplete;
     
     //stuff for stage 2
     ArrayList<Double> oSSPreviousAverages;
@@ -90,19 +94,19 @@ public class FollowLineCommand extends Command {
             setupForRun();//reset for next run
             somehow mark that we are done, maybe interrrupt?
         }else{*/
-        if(!visionStageComplete){
-            visionStage();
-        } else if(!oneSensorStageComplete){
-            oneSensorStage();
-        } else if(!twoSensorStageComplete){
-            twoSensorStage();
-        } else if(!twoSensorStageComplete){
-            twoSensorStage();
-        }else if(!twoSensorStageComplete){
-            twoSensorStage();
-        }else if(!twoSensorStageComplete){
-            twoSensorStage();
-        }else{
+        if(!stageOneComplete) {
+            stageOne();
+        } else if(!stageTwoComplete) {
+            stageTwo();
+        } else if(!stageThreeComplete) {
+            stageThree();
+        } else if(!stageFourComplete) {
+            stageFour();
+        } else if(!stageFiveComplete) {
+            stageFive();
+        } else if(!stageSixComplete) {
+            stageSix();
+        } else {
             //we are finished, idk what to do
         }
 
@@ -118,7 +122,7 @@ public class FollowLineCommand extends Command {
         //and motion profiling in conjunction to make the robot sort of swing outward to approach from a more reasonable angle, because if we approach 
         //from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it.
         //any questions or ideas on how to do this better, talk to me(jake).
-        visionStageComplete = true;
+        stageOneComplete = true;
     }
 
     //once we hit the line, make sure we go forward 2 inches
