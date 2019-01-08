@@ -109,7 +109,7 @@ public class FollowLineCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        System.out.println("FollowLineCommand execute");
+        //System.out.println("FollowLineCommand execute");
 
         /*if(limit switch hit){
             setupForRun();//reset for next run

@@ -28,7 +28,7 @@ public class DriveCommand extends Command {
 	boolean turtlemode = false;	
 	boolean brakeState = false;
 	long lastPressed = 0;
-	FollowLineCommand fLC = new FollowLineCommand();
+
 	
     public DriveCommand() {
     	requires(driveSubsystem);
@@ -39,7 +39,6 @@ public class DriveCommand extends Command {
     	System.out.println("Drive Comand init");
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
-		fLC.initialize();
 		System.out.println(lineSubsystem.getData());	
     }
 
@@ -50,14 +49,14 @@ public class DriveCommand extends Command {
     		turtlemode = !turtlemode;
 		} */
 
-		if(!fLC.isFinished()) {
-			if(xboxMap.interruptFollowLine()) {
-				fLC.kill();//Make this a thing
-			}else{
-				fLC.execute();
-			}
-		}	
-		else {
+		// if(!fLC.isFinished()) {
+		// 	if(xboxMap.interruptFollowLine()) {
+		// 		fLC.kill();//Make this a thing
+		// 	}else{
+		// 		fLC.execute();
+		// 	}
+		// }	
+		// else {
 			double speedLeft = xboxMap.left();
 			speedLeft *= -1;
 			if(Math.abs(speedLeft) < 0.1){
@@ -93,7 +92,7 @@ public class DriveCommand extends Command {
 			else if(!brakeState){
 				driveSubsystem.disableBrake();
 			}
-		}
+		//}
 
 
     	
