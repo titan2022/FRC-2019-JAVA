@@ -249,9 +249,15 @@ public class FollowLineCommand extends Command {
     //now turn the robot to the desired angle
     protected void stageFive() {
         if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE){
-
+            if(desiredAngle - gyro.getAngle() > 0){
+                driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
+                driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
+            } else{
+                driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
+                driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
+            }
         } else {
-
+            stageFiveComplete = true;
         }
     }
 

@@ -24,6 +24,8 @@ public class ConstantsMap {
     public static final double APPROACH_TIME = 1.0d; //seconds
     public static final double STAGE_TWO_SPEED = 12.0d; //inches per second
     public static final double ANGLE_TOLLERANCE = 0.5; //degrees
+    public static final double TURN_SPEED = 4; //inches per second
+    public static final double BLACK_WHITE_CUTOFF = 128; //some units idk
 
 
 
