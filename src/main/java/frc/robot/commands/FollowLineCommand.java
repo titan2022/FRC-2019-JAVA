@@ -30,7 +30,7 @@ public class FollowLineCommand extends Command {
     ArrayList<Double> oSSPreviousAverages;
     int numOfJumps; 
     int[] jumpIndices; // these will be the index after the change
-    double[] jumpTimes; // relative to the start of stage 2
+    int[] jumpEncoderCount; // relative to the start of stage 2
     long startTime;
 
 
@@ -58,7 +58,7 @@ public class FollowLineCommand extends Command {
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
         jumpIndices = new int[]{0,0};
-        jumpTimes = new double[]{0.0d, 0.0d};
+        jumpEncoderCount = new int[]{0, 0};
         startTime = System.nanoTime();
     }
   
@@ -131,7 +131,7 @@ public class FollowLineCommand extends Command {
                     //now we have a step
 
                     jumpIndices[numOfJumps] = oSSSize - 1;
-                    jumpTimes[numOfJumps] = (System.nanoTime() - startTime) / 1000000000; // yes divide by 1 billion
+                    jumpEncoderCount[numOfJumps] = 0; //TODO: get encoder values here, maybe average left and right? // yes divide by 1 billion
 
                     numOfJumps++;
                 }
@@ -139,8 +139,8 @@ public class FollowLineCommand extends Command {
             return; // please note this return when considering flow of this function
         }
         
-        //start to use it
-        double deltaTime = jumpTimes[1] - jumpTimes[0];
+        //start to use ith
+        double deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
         double deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
         //double distanceTraveled = 
 
