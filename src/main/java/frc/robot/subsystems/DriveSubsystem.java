@@ -36,6 +36,7 @@ public class DriveSubsystem extends Subsystem {
 	private Solenoid shift_high,shift_low;
 
 	public DriveSubsystem() {
+
 		//Instantiate motors		
 		left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_1);
 		left2 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_2);
@@ -58,8 +59,7 @@ public class DriveSubsystem extends Subsystem {
         ahrs = new AHRS(SPI.Port.kMXP);
 		stop();
 		
-		
-//		//Set encoder distance per pulse
+		//Set encoder distance per pulse
 		leftEncoder.setDistancePerPulse(ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
 		rightEncoder.setDistancePerPulse(ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
 		SmartDashboard.putData(ahrs);
@@ -68,34 +68,35 @@ public class DriveSubsystem extends Subsystem {
 		
 		shift_high = new Solenoid(2);
 		shift_low = new Solenoid(3);
-
 	}
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
     	//setDefaultCommand(new DriveCommand());
     }
-    
+	
+	//sets the gear to high by changing the solonoids on and off
     public void shiftHigh() {
     	shift_high.set(true);
     	shift_low.set(false);
-    }
+	}
+	
+	//sets the gear to low by changing the solonoids on and off
     public void shiftLow() {
     	shift_high.set(false);
     	shift_low.set(true);
     }
    
-   
+	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
-			left1.set(speed);
-			left2.set(speed);
-			//left3.set(speed);
+		left1.set(speed);
+		left2.set(speed);
 	}	
 	
+	//sets the speed for both of the right motors
 	public void setRightSpeed (double speed) {
-			right1.set(speed);
-			right2.set(speed);		
-		//	right3.set(speed);
+		right1.set(speed);
+		right2.set(speed);		
 	}
 	
 	public double getLeftSpeed() {		
@@ -112,22 +113,23 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public void enableBrake(){
+		//enable on left
 		left1.setNeutralMode(NeutralMode.Brake);
 		left2.setNeutralMode(NeutralMode.Brake);
-	//	left3.setNeutralMode(NeutralMode.Brake);
+
+		//enable on right
 		right1.setNeutralMode(NeutralMode.Brake);
 		right2.setNeutralMode(NeutralMode.Brake);
-		//right3.setNeutralMode(NeutralMode.Brake);
-		
 	}
 	
 	public void disableBrake(){
+		//disable on left
 		left1.setNeutralMode(NeutralMode.Coast);
 		left2.setNeutralMode(NeutralMode.Coast);
-	//	left3.setNeutralMode(NeutralMode.Coast);
+		
+		//disable on right
 		right1.setNeutralMode(NeutralMode.Coast);
 		right2.setNeutralMode(NeutralMode.Coast);
-		//right3.setNeutralMode(NeutralMode.Coast);
 	}
 	 
 	public Encoder getRightEncoder(){

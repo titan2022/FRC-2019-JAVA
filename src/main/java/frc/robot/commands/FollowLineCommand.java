@@ -76,6 +76,13 @@ public class FollowLineCommand extends Command {
 
     // Called by execute to line up when both sensors see tape
     protected void twoSensorStage () {
+
+        //this is so we know when to stop, will be uncommented when we have a mechanism for detecting when we hit the wall
+        /*if(we hit the wall)
+        {
+            twoSensorStageComplete = true;
+        }*/
+
         double frontAverage = followLineSubsystem.getCameraAverage(1);
         double backAverage = followLineSubsystem.getCameraAverage(2);
 
