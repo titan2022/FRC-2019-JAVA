@@ -23,6 +23,7 @@ public class ConstantsMap {
     public static final double ROBOT_LENGTH = 32; //inches
     public static final double APPROACH_TIME = 1.0d; //seconds
     public static final double STAGE_TWO_SPEED = 12.0d; //inches per second
+    public static final double ANGLE_TOLLERANCE = 0.5; //degrees
 
 
 

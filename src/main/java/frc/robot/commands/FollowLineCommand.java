@@ -37,6 +37,14 @@ public class FollowLineCommand extends Command {
 
     //stage four variables
     protected boolean stageFourComplete;
+    protected boolean stageFourFristRun;
+    protected double deltaAverage;
+    protected double deltaDistance;
+    protected double deltaHorizontalDistance;
+    protected double angleToLine;
+    protected double desiredAngle;
+    protected double swingDistance;
+    protected double encoderGoal;
 
     //stage five variables
     protected boolean stageFiveComplete;
@@ -77,6 +85,19 @@ public class FollowLineCommand extends Command {
         //visionStageComplete = false;
         //oneSensorStageComplete = false;
         //twoSensorStageComplete = false;
+
+        //setup stage 1 variables
+        
+        //stage 2
+        
+        //stage 3
+        
+        //stage 4
+        
+        //stage 5
+
+        //stage 6
+
     
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
@@ -138,30 +159,105 @@ public class FollowLineCommand extends Command {
         driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
         driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
 
-        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)) {
+        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getRightEncoderDistance() > rightEncoderDistanceGoal)) {
+            stageTwoComplete = true;
         }
-
-        stageTwoComplete = true;
     }
 
     //once we are over the line, then watch for the horizontal change
     protected void stageThree() {
+        boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
+        boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
 
+        for(boolean b: isBackCameraOnStrip){
+            if(b){ // jump to stage 6
+                stageTwoComplete = true;
+                stageThreeComplete = true;
+                stageFourComplete = true;
+                stageFiveComplete = true;
+                return;
+            }
+        }
+
+        //if(oSSPreviousAverages.size())
+
+        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be 
+        //done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we
+        //are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of
+        //the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back
+        //sensor hits, we can do the fine tuning. 
+        //
+        //do we even have a gyro on this bot? hopefully? if not we can calulate it using the change in positoin of left and right wheels and calculate 
+        //the angle, but that is so messy
+        //
+        //i *try* to implement this below
+        //
+        //any questions or ideas on how to do this better, talk to me(jake).
+
+        //this gets the jumps in average
+        if(numOfJumps < 2)
+        {
+            double frontAverage = followLineSubsystem.getCameraAverage(1);
+            oSSPreviousAverages.add(frontAverage);
+            int oSSSize = oSSPreviousAverages.size();
+
+            if(oSSSize > 1 && numOfJumps < 2){//just making sure we dont step outside oSSpreviousaverages
+                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
+                    //now we have a step
+
+                    jumpIndices[numOfJumps] = oSSSize - 1;
+                    jumpEncoderCount[numOfJumps] = 0; //TODO: get encoder values here, maybe average left and right? // yes divide by 1 billion
+
+                    numOfJumps++;
+                }
+            }
+            return; // please note this return when considering flow of this function
+        } else {
+            stageThreeComplete = true;
+        }
     }
 
     //once we get change and calculate the angle, then move forward to approximate the swing
     protected void stageFour() {
+        if(stageFourFristRun){//do caluclation for angle
+            deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+            deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
+            deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
+            
+            angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
+            desiredAngle = gyro.getAngle() + angleToLine;
 
+            swingDistance = Math.sin(angleToLine) * ConstantsMap.ROBOT_LENGTH/2;
+
+            double previousEncoderValue = (driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2;
+            encoderGoal = (previousEncoderValue + swingDistance);
+
+            stageFourFristRun = false;
+        }
+
+        //move forward to make up swing
+        driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
+        driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
+
+        if ((driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2 > encoderGoal) {
+            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.setLeftSpeed(0);
+            stageTwoComplete = true;
+        }
     }
 
     //now turn the robot to the desired angle
     protected void stageFive() {
+        if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE){
 
+        } else {
+
+        }
     }
 
     //now move to the wall, and use the old two sensor stage
     protected void stageSix() {
-
+        stageSixComplete = true;
     }
     
     // Called by execute to line up when only 1 sensor has seen tape
