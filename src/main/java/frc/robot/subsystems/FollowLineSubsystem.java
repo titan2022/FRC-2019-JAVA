@@ -7,19 +7,28 @@
 
 package frc.robot.subsystems;
 
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Add your docs here.
  */
 public class FollowLineSubsystem extends Subsystem{
+    I2C i2c;
+    public FollowLineSubsystem(){
+        i2c = new I2C(Port.kOnboard, 0x09);
+        byte[] fromSensor = new byte[1];
+        i2c.read(0x09, 1, fromSensor);
+        System.out.println(fromSensor.toString());
+
+    }
 
     @Override
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        // setDefaultCommand(new MySpecialCommand());
+        
     }
-
     //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
     public boolean[] getCameraData(int strip) {
         boolean[] sensors = new boolean[8];
