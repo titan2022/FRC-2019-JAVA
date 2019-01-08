@@ -74,9 +74,9 @@ public class FollowLineCommand extends Command {
     //this is to be called upon initialization and whenever the button is hit twice
     protected void setupForRun(){
 
-        visionStageComplete = false;
-        oneSensorStageComplete = false;
-        twoSensorStageComplete = false;
+        //visionStageComplete = false;
+        //oneSensorStageComplete = false;
+        //twoSensorStageComplete = false;
     
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
@@ -171,7 +171,9 @@ public class FollowLineCommand extends Command {
 
         for(boolean b: isBackCameraOnStrip){
             if(b){
-                oneSensorStageComplete = true;
+                stageTwoComplete = true;
+                stageThreeComplete = true;
+                stageFourComplete = true;
                 return;
             }
         }
