@@ -18,6 +18,7 @@ public class ConstantsMap {
 
     //for line follower
     public static final double DISTANCE_BETWEEN_SENSORS = 6; //inches
+    public static final double DISTANCE_BETWEEN_SENSOR_CAMERAS = .5;//inches 
     public static final double ROBOT_WIDTH = 26; //inches
     public static final double ROBOT_LENGTH = 32; //inches
     public static final double APPROACH_TIME = 1.0d; //seconds
