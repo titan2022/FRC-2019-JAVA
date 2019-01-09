@@ -8,10 +8,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Robot;
+import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmCommand extends Command {
+    ArmSubsystem armSubsystem = Robot.armSubsystem;
+
     public ArmCommand() {
-        requires(Robot.armSubs)
+        requires(armSubsystem);
     }
 
     // Called just before this Command runs the first time
