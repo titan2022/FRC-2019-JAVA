@@ -87,17 +87,24 @@ public class FollowLineCommand extends Command {
         //twoSensorStageComplete = false;
 
         //setup stage 1 variables
-        
+        stageOneComplete = false;
+
         //stage 2
-        
+        stageTwoComplete = false;
+        leftEncoderDistanceGoal = 0;
+        rightEncoderDistanceGoal = 0;
+
         //stage 3
-        
+        stageThreeComplete = false;
+
         //stage 4
+        stageFourComplete = false;
         
         //stage 5
+        stageFiveComplete = false;
 
         //stage 6
-
+        stageSixComplete = false;
     
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
@@ -109,7 +116,7 @@ public class FollowLineCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        //System.out.println("FollowLineCommand execute");
+        System.out.println("FollowLineCommand execute");
 
         /*if(limit switch hit){
             setupForRun();//reset for next run
@@ -135,6 +142,7 @@ public class FollowLineCommand extends Command {
 
     //vision stage, get us closer to the line
     protected void stageOne(){
+        System.out.println("stage 1");
         
         //TODO: use vision somehow....
         //i have no clue as of yet, this is a different problem for somebody else
@@ -148,6 +156,9 @@ public class FollowLineCommand extends Command {
 
     //once we hit the line, make sure we go forward 2 inches
     protected void stageTwo() {
+        stageTwoComplete = true;
+
+        System.out.println("stage 2");
         //set target
         if(leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0) {
             leftEncoderDistanceGoal = driveSubsystem.getLeftEncoderDistance() + 2;
@@ -166,18 +177,19 @@ public class FollowLineCommand extends Command {
 
     //once we are over the line, then watch for the horizontal change
     protected void stageThree() {
+        System.out.println("stage 3");
         boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
         boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
 
-        for(boolean b: isBackCameraOnStrip){
-            if(b){ // jump to stage 6
-                stageTwoComplete = true;
-                stageThreeComplete = true;
-                stageFourComplete = true;
-                stageFiveComplete = true;
-                return;
-            }
-        }
+        // for(boolean b: isBackCameraOnStrip){
+        //     if(b){ // jump to stage 6
+        //         stageTwoComplete = true;
+        //         stageThreeComplete = true;
+        //         stageFourComplete = true;
+        //         stageFiveComplete = true;
+        //         return;
+        //     }
+        // }
 
         //if(oSSPreviousAverages.size())
 
@@ -219,6 +231,7 @@ public class FollowLineCommand extends Command {
 
     //once we get change and calculate the angle, then move forward to approximate the swing
     protected void stageFour() {
+        System.out.println("stage 4");
         if(stageFourFristRun){//do caluclation for angle
             deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
             deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
@@ -248,6 +261,7 @@ public class FollowLineCommand extends Command {
 
     //now turn the robot to the desired angle
     protected void stageFive() {
+        System.out.println("stage 5");
         if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE){
             if(desiredAngle - gyro.getAngle() > 0){
                 driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
@@ -263,104 +277,9 @@ public class FollowLineCommand extends Command {
 
     //now move to the wall, and use the old two sensor stage
     protected void stageSix() {
+        System.out.println("stage 6");
         stageSixComplete = true;
     }
-    
-    // Called by execute to line up when only 1 sensor has seen tape
-    protected void oneSensorStage() {
-        boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
-        boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
-
-        for(boolean b: isBackCameraOnStrip){
-            if(b){
-                stageTwoComplete = true;
-                stageThreeComplete = true;
-                stageFourComplete = true;
-                return;
-            }
-        }
-
-        //if(oSSPreviousAverages.size())
-
-        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be 
-        //done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we
-        //are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of
-        //the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back
-        //sensor hits, we can do the fine tuning. 
-        //
-        //do we even have a gyro on this bot? hopefully? if not we can calulate it using the change in positoin of left and right wheels and calculate 
-        //the angle, but that is so messy
-        //
-        //i *try* to implement this below
-        //
-        //any questions or ideas on how to do this better, talk to me(jake).
-
-        //this gets the jumps in average
-        if(numOfJumps < 2)
-        {
-            double frontAverage = followLineSubsystem.getLineAverage(1);
-            oSSPreviousAverages.add(frontAverage);
-            int oSSSize = oSSPreviousAverages.size();
-
-            if(oSSSize > 1 && numOfJumps < 2){//just making sure we dont step outside oSSpreviousaverages
-                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
-                    //now we have a step
-
-                    jumpIndices[numOfJumps] = oSSSize - 1;
-                    jumpEncoderCount[numOfJumps] = 0; //TODO: get encoder values here, maybe average left and right? // yes divide by 1 billion
-
-                    numOfJumps++;
-                }
-            }
-            return; // please note this return when considering flow of this function
-        }
-        
-        //start to use ith
-        double deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
-        double deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
-        double deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
-        
-        double angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
-
-
-
-        
-        //TODO: actually implement the turning and math
-    }
-
-    // Called by execute to line up when both sensors see tape
-    protected void twoSensorStage () {
-
-        //this is so we know when to stop, will be uncommented when we have a mechanism for detecting when we hit the wall
-        /*if(we hit the wall)
-        {
-            twoSensorStageComplete = true;
-        }*/
-
-        double frontAverage = followLineSubsystem.getLineAverage(1);
-        double backAverage = followLineSubsystem.getLineAverage(2);
-
-        //Diff is in units of inches (1 camera distance is 1/2 an inch)
-        double diff = (backAverage - frontAverage) * (ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS);
-
-        //get the error angle
-        double theta = Math.acos(diff / Math.sqrt(diff * diff + ConstantsMap.DISTANCE_BETWEEN_SENSORS * ConstantsMap.DISTANCE_BETWEEN_SENSORS));
-
-        //use the angle to figure out how far the wheels must correct to appraoch the wall so that it is perpedicular.
-        //note: this method is not perfect, but rather an approximation of the best way to correct our angle as it makes us follow an arc, meanding we 
-        //become off center. But the better lined up we are before this step, the less we will shift side to side due to an arc(think about it, the error
-        //is almsot exactly equal to 1-cos(error angle)) in one direction or the other. 
-        double leftWheelDistance = estimatedDistanceToWall + theta * ConstantsMap.ROBOT_WIDTH;
-        double rightWheelDistance = estimatedDistanceToWall - theta * ConstantsMap.ROBOT_WIDTH;
-
-        //these units should be in INCHES
-        double leftWheelSpeed = leftWheelDistance / ConstantsMap.APPROACH_TIME;
-        double rightWheelSpeed = rightWheelDistance / ConstantsMap.APPROACH_TIME;
-
-        //finally implement the turning/movement
-        driveSubsystem.setLeftSpeed(leftWheelSpeed);
-        driveSubsystem.setRightSpeed(rightWheelSpeed);
-    } 
   
     // Make this return true when this Command no longer needs to run execute()
     @Override
@@ -376,7 +295,7 @@ public class FollowLineCommand extends Command {
 
     // Called for manual interruption of command
     protected void kill(){
-
+        
     }
   
     // Called when another command which requires one or more of the same
