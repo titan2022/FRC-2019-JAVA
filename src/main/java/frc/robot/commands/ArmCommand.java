@@ -70,7 +70,7 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
         armSubsystem.setWristJointSpeed(output);
     }
 
-    public void setPIDSourceType() {}
+    public void setPIDSourceType(PIDSourceType t) {}
 
     public double pidGet() {
         return armSubsystem.getWristDistance();
