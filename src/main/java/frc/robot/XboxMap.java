@@ -11,20 +11,20 @@ public class XboxMap {
 	static OI oi = Robot.oi;
 	
 	//Drive commands
-	public boolean startAutoBrakerSystem(){
+	static public boolean startAutoBrakerSystem(){
 		return oi.xbox.getRightBumperValue();
 	}
 	
-//	public boolean controlDriverGear() {
+//	static public boolean controlDriverGear() {
 //		return oi.xbox.getLeftBumperValue();
 //	}
 //	
 	//Grabber commands 
-//	public double controlUpperGrabberOut(){
+//	static public double controlUpperGrabberOut(){
 //		return oi.xbox.getRightTriggers();
 //	}
 //	
-//	public double controlUpperGrabberIn(){
+//	static public double controlUpperGrabberIn(){
 //		return oi.xbox.getLeftTriggers();
 //	}
 
@@ -65,23 +65,25 @@ public class XboxMap {
 	static public double left() {
 		return oi.xbox.getLeftY();
 	}
-	//public boolean shiftLow() {
-	// 	return oi.ps4.getBValue();
+
+	// static public boolean shiftLow() {
+	// 	 return oi.ps4.getBValue();
 	// }
-	// public boolean shiftHigh() {
+
+	// static public boolean shiftHigh() {
 	// 	return oi.ps4.getAValue();
 	// }
 	
 	
-	// public double actuate() {
+	// static public double actuate() {
 	// 	return oi.xbox.getLeftY();
 	// }
 	
-	// public double right() {
+	// static public double right() {
 	// 	return oi.ps4.getRightY();
 	// }
 	
-	// public double left() {
+	// static public double left() {
 	// 	return oi.ps4.getLeftY();
 	// }
 
