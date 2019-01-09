@@ -8,10 +8,10 @@
 package frc.robot;
 
 public class XboxMap {
-	OI oi = Robot.oi;
+	static OI oi = Robot.oi;
 	
 	//Drive commands
-	public boolean startAutoBrakerSystem(){
+	public static boolean startAutoBrakerSystem(){
 		return oi.xbox.getRightBumperValue();
 	}
 	
@@ -29,54 +29,40 @@ public class XboxMap {
 //	}
 
 	//Elevator commands
-	public double controlFrontElevator(){
+	public static double controlWristJoint() {
 		return oi.xbox.getRightY();
 	}
 	
-	public boolean startAutoElevatorBrakerSystem() {
-		return oi.xbox.getStartValue();
+	public static double controlShoulderJoint() {
+		return oi.xbox.getLeftY();
+	}
+
+	public static boolean enableZeroPid() {
+		return oi.xbox.getBValue();
 	}
 
 	//Universal stop command
-	public boolean stopSystem() {
+	public static boolean stopSystem() {
 		return oi.xbox.getBackValue();
 	}
-	
-	public boolean piston() {
-		return oi.xbox.getLeftBumperValue();
-	}
-	
-	public boolean inTake() {
-		return oi.xbox.getAValue();
-	}
-	public boolean override() {
-		return oi.xbox.getXValue();
-	}
-	
-	public boolean outTake() {
-		return oi.xbox.getBValue();
-	}
-	public boolean shiftLow() {
+
+	public static boolean shiftLow() {
 		return oi.ps4.getBValue();
 	}
-	public boolean shiftHigh() {
+	public static boolean shiftHigh() {
 		return oi.ps4.getAValue();
 	}
 	
 	
-	public double actuate() {
-		return oi.xbox.getLeftY();
-	}
-	
-	public double right() {
+	public static double right() {
 		return oi.ps4.getRightY();
 	}
 	
-	public double left() {
+	public static double left() {
 		return oi.ps4.getLeftY();
 	}
 
-	public boolean interruptFollowLine() {
+	public static boolean interruptFollowLine() {
 		return false;
 	}
 }
