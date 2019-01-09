@@ -38,19 +38,17 @@ public class DriveSubsystem extends Subsystem {
         System.out.println("Drive Subsystem Init");
 
 		//Instantiate motors		
-		left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_1);
-		left2 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_2);
+		left1 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_2);
+		left2 = new WPI_TalonSRX(RobotMap.LEFT_DRIVE_PORT_1);
 		right1 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_PORT_1);		
 		right2 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_PORT_2);
 		
 		//Invert Motors
-		left1.setInverted(false);
-		left2.setInverted(false);
-		//left3.setInverted(false);
+		
 		right1.setInverted(true);
 		right2.setInverted(true);
 		//right3.setInverted(false);
-
+		
 		//Instantiate Encoders
 		left1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		right1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
@@ -62,8 +60,7 @@ public class DriveSubsystem extends Subsystem {
 		
 
 		
-		SmartDashboard.putNumber("Right Count",right1.getSelectedSensorPosition(0));
-		SmartDashboard.putNumber("LEft Count",left1.getSelectedSensorPosition(0));
+		SmartDashboard.putData(ahrs);
 	}
 	
     public void initDefaultCommand() {
@@ -120,26 +117,26 @@ public class DriveSubsystem extends Subsystem {
 
 	//Get Encoder Distances
 	public double getRightEncoderDistance(){
-		return right1.getSelectedSensorPosition(0)* ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		return right1.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 	}	
 	public double getLeftEncoderDistance(){
-		return left1.getSelectedSensorPosition(0)* ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		return left1.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 	}
 	
 	//Get Encoder counts
 	public int getLeftEncoderCount(){
-		return right1.getSelectedSensorPosition(0);
+		return left1.getSelectedSensorPosition(0)* -1;
 	}	
 	public int getRightEncoderCount(){
-		return right1.getSelectedSensorPosition(0);
+		return right1.getSelectedSensorPosition(0)* -1;
 	}
 	
 	//Get Encoder Rates
 	public double getRightEncoderRate(){
-		return right1.getSelectedSensorVelocity(0);
+		return right1.getSelectedSensorVelocity(0)* -1;
 	}	
 	public double getLeftEncoderRate(){
-		return left1.getSelectedSensorVelocity(0);
+		return left1.getSelectedSensorVelocity(0)* -1;
 	}
 	
 	//reset encoders

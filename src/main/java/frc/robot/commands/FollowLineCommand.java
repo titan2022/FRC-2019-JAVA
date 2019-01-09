@@ -76,6 +76,7 @@ public class FollowLineCommand extends Command {
     @Override
     protected void initialize() {
         System.out.println("FollowLineCommand init");
+        gyro = driveSubsystem.getGyro();
         setupForRun();
     }
 
@@ -111,7 +112,7 @@ public class FollowLineCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        System.out.println("FollowLineCommand execute");
+        
 
         /*if(limit switch hit){
             setupForRun();//reset for next run
@@ -143,7 +144,7 @@ public class FollowLineCommand extends Command {
 
     //once we hit the line, make sure we go forward 2 inches
     protected void stageTwo() {
-        stageTwoComplete = true;
+        //stageTwoComplete = true;
 
         System.out.println("stage 2");
         //set target
@@ -193,16 +194,18 @@ public class FollowLineCommand extends Command {
             int oSSSize = oSSPreviousAverages.size();
 
             if(oSSSize > 1 && numOfJumps < 2) {//just making sure we dont step outside oSSpreviousaverages
-                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
+                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize - 2)) > 0.1){
                     //now we have a step, so we can set our values
 
                     jumpIndices[numOfJumps] = oSSSize - 1;
                     jumpEncoderCount[numOfJumps] = (driveSubsystem.getLeftEncoderCount() + driveSubsystem.getRightEncoderCount()) / 2; 
+                    
+                    System.out.println("" + numOfJumps + ", " + jumpIndices[numOfJumps] + ", " + jumpEncoderCount[numOfJumps]);
 
                     numOfJumps++;
                 }
             }
-            return; // please note this return when considering flow of this function
+            return; // please note this return when considering flow of this a
         } else {
             stageThreeComplete = true;
         }
@@ -243,11 +246,11 @@ public class FollowLineCommand extends Command {
         System.out.println("stage 5");
         if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE) {//Checks to see if our angle of approach is too great
             if (desiredAngle - gyro.getAngle() > 0) {//These figure out which was to turn 
-                driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
-                driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
+                driveSubsystem.setLeftSpeed((ConstantsMap.TURN_SPEED));
+                driveSubsystem.setRightSpeed((ConstantsMap.TURN_SPEED * -1));
             } else {
-                driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
-                driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
+                driveSubsystem.setLeftSpeed(( ConstantsMap.TURN_SPEED * -1));
+                driveSubsystem.setRightSpeed( ConstantsMap.TURN_SPEED);
             }
         } else {
             stageFiveComplete = true;

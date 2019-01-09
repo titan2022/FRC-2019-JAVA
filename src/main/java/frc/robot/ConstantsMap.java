@@ -11,8 +11,8 @@ package frc.robot;
  * Add your docs here.
  */
 public class ConstantsMap {
-    public static final double ROBOT_WHEEL_RADIUS_INCHES = Float.NaN; //inches
-    public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 256; //ticks
+    public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
+    public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
     public static final double TURTLE_SPEED = .5; //to be determined
 

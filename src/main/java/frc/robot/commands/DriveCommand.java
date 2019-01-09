@@ -114,7 +114,10 @@ public class DriveCommand extends Command {
     }
 
     protected void displayData(){
-    	
+    	SmartDashboard.putNumber("Right Count",driveSubsystem.getRightEncoderCount());
+		SmartDashboard.putNumber("LEft Count",driveSubsystem.getLeftEncoderCount());
+		SmartDashboard.putNumber("Right Distance",driveSubsystem.getRightEncoderDistance());
+		SmartDashboard.putNumber("LEft Disatance",driveSubsystem.getLeftEncoderDistance());
     }
     
     // Make this return true when this Command no longer needs to run execute()

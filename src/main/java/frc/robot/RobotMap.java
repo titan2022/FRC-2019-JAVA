@@ -19,9 +19,5 @@ public class RobotMap {
     public static final int RIGHT_DRIVE_PORT_1 = 3;
     public static final int RIGHT_DRIVE_PORT_2 = 4;
 
-    public static final int LEFT_ENCODER_PORT_A = 4;
-    public static final int LEFT_ENCODER_PORT_B = 5;
-
-    public static final int RIGHT_ENCODER_PORT_A = 6;
-    public static final int RIGHT_ENCODER_PORT_B = 7;
+    
 }
