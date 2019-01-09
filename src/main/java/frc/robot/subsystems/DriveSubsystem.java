@@ -30,11 +30,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveSubsystem extends Subsystem {
 
 	private WPI_TalonSRX left1,left2,left3,right1,right2, right3;
-	private Encoder leftEncoder, rightEncoder;
 
 	private AHRS ahrs;
 	
-	private Solenoid shift_high,shift_low;
 
 	public DriveSubsystem() {
         System.out.println("Drive Subsystem Init");
@@ -62,14 +60,10 @@ public class DriveSubsystem extends Subsystem {
         ahrs = new AHRS(SPI.Port.kMXP);
 		stop();
 		
-		//Set encoder distance per pulse
-		leftEncoder.setDistancePerPulse(ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
-		rightEncoder.setDistancePerPulse(ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
-		SmartDashboard.putData(ahrs);
-		SmartDashboard.putData(leftEncoder);
-		SmartDashboard.putData(rightEncoder);
+
 		
-		
+		SmartDashboard.putNumber("Right Count",right1.getSelectedSensorPosition(0));
+		SmartDashboard.putNumber("LEft Count",left1.getSelectedSensorPosition(0));
 	}
 	
     public void initDefaultCommand() {

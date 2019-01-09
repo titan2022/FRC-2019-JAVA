@@ -114,14 +114,7 @@ public class DriveCommand extends Command {
     }
 
     protected void displayData(){
-    	SmartDashboard.putNumber("Left Encoder Count: ", driveSubsystem.getLeftEncoderCount());
-    	SmartDashboard.putNumber("Left Encoder Distance: ", driveSubsystem.getLeftEncoderDistance());
-    	SmartDashboard.putNumber("Left Encoder Rate: ", driveSubsystem.getLeftEncoderRate());
-    	SmartDashboard.putNumber("Right Encoder Count: ", driveSubsystem.getRightEncoderCount());
-    	SmartDashboard.putNumber("Right Encoder Distance: ", driveSubsystem.getRightEncoderDistance());
-    	SmartDashboard.putNumber("Right Encoder Rate: ", driveSubsystem.getRightEncoderRate());
-    	SmartDashboard.putNumber("Gyro Angle: ", driveSubsystem.getGyroAngle());
-    	SmartDashboard.putBoolean("AutoBrake", brakeState);
+    	
     }
     
     // Make this return true when this Command no longer needs to run execute()
