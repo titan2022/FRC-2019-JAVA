@@ -15,7 +15,7 @@ public class OI {
 	//User interface Constants
 	public double attackThrottleSensitivity=.1;
 	//Controllers
-	public Xbox xbox,ps4;
+	public static Xbox xbox,ps4;
 
 	public OI(){
 		xbox = new Xbox(0);

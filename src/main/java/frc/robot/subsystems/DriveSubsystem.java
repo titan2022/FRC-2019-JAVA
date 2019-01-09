@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.ConstantsMap;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -53,8 +54,9 @@ public class DriveSubsystem extends Subsystem {
 		//right3.setInverted(false);
 
 		//Instantiate Encoders
-		leftEncoder = new Encoder(RobotMap.LEFT_ENCODER_PORT_A, RobotMap.LEFT_ENCODER_PORT_B, false);
-		rightEncoder = new Encoder(RobotMap.RIGHT_ENCODER_PORT_A, RobotMap.RIGHT_ENCODER_PORT_B,true);
+		left1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+		right1.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+
 		
 		//Instantiate Gyro | Gyro automatically calibrates when given power
         ahrs = new AHRS(SPI.Port.kMXP);
@@ -121,42 +123,35 @@ public class DriveSubsystem extends Subsystem {
 		right2.setNeutralMode(NeutralMode.Coast);
 	}
 	 
-	public Encoder getRightEncoder(){
-		return rightEncoder;
-	}
-	
-	public Encoder getLeftEncoder(){
-		return leftEncoder;
-	}
-	
+
 	//Get Encoder Distances
 	public double getRightEncoderDistance(){
-		return rightEncoder.getDistance();
+		return right1.getSelectedSensorPosition(0)* ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 	}	
 	public double getLeftEncoderDistance(){
-		return leftEncoder.getDistance();
+		return left1.getSelectedSensorPosition(0)* ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 	}
 	
 	//Get Encoder counts
 	public int getLeftEncoderCount(){
-		return leftEncoder.get();
+		return right1.getSelectedSensorPosition(0);
 	}	
 	public int getRightEncoderCount(){
-		return rightEncoder.get() * -1;
+		return right1.getSelectedSensorPosition(0);
 	}
 	
 	//Get Encoder Rates
 	public double getRightEncoderRate(){
-		return rightEncoder.getRate();
+		return right1.getSelectedSensorVelocity(0);
 	}	
 	public double getLeftEncoderRate(){
-		return leftEncoder.getRate();
+		return left1.getSelectedSensorVelocity(0);
 	}
 	
 	//reset encoders
 	public void resetEncoders(){
-		leftEncoder.reset();
-		rightEncoder.reset();
+		left1.getSensorCollection().setQuadraturePosition(0, 0);
+		right1.getSensorCollection().setQuadraturePosition(0, 0);
 	}
 	
 	public AHRS getGyro(){

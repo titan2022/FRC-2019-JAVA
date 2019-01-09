@@ -8,82 +8,91 @@
 package frc.robot;
 
 public class XboxMap {
-	OI oi = Robot.oi;
+	static OI oi = Robot.oi;
 	
 	//Drive commands
-	public boolean startAutoBrakerSystem(){
+	static public boolean startAutoBrakerSystem(){
 		return oi.xbox.getRightBumperValue();
 	}
 	
-//	public boolean controlDriverGear() {
+//	static public boolean controlDriverGear() {
 //		return oi.xbox.getLeftBumperValue();
 //	}
 //	
 	//Grabber commands 
-//	public double controlUpperGrabberOut(){
+//	static public double controlUpperGrabberOut(){
 //		return oi.xbox.getRightTriggers();
 //	}
 //	
-//	public double controlUpperGrabberIn(){
+//	static public double controlUpperGrabberIn(){
 //		return oi.xbox.getLeftTriggers();
 //	}
 
 	//Elevator commands
-	public double controlFrontElevator(){
+	static public double controlFrontElevator(){
 		return oi.xbox.getRightY();
 	}
 	
-	public boolean startAutoElevatorBrakerSystem() {
+	static public boolean startAutoElevatorBrakerSystem() {
 		return oi.xbox.getStartValue();
 	}
 
 	//Universal stop command
-	public boolean stopSystem() {
+	static public boolean stopSystem() {
 		return oi.xbox.getBackValue();
 	}
 	
-	public boolean piston() {
+	static public boolean piston() {
 		return oi.xbox.getLeftBumperValue();
 	}
 	
-	public boolean inTake() {
+	static public boolean inTake() {
 		return oi.xbox.getAValue();
 	}
-	public boolean override() {
+
+	static public boolean override() {
 		return oi.xbox.getXValue();
 	}
 	
-	public boolean outTake() {
+	static public boolean outTake() {
 		return oi.xbox.getBValue();
 	}
-	public double right() {
+
+	static public double right() {
 		return oi.xbox.getRightY();
 	}
 	
-	public double left() {
+	static public double left() {
 		return oi.xbox.getLeftY();
 	}
-	//public boolean shiftLow() {
-	// 	return oi.ps4.getBValue();
+
+	// static public boolean shiftLow() {
+	// 	 return oi.ps4.getBValue();
 	// }
-	// public boolean shiftHigh() {
+
+	// static public boolean shiftHigh() {
 	// 	return oi.ps4.getAValue();
 	// }
 	
 	
-	// public double actuate() {
+	// static public double actuate() {
 	// 	return oi.xbox.getLeftY();
 	// }
 	
-	// public double right() {
+	// static public double right() {
 	// 	return oi.ps4.getRightY();
 	// }
 	
-	// public double left() {
+	// static public double left() {
 	// 	return oi.ps4.getLeftY();
 	// }
 
-	public boolean interruptFollowLine() {
-		return false;
+	static public boolean runFollowLineCommand() {
+	 	return oi.xbox.getAValue();
+	}
+
+	//TODO B is also being used for outtake (Change later)
+	static public boolean interruptFollowLine() {
+		return oi.xbox.getBValue();
 	}
 }
