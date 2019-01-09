@@ -187,8 +187,7 @@ public class FollowLineCommand extends Command {
         //any questions or ideas on how to do this better, talk to me(jake).
 
         //this gets the jumps in average
-        if(numOfJumps < 2)
-        {
+        if(numOfJumps < 2) {
             double frontAverage = followLineSubsystem.getLineAverage(1);
             oSSPreviousAverages.add(frontAverage);
             int oSSSize = oSSPreviousAverages.size();
@@ -275,7 +274,14 @@ public class FollowLineCommand extends Command {
 
     // Called for manual interruption of command
     protected void kill() {
-        
+        stageOneComplete = true;
+        stageTwoComplete = true;
+        stageThreeComplete = true; 
+        stageFourComplete = true;
+        stageFiveComplete = true;
+        stageSixComplete = true;
+
+        System.out.println("FollowLineCommand kill");
     }
   
     // Called when another command which requires one or more of the same
@@ -283,5 +289,6 @@ public class FollowLineCommand extends Command {
     @Override
     protected void interrupted() {
         System.out.println("FollowLineCommand interrupted");
+        kill();
     }
 }
