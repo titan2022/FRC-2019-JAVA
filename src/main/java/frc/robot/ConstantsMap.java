@@ -22,6 +22,7 @@ public class ConstantsMap {
     public static final double ROBOT_LENGTH = 32; //inches
     public static final double APPROACH_TIME = 1.0d; //seconds
 
+    //For ArmSubsystem
     public static final double WRIST_ZERO_KP = 1;
     public static final double WRIST_ZERO_KI = 1;
     public static final double WRIST_ZERO_KD = 1;
@@ -29,4 +30,6 @@ public class ConstantsMap {
 
     public static final double WRIST_SPEED_MULT = .5;
     public static final double SHOULDER_SPEED_MULT = .5;
+
+    public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 420; //ticks
 }
