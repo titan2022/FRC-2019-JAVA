@@ -35,9 +35,16 @@ public class FollowLineCommand extends Command {
     //stage three variables
     protected boolean stageThreeComplete;
 
+    ArrayList<Double> oSSPreviousAverages;
+    int numOfJumps; 
+    int[] jumpIndices; // these will be the index after the change
+    int[] jumpEncoderCount; // relative to the start of stage 2
+    long startTime;
+
     //stage four variables
     protected boolean stageFourComplete;
     protected boolean stageFourFristRun;
+
     protected double deltaAverage;
     protected double deltaDistance;
     protected double deltaHorizontalDistance;
@@ -51,15 +58,8 @@ public class FollowLineCommand extends Command {
 
     //stage six variables
     protected boolean stageSixComplete;
-    
-    //stuff for stage 2
-    ArrayList<Double> oSSPreviousAverages;
-    int numOfJumps; 
-    int[] jumpIndices; // these will be the index after the change
-    int[] jumpEncoderCount; // relative to the start of stage 2
-    long startTime;
 
-    //Stuff for one sensor stages 
+    //Other stuff that we need 
     AHRS gyro;
 
     
@@ -80,12 +80,7 @@ public class FollowLineCommand extends Command {
     }
 
     //this is to be called upon initialization and whenever the button is hit twice
-    protected void setupForRun(){
-
-        //visionStageComplete = false;
-        //oneSensorStageComplete = false;
-        //twoSensorStageComplete = false;
-
+    protected void setupForRun() { 
         //setup stage 1 variables
         stageOneComplete = false;
 
@@ -97,6 +92,12 @@ public class FollowLineCommand extends Command {
         //stage 3
         stageThreeComplete = false;
 
+        oSSPreviousAverages = new ArrayList<Double>();
+        numOfJumps = 0; 
+        jumpIndices = new int[]{0,0};
+        jumpEncoderCount = new int[]{0, 0};
+        startTime = System.nanoTime();
+
         //stage 4
         stageFourComplete = false;
         
@@ -104,13 +105,7 @@ public class FollowLineCommand extends Command {
         stageFiveComplete = false;
 
         //stage 6
-        stageSixComplete = false;
-    
-        oSSPreviousAverages = new ArrayList<Double>();
-        numOfJumps = 0; 
-        jumpIndices = new int[]{0,0};
-        jumpEncoderCount = new int[]{0, 0};
-        startTime = System.nanoTime();
+        stageSixComplete = false;    
     }
   
     // Called repeatedly when this Command is scheduled to run
@@ -134,14 +129,11 @@ public class FollowLineCommand extends Command {
             stageFive();
         } else if(!stageSixComplete) {
             stageSix();
-        } else {
-            //we are finished, idk what to do
-        }
-
+        } 
     }
 
     //vision stage, get us closer to the line
-    protected void stageOne(){
+    protected void stageOne() {
         System.out.println("stage 1");
         
         //TODO: use vision somehow....
@@ -160,7 +152,7 @@ public class FollowLineCommand extends Command {
 
         System.out.println("stage 2");
         //set target
-        if(leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0) {
+        if (leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0) {
             leftEncoderDistanceGoal = driveSubsystem.getLeftEncoderDistance() + 2;
             rightEncoderDistanceGoal = driveSubsystem.getRightEncoderDistance() + 2;
 
@@ -170,7 +162,7 @@ public class FollowLineCommand extends Command {
         driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
         driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
 
-        if((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getRightEncoderDistance() > rightEncoderDistanceGoal)) {
+        if ((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getRightEncoderDistance() > rightEncoderDistanceGoal)) {
             stageTwoComplete = true;
         }
     }
@@ -178,8 +170,8 @@ public class FollowLineCommand extends Command {
     //once we are over the line, then watch for the horizontal change
     protected void stageThree() {
         System.out.println("stage 3");
-        boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
-        boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
+        //boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
+        //boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
 
         // for(boolean b: isBackCameraOnStrip){
         //     if(b){ // jump to stage 6
@@ -213,7 +205,7 @@ public class FollowLineCommand extends Command {
             oSSPreviousAverages.add(frontAverage);
             int oSSSize = oSSPreviousAverages.size();
 
-            if(oSSSize > 1 && numOfJumps < 2){//just making sure we dont step outside oSSpreviousaverages
+            if(oSSSize > 1 && numOfJumps < 2) {//just making sure we dont step outside oSSpreviousaverages
                 if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
                     //now we have a step
 
@@ -232,15 +224,15 @@ public class FollowLineCommand extends Command {
     //once we get change and calculate the angle, then move forward to approximate the swing
     protected void stageFour() {
         System.out.println("stage 4");
-        if(stageFourFristRun){//do caluclation for angle
-            deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) *  ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+        if (stageFourFristRun) {//do caluclation for angle
+            deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
             deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
             deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
             
             angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
-            desiredAngle = gyro.getAngle() + angleToLine;
+            desiredAngle = gyro.getAngle() + angleToLine;//This "zeros" the angle 
 
-            swingDistance = Math.sin(angleToLine) * ConstantsMap.ROBOT_LENGTH/2;
+            swingDistance = Math.sin(angleToLine) * ConstantsMap.ROBOT_LENGTH/2;//Approximates distance the robot needs to move forward before turning to stay on line
 
             double previousEncoderValue = (driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2;
             encoderGoal = (previousEncoderValue + swingDistance);
@@ -252,21 +244,21 @@ public class FollowLineCommand extends Command {
         driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
         driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
 
-        if ((driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2 > encoderGoal) {
+        if ((driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2 > encoderGoal) {//Once we have moved enough to account for the turn
             driveSubsystem.setRightSpeed(0);
             driveSubsystem.setLeftSpeed(0);
-            stageTwoComplete = true;
+            stageFourComplete = true;
         }
     }
 
     //now turn the robot to the desired angle
     protected void stageFive() {
         System.out.println("stage 5");
-        if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE){
-            if(desiredAngle - gyro.getAngle() > 0){
+        if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE) {//Checks to see if our angle of approach is too great
+            if (desiredAngle - gyro.getAngle() > 0) {//These figure out which was to turn 
                 driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
                 driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
-            } else{
+            } else {
                 driveSubsystem.setLeftSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED * -1);
                 driveSubsystem.setRightSpeed((desiredAngle - gyro.getAngle())/20 * ConstantsMap.TURN_SPEED);
             }
@@ -294,7 +286,7 @@ public class FollowLineCommand extends Command {
     }
 
     // Called for manual interruption of command
-    protected void kill(){
+    protected void kill() {
         
     }
   
