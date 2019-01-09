@@ -137,12 +137,7 @@ public class FollowLineCommand extends Command {
         System.out.println("stage 1");
         
         //TODO: use vision somehow....
-        //i have no clue as of yet, this is a different problem for somebody else
-
-        //although, i will say that hopefully we can make so that even if we approach the wall at some terrible angle, then we can hopefully use vision
-        //and motion profiling in conjunction to make the robot sort of swing outward to approach from a more reasonable angle, because if we approach 
-        //from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it.
-        //any questions or ideas on how to do this better, talk to me(jake).
+        //i have no clue as of yet, this is a different problem for somebody else although, i will say that hopefully we can make so that even if we approach the wall at some terrible angle, then we can hopefully use vision and motion profiling in conjunction to make the robot sort of swing outward to approach from a more reasonable angle, because if we approach from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it. any questions or ideas on how to do this better, talk to me(jake).
         stageOneComplete = true;
     }
 
@@ -185,17 +180,10 @@ public class FollowLineCommand extends Command {
 
         //if(oSSPreviousAverages.size())
 
-        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be 
-        //done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we
-        //are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of
-        //the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back
-        //sensor hits, we can do the fine tuning. 
-        //
+        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back sensor hits, we can do the fine tuning. 
         //do we even have a gyro on this bot? hopefully? if not we can calulate it using the change in positoin of left and right wheels and calculate 
         //the angle, but that is so messy
-        //
         //i *try* to implement this below
-        //
         //any questions or ideas on how to do this better, talk to me(jake).
 
         //this gets the jumps in average
@@ -207,10 +195,10 @@ public class FollowLineCommand extends Command {
 
             if(oSSSize > 1 && numOfJumps < 2) {//just making sure we dont step outside oSSpreviousaverages
                 if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
-                    //now we have a step
+                    //now we have a step, so we can set our values
 
                     jumpIndices[numOfJumps] = oSSSize - 1;
-                    jumpEncoderCount[numOfJumps] = 0; //TODO: get encoder values here, maybe average left and right? // yes divide by 1 billion
+                    jumpEncoderCount[numOfJumps] = (driveSubsystem.getLeftEncoderCount() + driveSubsystem.getRightEncoderCount()) / 2; 
 
                     numOfJumps++;
                 }
