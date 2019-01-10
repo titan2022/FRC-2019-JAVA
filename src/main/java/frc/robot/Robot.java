@@ -12,10 +12,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SolenoidValveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
+import frc.robot.subsystems.SolenoidValveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,8 +33,11 @@ public class Robot extends TimedRobot {
   public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
+  public static SolenoidValveSubsystem solenoidValveSubsystem = new SolenoidValveSubsystem();
 
   Command autonomousCommand;
+  Command driveCommand;
+  Command solenoidValveCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
@@ -44,6 +50,9 @@ public class Robot extends TimedRobot {
     chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", chooser);
+
+    driveCommand = new DriveCommand();
+    solenoidValveCommand = new SolenoidValveCommand();
   }
 
   /**
@@ -117,6 +126,10 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    driveCommand.start();
+    solenoidValveCommand.start();
+
   }
 
   /**
