@@ -91,9 +91,9 @@ def getAngle(center):
 def getDistance(angle):
         return (target_bottom_height + (target_height/2) - camera_height) / math.tan((verticalangle + camera_angle) * math.pi / 180) ;
 def process(img):
-        rgb_threshold_red = [0.0, 45.40101835752104]
-        rgb_threshold_green = [200.0, 255.0]
-        rgb_threshold_blue = [0.0, 255.0]
+        rgb_threshold_red = [0.0, 68.0]
+        rgb_threshold_green = [92, 255.0]
+        rgb_threshold_blue = [0.0, 92]
 
 	
         
@@ -146,7 +146,7 @@ def process(img):
         for contour in contours:
             output.append(cv2.convexHull(contour))
         contours = output
-        cv2.drawContours(img, contours, -1, (255,255,0), 3)
+        #cv2.drawContours(img, contours, -1, (255,255,0), 3)
         ret = 1000
         cnt = None
         cnt2 = None
@@ -163,39 +163,47 @@ def process(img):
         
         for i in contours:
                 ret = cv2.matchShapes(rect,i,1,0.0)
-                if(ret < 100):
-                        if(ret < cntscore):
-                                cntscore = ret
-                                cnt = i
-                        elif(ret < cnt2score):
-                                cnt2score = ret
-                                cnt2 = i
+                if(ret < cntscore):
+                        if cnt is not None:
+                                cnt2score = cntscore
+                                cnt2 = cnt
+                        cntscore = ret
+                        cnt = i
+                elif(ret < cnt2score):
+                        cnt2score = ret
+                        cnt2 = i
                         
-                
+        
         if cnt is not None and cnt2 is not None:
                 
-                cv2.drawContours(img, [cnt], 0, (255,0,0), 3)
+                cv2.drawContours(img, [cnt], 0, (0,0,122), 3)
 
-                cv2.drawContours(img, [cnt2], 0, (255,0,0), 3)
+                cv2.drawContours(img, [cnt2], 0, (0,0,122), 3)
                 
                 x,y,w,h = cv2.boundingRect(cnt)
                 x2,y2,w2,h2 = cv2.boundingRect(cnt2)
                 if(x<x2):
-                        cv2.rectangle(img,(x,y),(x2+w2,y2+h2),(0,255,0),2)
-                        cx = x + (x2+w2-x)/2
-                        cy = y + (y2+h2-y)/2
+                        if(y<y2):
+                                
+                                cv2.rectangle(img,(x,y),(x2+w2,y2+h2),(0,255,0),2)
+                                cx = x + (x2+w2-x)/2
+                                cy = y + (y2+h2-y)/2
+                        else:
+                                cv2.rectangle(img,(x,y2),(x2+w2,y+h2),(0,255,0),2)
                                         
                 else:
                         cv2.rectangle(img,(x2,y2),(x+w,y+h),(0,255,0),2)
                         cx = x2 + (x+w-x2)/2
                         cy = y2 + (y+h-y2)/2 
-                        cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
-                        cv2.rectangle(img,(x2,y2),(x2+w2,y2+h2),(0,0,255),2)
+                cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
+                cv2.rectangle(img,(x2,y2),(x2+w2,y2+h2),(0,0,255),2)
                         #print(getAngle(cx))
 
         return img
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(1)
+cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+cap.set(cv2.CAP_PROP_EXPOSURE, -50)
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
