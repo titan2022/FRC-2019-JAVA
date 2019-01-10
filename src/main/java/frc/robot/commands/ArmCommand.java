@@ -37,6 +37,7 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
         double moveShoulderJoint = XboxMap.controlShoulderJoint();
         double moveWristJoint = XboxMap.controlWristJoint();
 
+        zeroPid.setSetpoint(pidCurrentSP());
         // TODO: restructure w/ tolerance equality
         if ((armSubsystem.getWristDistance() != 0 && moveShoulderJoint != 0 && moveWristJoint == 0) ||
             XboxMap.enableZeroPid()) {
@@ -78,5 +79,9 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
 
     public PIDSourceType getPIDSourceType() {
         return PIDSourceType.kDisplacement;
+    }
+
+    public double pidCurrentSP() {
+        return 90.00 - armSubsystem.getShoulderEncoderAngle(ConstantsMap.SHOULDER_GEAR_RATIO);
     }
 }

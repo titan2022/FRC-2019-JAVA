@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
 
 /**
@@ -47,6 +48,14 @@ public class ArmSubsystem extends Subsystem {
 
     public double getWristDistance() {
         return wristEncoder.getDistance();
+    }
+
+    public double getWristEncoderAngle() {
+        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360;
+    }
+
+    public double getShoulderEncoderAngle(double gearRatio) {
+        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360.00 * gearRatio;
     }
 
     @Override

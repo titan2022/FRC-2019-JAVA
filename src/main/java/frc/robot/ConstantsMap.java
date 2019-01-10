@@ -32,4 +32,6 @@ public class ConstantsMap {
     public static final double SHOULDER_SPEED_MULT = .5;
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 420; //ticks
+
+    public static final double SHOULDER_GEAR_RATIO = 420;
 }
