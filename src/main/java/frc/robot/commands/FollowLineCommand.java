@@ -281,24 +281,24 @@ public class FollowLineCommand extends Command {
         }
 
         if (firstRun) {
-            startEncoderAvg =  (driveSubsystem.getRightEncoderCount() + driveSubsystem.getLeftEncoderCount()) / 2;
+            startEncoderAvg =  (driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2;
             encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
 
             firstRun = false;
         }
 
         System.out.println("Sensor outputs: " + frontAverage);
-        System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderCount() +              driveSubsystem.getLeftEncoderCount()) / 2));
+        System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderDistance() +              driveSubsystem.getLeftEncoderDistance()) / 2));
 
         if (startEncoderAvg < encoderFinalGoal) {
             //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
             //TODO Figure out the indices of the sensor 
             if (frontAverage < 3.4) {//We are way to the left of the sensors, so we need to start turning (right) 
-                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
-            } else if (frontAverage > 3.6) { //Turn Left 
-                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+            } else if (frontAverage > 3.6) { //Turn Left 
+                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
             } else if (Math.abs(frontAverage - 3.5) < .1) {//We are within the tolerance, so we just move forward 
                 driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
