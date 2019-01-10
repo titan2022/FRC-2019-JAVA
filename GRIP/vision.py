@@ -4,12 +4,12 @@ import math
    
 centerx = 640
 centery = 360
-focal = 640
-camera_height = 30
-target_bottom_height=40
-target_height = 5
-target_width = 15
-camera_fov = 70
+camera_height = 31
+target_bottom_height=63
+target_height = 6
+target_width = 13
+camera_fov_x = 60
+camera_fov_y= 40
 
 def rgb_threshold(input, red, green, blue):
         """Segment an image based on color ranges.
@@ -86,10 +86,14 @@ def filter_contours(input_contours, min_area, min_perimeter, min_width, max_widt
 		output.append(contour)
 
 	return output
-def getAngle(center):
-        return math.atan(center/focal) * 180 / math.pi;
+def getAngleX(center):
+        center = center - 1280/2
+        return math.atan(2*center*math.tan((60 * math.pi / 180 )/2)/1280) * 180 / math.pi;
+def getAngleY(center):
+        center = center - 720/2
+        return math.atan(2*center*math.tan((camera_fov_y * math.pi / 180 )/2)/720) * 180 / math.pi * -1;
 def getDistance(angle):
-        return (target_bottom_height + (target_height/2) - camera_height) / math.tan((verticalangle + camera_angle) * math.pi / 180) ;
+        return (35 / math.tan(angle* math.pi / 180))
 def process(img):
         rgb_threshold_red = [0.0, 68.0]
         rgb_threshold_green = [92, 255.0]
@@ -188,8 +192,13 @@ def process(img):
                                 cv2.rectangle(img,(x,y),(x2+w2,y2+h2),(0,255,0),2)
                                 cx = x + (x2+w2-x)/2
                                 cy = y + (y2+h2-y)/2
+                                
                         else:
                                 cv2.rectangle(img,(x,y2),(x2+w2,y+h2),(0,255,0),2)
+                                cx = x + (x2+w2-x)/2
+                                cy = y + (y2+h2-y)/2
+
+                        
                                         
                 else:
                         cv2.rectangle(img,(x2,y2),(x+w,y+h),(0,255,0),2)
@@ -197,13 +206,20 @@ def process(img):
                         cy = y2 + (y+h-y2)/2 
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),2)
                 cv2.rectangle(img,(x2,y2),(x2+w2,y2+h2),(0,0,255),2)
-                        #print(getAngle(cx))
-
+                #print(getAngleX(cx))
+                y_angle = getAngleY(cy)
+                print(y_angle)
+                distance = getDistance(y_angle)
+                
+                print(distance)
         return img
 
 cap = cv2.VideoCapture(1)
 cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
 cap.set(cv2.CAP_PROP_EXPOSURE, -50)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
 while(True):
     # Capture frame-by-frame
     ret, frame = cap.read()
