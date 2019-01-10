@@ -12,14 +12,27 @@ public class XboxMap {
 	
 	//Drive commands
 	public boolean startAutoBrakerSystem(){
-		return oi.xbox.getRightBumperValue();
+		return oi.xbox.getStartValue();
 	}
 	
 //	public boolean controlDriverGear() {
 //		return oi.xbox.getLeftBumperValue();
 //	}
 //	
-	//Grabber commands 
+//	Solenoid  for prototyping
+	public boolean setRightValveForward(){
+		return oi.xbox.getXValue();
+	}
+	public boolean setLeftValveForward(){
+		return oi.xbox.getYValue();
+	}
+	public boolean setRightValveReverse(){
+		return oi.xbox.getAValue();
+	}
+	public boolean setLeftValveReverse(){
+		return oi.xbox.getBValue();
+	}
+//Grabber commands (no)
 //	public double controlUpperGrabberOut(){
 //		return oi.xbox.getRightTriggers();
 //	}
@@ -41,26 +54,26 @@ public class XboxMap {
 	public boolean stopSystem() {
 		return oi.xbox.getBackValue();
 	}
+	//shifted to Solenoid
+	// public boolean piston() {
+	// 	return oi.xbox.getLeftBumperValue();
+	// }
 	
-	public boolean piston() {
-		return oi.xbox.getLeftBumperValue();
-	}
+	// public boolean inTake() {
+	// 	return oi.xbox.getAValue();
+	// }
+	// public boolean override() {
+	// 	return oi.xbox.getXValue();
+	// }
 	
-	public boolean inTake() {
-		return oi.xbox.getAValue();
-	}
-	public boolean override() {
-		return oi.xbox.getXValue();
-	}
-	
-	public boolean outTake() {
-		return oi.xbox.getBValue();
-	}
+	// public boolean outTake() {
+	// 	return oi.xbox.getBValue();
+	// }
 	public boolean shiftLow() {
-		return oi.ps4.getBValue();
+		return oi.ps4.getLeftBumperValue();
 	}
 	public boolean shiftHigh() {
-		return oi.ps4.getAValue();
+		return oi.ps4.getRightBumperValue();
 	}
 	
 	

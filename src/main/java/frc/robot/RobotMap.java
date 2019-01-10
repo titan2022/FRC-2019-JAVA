@@ -24,4 +24,9 @@ public class RobotMap {
 
     public static final int RIGHT_ENCODER_PORT_A = 6;
     public static final int RIGHT_ENCODER_PORT_B = 7;
+
+    public static final int LEFT_SOLENOID_PORT_A = 4;
+    public static final int LEFT_SOLENOID_PORT_B = 5;
+    public static final int RIGHT_SOLENOID_PORT_A = 6;
+    public static final int RIGHT_SOLENOID_PORT_B = 7;
 }
