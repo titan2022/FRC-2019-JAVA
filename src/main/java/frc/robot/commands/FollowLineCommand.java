@@ -59,6 +59,11 @@ public class FollowLineCommand extends Command {
     //stage six variables
     protected boolean stageSixComplete;
 
+    //Maybe this will work variables 
+    protected double startEncoderAvg;
+    protected double encoderFinalGoal;
+
+    protected boolean firstRun;
     //Other stuff that we need 
     AHRS gyro;
 
@@ -106,7 +111,10 @@ public class FollowLineCommand extends Command {
         stageFiveComplete = false;
 
         //stage 6
-        stageSixComplete = false;    
+        stageSixComplete = false;   
+        
+        //maybe 
+        firstRun = true;
     }
   
     // Called repeatedly when this Command is scheduled to run
@@ -268,17 +276,33 @@ public class FollowLineCommand extends Command {
         //Triggers when we have a camera on the sensor
         double frontAverage = followLineSubsystem.getLineAverage(1);
 
-        //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
-        //TODO Figure out the indices of the sensor 
-        if (frontAverage < 3) {//We are way to the left of the sensors, so we need to start turning (right) 
-            driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
-            driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
-        } else if (frontAverage > 4) { //Turn Left 
-            driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
-            driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
-        } else if (Math.abs(frontAverage - 3.5) < .5) {//We are within the tolerance, so we just move forward 
-            driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
-            driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+        if (frontAverage == 0) {
+            return;//Kills it because the sensor is either not working or off of the tape 
+        }
+
+        if (firstRun) {
+            startEncoderAvg =  (driveSubsystem.getRightEncoderCount() + driveSubsystem.getLeftEncoderCount()) / 2;
+            encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
+
+            firstRun = false;
+        }
+
+        System.out.println("Sensor outputs: " + frontAverage);
+        System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderCount() +              driveSubsystem.getLeftEncoderCount()) / 2));
+
+        if (startEncoderAvg < encoderFinalGoal) {
+            //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
+            //TODO Figure out the indices of the sensor 
+            if (frontAverage < 3) {//We are way to the left of the sensors, so we need to start turning (right) 
+                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+            } else if (frontAverage > 4) { //Turn Left 
+                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
+            } else if (Math.abs(frontAverage - 3.5) < .5) {//We are within the tolerance, so we just move forward 
+                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+            }
         }
     }
   
