@@ -40,6 +40,17 @@ public class FollowLineSubsystem extends Subsystem{
         }
         return Arrays.toString(data);
     }
+
+    public int[] getRawData(){
+        byte[] fromSensor = new byte[16];
+        i2c.readOnly(fromSensor,16);
+        int[] data = new int[8];
+        for(int i= 0;i<8;i++){
+            data[i] = fromSensor[2*i] & 0xFF;
+        }
+        return data;
+    }
+
     //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
     public boolean[] getLineData(int strip) {
         boolean[] sensors = new boolean[8];

@@ -78,7 +78,7 @@ public class DriveSubsystem extends Subsystem {
 	//sets the speed for both of the right motors
 	public void setRightSpeed (double speed) {
 		right1.set(speed);
-		right2.set(speed);		
+		right2.set(speed);	
 	}
 	
 	public double getLeftSpeed() {		

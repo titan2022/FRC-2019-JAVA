@@ -14,6 +14,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -35,10 +36,11 @@ public class FollowLineCommand extends Command {
     //stage three variables
     protected boolean stageThreeComplete;
 
+    boolean[] previousValues;
     ArrayList<Double> oSSPreviousAverages;
     int numOfJumps; 
     int[] jumpIndices; // these will be the index after the change
-    int[] jumpEncoderCount; // relative to the start of stage 2
+    double[] jumpEncoderDistance; // relative to the start of stage 2
     long startTime;
 
     //stage four variables
@@ -96,11 +98,13 @@ public class FollowLineCommand extends Command {
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
         jumpIndices = new int[]{0,0};
-        jumpEncoderCount = new int[]{0, 0};
+        jumpEncoderDistance = new double[]{0.0, 0.0};
         startTime = System.nanoTime();
+        previousValues = new boolean[]{false, false, false, false, false, false, false, false};
 
         //stage 4
         stageFourComplete = false;
+        stageFourFristRun = true;
         
         //stage 5
         stageFiveComplete = false;
@@ -166,7 +170,20 @@ public class FollowLineCommand extends Command {
     //once we are over the line, then watch for the horizontal change
     protected void stageThree() {
         System.out.println("stage 3");
-        //boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
+        boolean[] isFrontCameraOnStrip = new boolean[8];
+        
+        int[] frontCameraValues = followLineSubsystem.getRawData();
+
+        for(int i = 0; i < 8; i++){
+            if(frontCameraValues[i] < ConstantsMap.LOW_CUTOFF){
+                isFrontCameraOnStrip[i] = false;
+            } else if(frontCameraValues[i] > ConstantsMap.HIGH_CUTOFF){
+                isFrontCameraOnStrip[i] = true;
+            } else{
+                isFrontCameraOnStrip[i] = previousValues[i];
+            }
+        }
+
         //boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
 
         // for(boolean b: isBackCameraOnStrip){
@@ -187,6 +204,9 @@ public class FollowLineCommand extends Command {
         //i *try* to implement this below
         //any questions or ideas on how to do this better, talk to me(jake).
 
+        System.out.println(Arrays.toString(isFrontCameraOnStrip));
+        System.out.println(followLineSubsystem.getData());
+
         //this gets the jumps in average
         if(numOfJumps < 2) {
             double frontAverage = followLineSubsystem.getLineAverage(1);
@@ -194,13 +214,14 @@ public class FollowLineCommand extends Command {
             int oSSSize = oSSPreviousAverages.size();
 
             if(oSSSize > 1 && numOfJumps < 2) {//just making sure we dont step outside oSSpreviousaverages
-                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize - 2)) > 0.1){
+                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize - 2)) > 0.25){
                     //now we have a step, so we can set our values
 
                     jumpIndices[numOfJumps] = oSSSize - 1;
-                    jumpEncoderCount[numOfJumps] = (driveSubsystem.getLeftEncoderCount() + driveSubsystem.getRightEncoderCount()) / 2; 
+                    jumpEncoderDistance[numOfJumps] = (driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance()) / 2; 
                     
-                    System.out.println("" + numOfJumps + ", " + jumpIndices[numOfJumps] + ", " + jumpEncoderCount[numOfJumps]);
+                    
+                    System.out.println("" + numOfJumps + ", " + jumpIndices[numOfJumps] + ", " + jumpEncoderDistance[numOfJumps]);
 
                     numOfJumps++;
                 }
@@ -209,34 +230,46 @@ public class FollowLineCommand extends Command {
         } else {
             stageThreeComplete = true;
         }
+
+        previousValues = isFrontCameraOnStrip;
     }
 
     //once we get change and calculate the angle, then move forward to approximate the swing
     protected void stageFour() {
         System.out.println("stage 4");
         if (stageFourFristRun) {//do caluclation for angle
-            deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+            deltaDistance = jumpEncoderDistance[1] - jumpEncoderDistance[0];
             deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
             deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
             
-            angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
-            desiredAngle = gyro.getAngle() + angleToLine;//This "zeros" the angle 
+            angleToLine = Math.toDegrees(Math.acos(deltaHorizontalDistance/deltaDistance));
+            desiredAngle = (gyro.getAngle() + angleToLine);//This "zeros" the angle 
 
-            swingDistance = Math.sin(angleToLine) * ConstantsMap.ROBOT_LENGTH/2;//Approximates distance the robot needs to move forward before turning to stay on line
+            swingDistance = Math.sin(Math.toRadians(angleToLine)) * ConstantsMap.ROBOT_LENGTH/2;//Approximates distance the robot needs to move forward before turning to stay on line
 
             double previousEncoderValue = (driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2;
             encoderGoal = (previousEncoderValue + swingDistance);
 
             stageFourFristRun = false;
+
+            System.out.println("deltaDistance:" + deltaDistance);
+            System.out.println("deltaAverage:" + deltaAverage);
+            System.out.println("deltaHorizontalDistance:" + deltaHorizontalDistance);
+            System.out.println("angleToline:" + angleToLine);
+            System.out.println("currentAngle:" + gyro.getAngle());
+            System.out.println("desiredAngle:" + desiredAngle);
+            System.out.println("swingDistance:" + swingDistance);
+            System.out.println("previousEncoderValue:" + previousEncoderValue);
+            System.out.println("encoderGoal:" + encoderGoal);
         }
+
+        stageFourComplete = true;
 
         //move forward to make up swing
         driveSubsystem.setRightSpeed(ConstantsMap.STAGE_TWO_SPEED);
         driveSubsystem.setLeftSpeed(ConstantsMap.STAGE_TWO_SPEED);
 
         if ((driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2 > encoderGoal) {//Once we have moved enough to account for the turn
-            driveSubsystem.setRightSpeed(0);
-            driveSubsystem.setLeftSpeed(0);
             stageFourComplete = true;
         }
     }
@@ -245,15 +278,22 @@ public class FollowLineCommand extends Command {
     protected void stageFive() {
         System.out.println("stage 5");
         if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE) {//Checks to see if our angle of approach is too great
-            if (desiredAngle - gyro.getAngle() > 0) {//These figure out which was to turn 
-                driveSubsystem.setLeftSpeed((ConstantsMap.TURN_SPEED));
-                driveSubsystem.setRightSpeed((ConstantsMap.TURN_SPEED * -1));
+            if (gyro.getAngle() - desiredAngle > 0) {//These figure out which was to turn 
+                //turn left
+                System.out.println("turnLeft");
+                driveSubsystem.setLeftSpeed(ConstantsMap.TURN_SPEED * -1);
+                driveSubsystem.setRightSpeed(ConstantsMap.TURN_SPEED * 1);
             } else {
-                driveSubsystem.setLeftSpeed(( ConstantsMap.TURN_SPEED * -1));
-                driveSubsystem.setRightSpeed( ConstantsMap.TURN_SPEED);
+                //turn right
+                System.out.println("turnRight");
+                driveSubsystem.setLeftSpeed(ConstantsMap.TURN_SPEED * 1);
+                driveSubsystem.setRightSpeed(ConstantsMap.TURN_SPEED * -1);
             }
         } else {
             stageFiveComplete = true;
+            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.setLeftSpeed(0);
+            System.out.println("fuck");
         }
     }
 
