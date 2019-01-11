@@ -1,7 +1,19 @@
 import cv2 as cv2
 import numpy as np
 import math
-   
+from networktables import NetworkTables
+
+# To see messages from networktables, you must setup logging
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+ip = 10.20.22.2
+# As a client to connect to a robot
+NetworkTables.initialize(ip) 
+
+sd = NetworkTables.getTable('SmartDashboard')
+
 centerx = 640
 centery = 360
 camera_height = 31
@@ -209,8 +221,9 @@ def process(img):
                 #print(getAngleX(cx))
                 y_angle = getAngleY(cy)
                 print(y_angle)
+                sd.putNumber("y_angle", y_angle)
                 distance = getDistance(y_angle)
-                
+                sd.putNumber("distance", distance)
                 print(distance)
         return img
 
