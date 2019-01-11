@@ -28,6 +28,7 @@ public class FollowLineCommand extends Command {
     //stage one variables (Vision Stage)
     protected boolean stageOneComplete;
 
+    /*
     //stage two variables
     protected boolean stageTwoComplete;
     double leftEncoderDistanceGoal;
@@ -59,6 +60,10 @@ public class FollowLineCommand extends Command {
 
     //stage six variables
     protected boolean stageSixComplete;
+    */
+
+    //Checks to see if we are running rn 
+    protected boolean runningFLC;
 
     //Maybe this will work variables 
     protected double startEncoderAvg;
@@ -88,9 +93,12 @@ public class FollowLineCommand extends Command {
 
     //this is to be called upon initialization and whenever the button is hit twice
     protected void setupForRun() { 
+        //turns on runningFLC 
+        runningFLC = true;
+        
         //setup stage 1 variables
         stageOneComplete = false;
-
+        /*
         //stage 2
         stageTwoComplete = false;
         leftEncoderDistanceGoal = 0;
@@ -112,7 +120,8 @@ public class FollowLineCommand extends Command {
         stageFiveComplete = false;
 
         //stage 6
-        stageSixComplete = false;   
+        stageSixComplete = false; 
+        */  
         
         //maybe 
         firstRun = true;
@@ -140,7 +149,7 @@ public class FollowLineCommand extends Command {
         // } else if(!stageSixComplete) {
         //     stageSix();
         // } 
-
+        
         maybeThisWillWorkButIDRK();
     }
 
@@ -153,6 +162,7 @@ public class FollowLineCommand extends Command {
         stageOneComplete = true;
     }
 
+    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
     //once we hit the line, make sure we go forward 2 inches
     protected void stageTwo() {
         //stageTwoComplete = true;
@@ -276,6 +286,7 @@ public class FollowLineCommand extends Command {
         System.out.println("stage 6");
         stageSixComplete = true;
     }
+    */
 
     //New method relying only on the sensors (a bit simpler than doing the calculations)
     protected void maybeThisWillWorkButIDRK() {
@@ -289,7 +300,7 @@ public class FollowLineCommand extends Command {
             return;//Kills it because the sensor is either not working or off of the tape 
         }
 
-        if (firstRun) {
+        if (firstRun) {//this sets up the first few values we need 
             startEncoderAvg =  (driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2;
             encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
 
@@ -342,6 +353,8 @@ public class FollowLineCommand extends Command {
         } else {
             driveSubsystem.setLeftSpeed(0);
             driveSubsystem.setRightSpeed(0);
+
+            runningFLC = false;//We have completed the process 
             return;
         }
     }
@@ -349,7 +362,7 @@ public class FollowLineCommand extends Command {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return stageSixComplete;
+        return !runningFLC;
     }
   
     // Called once after isFinished returns true
@@ -360,12 +373,7 @@ public class FollowLineCommand extends Command {
 
     // Called for manual interruption of command
     protected void kill() {
-        stageOneComplete = true;
-        stageTwoComplete = true;
-        stageThreeComplete = true; 
-        stageFourComplete = true;
-        stageFiveComplete = true;
-        stageSixComplete = true;
+        runningFLC = false;
 
         System.out.println("FollowLineCommand kill");
     }
