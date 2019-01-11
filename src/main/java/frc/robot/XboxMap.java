@@ -42,18 +42,7 @@ public class XboxMap {
 //	}
 
 	//Elevator commands
-	public double controlFrontElevator(){
-		return oi.xbox.getRightY();
-	}
 	
-	public boolean startAutoElevatorBrakerSystem() {
-		return oi.xbox.getStartValue();
-	}
-
-	//Universal stop command
-	public boolean stopSystem() {
-		return oi.xbox.getBackValue();
-	}
 	//shifted to Solenoid
 	// public boolean piston() {
 	// 	return oi.xbox.getLeftBumperValue();
@@ -69,27 +58,14 @@ public class XboxMap {
 	// public boolean outTake() {
 	// 	return oi.xbox.getBValue();
 	// }
-	public boolean shiftLow() {
-		return oi.ps4.getLeftBumperValue();
-	}
-	public boolean shiftHigh() {
-		return oi.ps4.getRightBumperValue();
-	}
-	
-	
-	public double actuate() {
-		return oi.xbox.getLeftY();
-	}
 	
 	public double right() {
-		return oi.ps4.getRightY();
+		return oi.xbox.getRightY();
 	}
 	
 	public double left() {
-		return oi.ps4.getLeftY();
+		return oi.xbox.getLeftY();
 	}
 
-	public boolean interruptFollowLine() {
-		return false;
-	}
+	
 }

@@ -17,13 +17,13 @@ import frc.robot.ConstantsMap;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SolenoidValveCommand extends Command {
-    SolenoidValveSubsystem solenoidValveSubsystem = new SolenoidValveSubsystem();
+    SolenoidValveSubsystem solenoidValveSubsystem = Robot.solenoidValveSubsystem;
     XboxMap xboxMap = new XboxMap();
 	OI oi = Robot.oi;
     public SolenoidValveCommand() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-        requires(Robot.solenoidValveSubsystem);
+        requires(solenoidValveSubsystem);
     }
 
     // Called just before this Command runs the first time
