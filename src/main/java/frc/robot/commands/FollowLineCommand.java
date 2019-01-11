@@ -16,6 +16,7 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.sun.org.apache.bcel.internal.Const;
 
 /**
  * Add your docs here.
@@ -66,6 +67,9 @@ public class FollowLineCommand extends Command {
     protected boolean firstRun;
     //Other stuff that we need 
     AHRS gyro;
+
+    //moar variables
+    private boolean overCompensate = false;
 
     protected double estimatedDistanceToWall;
 
@@ -278,7 +282,7 @@ public class FollowLineCommand extends Command {
         //Triggers when we have a camera on the sensor
         double frontAverage = followLineSubsystem.getLineAverage(1);
 
-        if (frontAverage == 0) {
+        if (frontAverage == 0 || frontAverage == Float.NaN) {
             driveSubsystem.setRightSpeed(0);
             driveSubsystem.setLeftSpeed(0);
             System.out.println("killededed");
@@ -297,23 +301,48 @@ public class FollowLineCommand extends Command {
 
         if (((driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2) < encoderFinalGoal) {
             //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
-            //TODO Figure out the indices of the sensor 
-            if (frontAverage < 3.4) {//We are way to the left of the sensors, so we need to start turning (right) 
-                System.out.println("Heave left!");
+
+            if (frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) {//We are way to the left of the sensors, so we need to start turning (right) 
+                System.out.println("we should compensate left!");
+
+                overCompensate = true;
+
                 driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
-            } else if (frontAverage > 3.6) { //Turn Left 
-                System.out.println("Heave Right!");
+            } else if (frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) { //Turn Left
+                System.out.println("we should compensate right!");
+
+                overCompensate = true;
+
                 driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
-            } else if (Math.abs(frontAverage - 3.5) <= .1) {//We are within the tolerance, so we just move forward 
-                System.out.println("Land ho!");
+            } else if (Math.abs(ConstantsMap.SENSOR_AVERAGE_CENTER - frontAverage) <= ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW) {//We are within the tolerance, so we just move forward 
+                System.out.println("we have fixed it, so no more overcompensating!");
+               
+                overCompensate = false;
+                
                 driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+            } else if(frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate) {
+                System.out.println("compensating left!");
+
+                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+            }
+            else if(frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate){
+                System.out.println("compensating right!");
+
+                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
             }
         } else {
             driveSubsystem.setLeftSpeed(0);
             driveSubsystem.setRightSpeed(0);
+            return;
         }
     }
   
