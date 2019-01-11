@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.RobotMap;
 /**
@@ -17,10 +18,22 @@ import frc.robot.RobotMap;
 public class SolenoidValveSubsystem extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
+    private Solenoid in,out;
     private DoubleSolenoid left, right;
     public SolenoidValveSubsystem(){
-        left = new DoubleSolenoid(RobotMap.LEFT_SOLENOID_PORT_A,RobotMap.LEFT_SOLENOID_PORT_B);
-        right = new DoubleSolenoid(RobotMap.RIGHT_SOLENOID_PORT_A,RobotMap.RIGHT_SOLENOID_PORT_B);
+        //left = new DoubleSolenoid(RobotMap.LEFT_SOLENOID_PORT_A,RobotMap.LEFT_SOLENOID_PORT_B);
+        in = new Solenoid(6);
+        out = new Solenoid(7);       
+        //right = newDoubleSolenoid(RobotMap.RIGHT_SOLENOID_PORT_A,RobotMap.RIGHT_SOLENOID_PORT_B);
+    }
+    public void in() {
+    	in.set(true);
+        out.set(false);
+    }
+    public void out() {
+    	in.set(false);
+    	out.set(true);
+    	
     }
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.

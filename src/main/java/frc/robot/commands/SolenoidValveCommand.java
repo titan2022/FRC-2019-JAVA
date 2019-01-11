@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SolenoidValveCommand extends Command {
     SolenoidValveSubsystem solenoidValveSubsystem = Robot.solenoidValveSubsystem;
     XboxMap xboxMap = new XboxMap();
-	OI oi = Robot.oi;
+    OI oi = Robot.oi;
+    private boolean in = false;
+    private double lastPressed = 0;
     public SolenoidValveCommand() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -30,27 +32,24 @@ public class SolenoidValveCommand extends Command {
     @Override
     protected void initialize() {
         System.out.println("Solenoid init");
-        solenoidValveSubsystem.setLeftOff();
-        solenoidValveSubsystem.setRightOff();
+        //solenoidValveSubsystem.setLeftOff();
+       // solenoidValveSubsystem.setRightOff();
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        if(xboxMap.setLeftValveForward()){
-            solenoidValveSubsystem.setLeftForward();
-        } else if (xboxMap.setLeftValveReverse()) {
-            solenoidValveSubsystem.setLeftReverse();
-        } else {
-            solenoidValveSubsystem.setLeftOff();
-        }
-        if(xboxMap.setRightValveForward()){
-            solenoidValveSubsystem.setRightForward();
-        } else if(xboxMap.setRightValveReverse()){
-            solenoidValveSubsystem.setRightReverse();
-        } else{
-            solenoidValveSubsystem.setRightOff();
-        }
+        if(xboxMap.in() && (System.currentTimeMillis() - lastPressed) > 500) {
+    		lastPressed = System.currentTimeMillis();
+    		if(in) {
+    			solenoidValveSubsystem.in();
+    			in = !in;
+    		}
+    		else {
+    			solenoidValveSubsystem.out();
+    			in = !in;
+    		}
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

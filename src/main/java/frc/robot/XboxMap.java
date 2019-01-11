@@ -20,18 +20,10 @@ public class XboxMap {
 //	}
 //	
 //	Solenoid  for prototyping
-	public boolean setRightValveForward(){
+	public boolean in(){
 		return oi.xbox.getXValue();
 	}
-	public boolean setLeftValveForward(){
-		return oi.xbox.getYValue();
-	}
-	public boolean setRightValveReverse(){
-		return oi.xbox.getAValue();
-	}
-	public boolean setLeftValveReverse(){
-		return oi.xbox.getBValue();
-	}
+	
 //Grabber commands (no)
 //	public double controlUpperGrabberOut(){
 //		return oi.xbox.getRightTriggers();

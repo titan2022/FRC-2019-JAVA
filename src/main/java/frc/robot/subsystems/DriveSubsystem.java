@@ -47,8 +47,8 @@ public class DriveSubsystem extends Subsystem {
 		left1.setInverted(false);
 		left2.setInverted(false);
 		//left3.setInverted(false);
-		right1.setInverted(false);
-		right2.setInverted(false);
+		right1.setInverted(true);
+		right2.setInverted(true);
 		//right3.setInverted(false);
 
 		//Instantiate Encoders
@@ -89,6 +89,7 @@ public class DriveSubsystem extends Subsystem {
    
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
+
 		left1.set(speed);
 		left2.set(speed);
 	}	
