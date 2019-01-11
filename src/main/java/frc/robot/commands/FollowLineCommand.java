@@ -67,9 +67,6 @@ public class FollowLineCommand extends Command {
     //Other stuff that we need 
     AHRS gyro;
 
-    
-
-
     protected double estimatedDistanceToWall;
 
     public FollowLineCommand() {
@@ -126,19 +123,21 @@ public class FollowLineCommand extends Command {
             setupForRun();//reset for next run
             somehow mark that we are done, maybe interrrupt?
         }else{*/
-        if(!stageOneComplete) {
-            stageOne();
-        } else if(!stageTwoComplete) {
-            stageTwo();
-        } else if(!stageThreeComplete) {
-            stageThree();
-        } else if(!stageFourComplete) {
-            stageFour();
-        } else if(!stageFiveComplete) {
-            stageFive();
-        } else if(!stageSixComplete) {
-            stageSix();
-        } 
+        // if(!stageOneComplete) {
+        //     stageOne();
+        // } else if(!stageTwoComplete) {
+        //     stageTwo();
+        // } else if(!stageThreeComplete) {
+        //     stageThree();
+        // } else if(!stageFourComplete) {
+        //     stageFour();
+        // } else if(!stageFiveComplete) {
+        //     stageFive();
+        // } else if(!stageSixComplete) {
+        //     stageSix();
+        // } 
+
+        maybeThisWillWorkButIDRK();
     }
 
     //vision stage, get us closer to the line
@@ -251,6 +250,9 @@ public class FollowLineCommand extends Command {
 
     //now turn the robot to the desired angle
     protected void stageFive() {
+
+
+
         System.out.println("stage 5");
         if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE) {//Checks to see if our angle of approach is too great
             if (desiredAngle - gyro.getAngle() > 0) {//These figure out which was to turn 
@@ -277,6 +279,9 @@ public class FollowLineCommand extends Command {
         double frontAverage = followLineSubsystem.getLineAverage(1);
 
         if (frontAverage == 0) {
+            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.setLeftSpeed(0);
+            System.out.println("killededed");
             return;//Kills it because the sensor is either not working or off of the tape 
         }
 
@@ -290,19 +295,25 @@ public class FollowLineCommand extends Command {
         System.out.println("Sensor outputs: " + frontAverage);
         System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderDistance() +              driveSubsystem.getLeftEncoderDistance()) / 2));
 
-        if (startEncoderAvg < encoderFinalGoal) {
+        if (((driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2) < encoderFinalGoal) {
             //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
             //TODO Figure out the indices of the sensor 
             if (frontAverage < 3.4) {//We are way to the left of the sensors, so we need to start turning (right) 
+                System.out.println("Heave left!");
                 driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
             } else if (frontAverage > 3.6) { //Turn Left 
-                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+                System.out.println("Heave Right!");
+                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
-            } else if (Math.abs(frontAverage - 3.5) < .1) {//We are within the tolerance, so we just move forward 
+            } else if (Math.abs(frontAverage - 3.5) <= .1) {//We are within the tolerance, so we just move forward 
+                System.out.println("Land ho!");
                 driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
                 driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
             }
+        } else {
+            driveSubsystem.setLeftSpeed(0);
+            driveSubsystem.setRightSpeed(0);
         }
     }
   
