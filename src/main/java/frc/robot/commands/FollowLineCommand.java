@@ -15,6 +15,9 @@ import frc.robot.subsystems.FollowLineSubsystem;
 import java.lang.Math;
 import java.util.ArrayList;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.sun.org.apache.bcel.internal.Const;
+
 /**
  * Add your docs here.
  */
@@ -22,17 +25,56 @@ public class FollowLineCommand extends Command {
     FollowLineSubsystem followLineSubsystem = Robot.followLineSubsystem;
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
 
-    protected boolean visionStageComplete;
-    protected boolean oneSensorStageComplete;
-    protected boolean twoSensorStageComplete;
+    //stage one variables (Vision Stage)
+    protected boolean stageOneComplete;
 
-    //stuff for stage 2
+    /*
+    //stage two variables
+    protected boolean stageTwoComplete;
+    double leftEncoderDistanceGoal;
+    double rightEncoderDistanceGoal;
+
+    //stage three variables
+    protected boolean stageThreeComplete;
+
     ArrayList<Double> oSSPreviousAverages;
     int numOfJumps; 
     int[] jumpIndices; // these will be the index after the change
-    double[] jumpTimes; // relative to the start of stage 2
+    int[] jumpEncoderCount; // relative to the start of stage 2
     long startTime;
 
+    //stage four variables
+    protected boolean stageFourComplete;
+    protected boolean stageFourFristRun;
+
+    protected double deltaAverage;
+    protected double deltaDistance;
+    protected double deltaHorizontalDistance;
+    protected double angleToLine;
+    protected double desiredAngle;
+    protected double swingDistance;
+    protected double encoderGoal;
+
+    //stage five variables
+    protected boolean stageFiveComplete;
+
+    //stage six variables
+    protected boolean stageSixComplete;
+    */
+
+    //Checks to see if we are running rn 
+    protected boolean runningFLC;
+
+    //Maybe this will work variables 
+    protected double startEncoderAvg;
+    protected double encoderFinalGoal;
+
+    protected boolean firstRun;
+    //Other stuff that we need 
+    AHRS gyro;
+
+    //moar variables
+    private boolean overCompensate = false;
 
     protected double estimatedDistanceToWall;
 
@@ -45,148 +87,282 @@ public class FollowLineCommand extends Command {
     @Override
     protected void initialize() {
         System.out.println("FollowLineCommand init");
+        gyro = driveSubsystem.getGyro();
         setupForRun();
     }
 
     //this is to be called upon initialization and whenever the button is hit twice
-    protected void setupForRun(){
+    protected void setupForRun() { 
+        //turns on runningFLC 
+        runningFLC = true;
+        
+        //setup stage 1 variables
+        stageOneComplete = false;
+        /*
+        //stage 2
+        stageTwoComplete = false;
+        leftEncoderDistanceGoal = 0;
+        rightEncoderDistanceGoal = 0;
 
-        visionStageComplete = false;
-        oneSensorStageComplete = false;
-        twoSensorStageComplete = false;
-    
+        //stage 3
+        stageThreeComplete = false;
+
         oSSPreviousAverages = new ArrayList<Double>();
         numOfJumps = 0; 
         jumpIndices = new int[]{0,0};
-        jumpTimes = new double[]{0.0d, 0.0d};
+        jumpEncoderCount = new int[]{0, 0};
         startTime = System.nanoTime();
+
+        //stage 4
+        stageFourComplete = false;
+        
+        //stage 5
+        stageFiveComplete = false;
+
+        //stage 6
+        stageSixComplete = false; 
+        */  
+        
+        //maybe 
+        firstRun = true;
     }
   
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        System.out.println("FollowLineCommand execute");
+        
 
-        if(!visionStageComplete){
-            visionStage();
-        } else if(!oneSensorStageComplete){
-            oneSensorStage();
-        } else if(!twoSensorStageComplete){
-            twoSensorStage();
-        } else{
-            //we are finished, idk what to do
-        }
-
+        /*if(limit switch hit){
+            setupForRun();//reset for next run
+            somehow mark that we are done, maybe interrrupt?
+        }else{*/
+        // if(!stageOneComplete) {
+        //     stageOne();
+        // } else if(!stageTwoComplete) {
+        //     stageTwo();
+        // } else if(!stageThreeComplete) {
+        //     stageThree();
+        // } else if(!stageFourComplete) {
+        //     stageFour();
+        // } else if(!stageFiveComplete) {
+        //     stageFive();
+        // } else if(!stageSixComplete) {
+        //     stageSix();
+        // } 
+        
+        maybeThisWillWorkButIDRK();
     }
 
-    // Called by execute to approach the tape using vision
-    protected void visionStage () {
-
+    //vision stage, get us closer to the line
+    protected void stageOne() {
+        System.out.println("stage 1");
+        
         //TODO: use vision somehow....
-        //i have no clue as of yet, this is a different problem for somebody else
-
-        //although, i will say that hopefully we can make so that even if we approach the wall at some terrible angle, then we can hopefully use vision
-        //and motion profiling in conjunction to make the robot sort of swing outward to approach from a more reasonable angle, because if we approach 
-        //from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it.
-        //any questions or ideas on how to do this better, talk to me(jake).
-        visionStageComplete = true;
+        //i have no clue as of yet, this is a different problem for somebody else although, i will say that hopefully we can make so that even if we approach the wall at some terrible angle, then we can hopefully use vision and motion profiling in conjunction to make the robot sort of swing outward to approach from a more reasonable angle, because if we approach from an angle of incedence to the wall of less than say 25 degrees, steps 2 and three WILL fail to fix it. any questions or ideas on how to do this better, talk to me(jake).
+        stageOneComplete = true;
     }
-    
-    // Called by execute to line up when only 1 sensor has seen tape
-    protected void oneSensorStage () {
-        boolean[] isFrontCameraOnStrip = followLineSubsystem.getCameraData(1); 
-        boolean[] isBackCameraOnStrip = followLineSubsystem.getCameraData(2);
 
-        for(boolean b: isBackCameraOnStrip){
-            if(b){
-                oneSensorStageComplete = true;
-                return;
-            }
+    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
+    //once we hit the line, make sure we go forward 2 inches
+    protected void stageTwo() {
+        //stageTwoComplete = true;
+
+        System.out.println("stage 2");
+        //set target
+        if (leftEncoderDistanceGoal == 0 && rightEncoderDistanceGoal == 0) {
+            leftEncoderDistanceGoal = driveSubsystem.getLeftEncoderDistance() + 2;
+            rightEncoderDistanceGoal = driveSubsystem.getRightEncoderDistance() + 2;
+
+            driveSubsystem.enableBrake();
         }
+
+        driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+        driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+
+        if ((driveSubsystem.getLeftEncoderDistance() > leftEncoderDistanceGoal)||(driveSubsystem.getRightEncoderDistance() > rightEncoderDistanceGoal)) {
+            stageTwoComplete = true;
+        }
+    }
+
+    //once we are over the line, then watch for the horizontal change
+    protected void stageThree() {
+        System.out.println("stage 3");
+        //boolean[] isFrontCameraOnStrip = followLineSubsystem.getLineData(1); 
+        //boolean[] isBackCameraOnStrip = followLineSubsystem.getLineData(2);
+
+        // for(boolean b: isBackCameraOnStrip){
+        //     if(b){ // jump to stage 6
+        //         stageTwoComplete = true;
+        //         stageThreeComplete = true;
+        //         stageFourComplete = true;
+        //         stageFiveComplete = true;
+        //         return;
+        //     }
+        // }
 
         //if(oSSPreviousAverages.size())
 
-        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be 
-        //done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we
-        //are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of
-        //the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back
-        //sensor hits, we can do the fine tuning. 
-        //
+        //okay so here is my idea, we should use the arraylist of previous whatever to determine the trend of where we are going(this is to be done by mesasuing the time between jumps, as the number is a step function). once we see a change,we can then calculate the angle off that we are, then use the gyro to get our current angle and then calculate the new angle. Once we have our desired angle, we adjust for the swing of the front of the robot about its center iwth forward movement and only then do we we orient ourselves to the desired angle. Then once the back sensor hits, we can do the fine tuning. 
         //do we even have a gyro on this bot? hopefully? if not we can calulate it using the change in positoin of left and right wheels and calculate 
         //the angle, but that is so messy
-        //
         //i *try* to implement this below
-        //
         //any questions or ideas on how to do this better, talk to me(jake).
 
         //this gets the jumps in average
-        if(numOfJumps < 2)
-        {
-            double frontAverage = followLineSubsystem.getCameraAverage(1);
+        if(numOfJumps < 2) {
+            double frontAverage = followLineSubsystem.getLineAverage(1);
             oSSPreviousAverages.add(frontAverage);
             int oSSSize = oSSPreviousAverages.size();
 
-            if(oSSSize > 1 && numOfJumps < 2){//just making sure we dont step outside oSSpreviousaverages
-                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize)) > 0.1){
-                    //now we have a step
+            if(oSSSize > 1 && numOfJumps < 2) {//just making sure we dont step outside oSSpreviousaverages
+                if(Math.abs(oSSPreviousAverages.get(oSSSize - 1) - oSSPreviousAverages.get(oSSSize - 2)) > 0.1){
+                    //now we have a step, so we can set our values
 
                     jumpIndices[numOfJumps] = oSSSize - 1;
-                    jumpTimes[numOfJumps] = (System.nanoTime() - startTime) / 1000000000; // yes divide by 1 billion
+                    jumpEncoderCount[numOfJumps] = (driveSubsystem.getLeftEncoderCount() + driveSubsystem.getRightEncoderCount()) / 2; 
+                    
+                    System.out.println("" + numOfJumps + ", " + jumpIndices[numOfJumps] + ", " + jumpEncoderCount[numOfJumps]);
 
                     numOfJumps++;
                 }
             }
-            return; // please note this return when considering flow of this function
+            return; // please note this return when considering flow of this a
+        } else {
+            stageThreeComplete = true;
         }
-        
-        //start to use it
-        double deltaTime = jumpTimes[1] - jumpTimes[0];
-        double deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
-        //double distanceTraveled = 
-
-        
-        //TODO: actually implement the turning and math
     }
 
-    // Called by execute to line up when both sensors see tape
-    protected void twoSensorStage () {
+    //once we get change and calculate the angle, then move forward to approximate the swing
+    protected void stageFour() {
+        System.out.println("stage 4");
+        if (stageFourFristRun) {//do caluclation for angle
+            deltaDistance = (jumpEncoderCount[1] - jumpEncoderCount[0]) * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+            deltaAverage = oSSPreviousAverages.get(jumpIndices[1]) - oSSPreviousAverages.get(jumpIndices[0] - 1);
+            deltaHorizontalDistance = deltaAverage * ConstantsMap.DISTANCE_BETWEEN_SENSOR_CAMERAS;
+            
+            angleToLine = Math.acos(deltaHorizontalDistance/deltaDistance);
+            desiredAngle = gyro.getAngle() + angleToLine;//This "zeros" the angle 
 
-        //this is so we know when to stop, will be uncommented when we have a mechanism for detecting when we hit the wall
-        /*if(we hit the wall)
-        {
-            twoSensorStageComplete = true;
-        }*/
+            swingDistance = Math.sin(angleToLine) * ConstantsMap.ROBOT_LENGTH/2;//Approximates distance the robot needs to move forward before turning to stay on line
 
-        double frontAverage = followLineSubsystem.getCameraAverage(1);
-        double backAverage = followLineSubsystem.getCameraAverage(2);
+            double previousEncoderValue = (driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2;
+            encoderGoal = (previousEncoderValue + swingDistance);
 
-        double diff = backAverage - frontAverage;
+            stageFourFristRun = false;
+        }
 
-        //TODO: CONVERT THE DIFF TO ACTUAL UNITS(INCHES), NOT JUST OUR ARBITRARY ONES. THIS IS VERY VERY IMPORTANT. i would now, but i need measurements
+        //move forward to make up swing
+        driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+        driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
 
-        //get the error angle
-        double theta = Math.acos(diff / Math.sqrt(diff * diff + ConstantsMap.DISTANCE_BETWEEN_SENSORS * ConstantsMap.DISTANCE_BETWEEN_SENSORS));
+        if ((driveSubsystem.getLeftEncoderDistance() + driveSubsystem.getRightEncoderDistance())/2 > encoderGoal) {//Once we have moved enough to account for the turn
+            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.setLeftSpeed(0);
+            stageFourComplete = true;
+        }
+    }
 
-        //use the angle to figure out how far the wheels must correct to appraoch the wall so that it is perpedicular.
-        //note: this method is not perfect, but rather an approximation of the best way to correct our angle as it makes us follow an arc, meanding we 
-        //become off center. But the better lined up we are before this step, the less we will shift side to side due to an arc(think about it, the error
-        //is almsot exactly equal to 1-cos(error angle)) in one direction or the other. 
-        double leftWheelDistance = estimatedDistanceToWall + theta * ConstantsMap.ROBOT_WIDTH;
-        double rightWheelDistance = estimatedDistanceToWall - theta * ConstantsMap.ROBOT_WIDTH;
+    //now turn the robot to the desired angle
+    protected void stageFive() {
 
-        //these units should be in INCHES
-        double leftWheelSpeed = leftWheelDistance / ConstantsMap.APPROACH_TIME;
-        double rightWheelSpeed = rightWheelDistance / ConstantsMap.APPROACH_TIME;
 
-        //finally implement the turning/movement
-        driveSubsystem.setLeftSpeed(leftWheelSpeed);
-        driveSubsystem.setRightSpeed(rightWheelSpeed);
-    } 
+
+        System.out.println("stage 5");
+        if (Math.abs(desiredAngle - gyro.getAngle()) > ConstantsMap.ANGLE_TOLLERANCE) {//Checks to see if our angle of approach is too great
+            if (desiredAngle - gyro.getAngle() > 0) {//These figure out which was to turn 
+                driveSubsystem.setLeftSpeed((ConstantsMap.TURN_SPEED));
+                driveSubsystem.setRightSpeed((ConstantsMap.TURN_SPEED * -1));
+            } else {
+                driveSubsystem.setLeftSpeed(( ConstantsMap.TURN_SPEED * -1));
+                driveSubsystem.setRightSpeed( ConstantsMap.TURN_SPEED);
+            }
+        } else {
+            stageFiveComplete = true;
+        }
+    }
+
+    //now move to the wall, and use the old two sensor stage
+    protected void stageSix() {
+        System.out.println("stage 6");
+        stageSixComplete = true;
+    }
+    */
+
+    //New method relying only on the sensors (a bit simpler than doing the calculations)
+    protected void maybeThisWillWorkButIDRK() {
+        //Triggers when we have a camera on the sensor
+        double frontAverage = followLineSubsystem.getLineAverage(1);
+
+        if (frontAverage == 0 || frontAverage == Float.NaN) {
+            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.setLeftSpeed(0);
+            System.out.println("killededed");
+            return;//Kills it because the sensor is either not working or off of the tape 
+        }
+
+        if (firstRun) {//this sets up the first few values we need 
+            startEncoderAvg =  (driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2;
+            encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
+
+            firstRun = false;
+        }
+
+        System.out.println("Sensor outputs: " + frontAverage);
+        System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderDistance() +              driveSubsystem.getLeftEncoderDistance()) / 2));
+
+        if (((driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2) < encoderFinalGoal) {
+            //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
+
+            if (frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) {//We are way to the left of the sensors, so we need to start turning (right) 
+                System.out.println("we should compensate left!");
+
+                overCompensate = true;
+
+                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+            } else if (frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) { //Turn Left
+                System.out.println("we should compensate right!");
+
+                overCompensate = true;
+
+                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
+            } else if (Math.abs(ConstantsMap.SENSOR_AVERAGE_CENTER - frontAverage) <= ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW) {//We are within the tolerance, so we just move forward 
+                System.out.println("we have fixed it, so no more overcompensating!");
+               
+                overCompensate = false;
+                
+                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+            } else if(frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate) {
+                System.out.println("compensating left!");
+
+                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+            }
+            else if(frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate){
+                System.out.println("compensating right!");
+
+                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
+            }
+        } else {
+            driveSubsystem.setLeftSpeed(0);
+            driveSubsystem.setRightSpeed(0);
+
+            runningFLC = false;//We have completed the process 
+            return;
+        }
+    }
   
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return false;
+        return !runningFLC;
     }
   
     // Called once after isFinished returns true
@@ -196,8 +372,10 @@ public class FollowLineCommand extends Command {
     }
 
     // Called for manual interruption of command
-    protected void kill(){
+    protected void kill() {
+        runningFLC = false;
 
+        System.out.println("FollowLineCommand kill");
     }
   
     // Called when another command which requires one or more of the same
@@ -205,5 +383,6 @@ public class FollowLineCommand extends Command {
     @Override
     protected void interrupted() {
         System.out.println("FollowLineCommand interrupted");
+        kill();
     }
 }

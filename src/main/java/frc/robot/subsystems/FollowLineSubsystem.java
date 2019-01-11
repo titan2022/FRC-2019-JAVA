@@ -7,30 +7,70 @@
 
 package frc.robot.subsystems;
 
+
+import java.util.Arrays;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import frc.robot.ConstantsMap;
 
 /**
  * Add your docs here.
  */
 public class FollowLineSubsystem extends Subsystem{
+    I2C i2c;
+    public FollowLineSubsystem(){
+        System.out.println("Line Follow Subsystem Init");
+        i2c = new I2C(Port.kOnboard, 0x09);
+        
+
+    }
 
     @Override
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        // setDefaultCommand(new MySpecialCommand());
+        
+    }
+    public String getData(){
+        byte[] fromSensor = new byte[16];
+        i2c.readOnly(fromSensor,16);
+        int[] data = new int[8];
+        for(int i= 0;i<8;i++){
+            data[i] = fromSensor[2*i] & 0xFF;
+        }
+        return Arrays.toString(data);
+    }
+
+    public int[] getRawData(){
+        byte[] fromSensor = new byte[16];
+        i2c.readOnly(fromSensor,16);
+        int[] data = new int[8];
+        for(int i= 0;i<8;i++){
+            data[i] = fromSensor[2*i] & 0xFF;
+        }
+        return data;
     }
 
     //gets data from camera srip, strip 1 is front camera, strip 2 is back camera
-    public boolean[] getCameraData(int strip) {
+    public boolean[] getLineData(int strip) {
         boolean[] sensors = new boolean[8];
 
-        //get shit like bossP        
+        byte[] fromSensor = new byte[16];
+        i2c.readOnly(fromSensor,16);
+        int[] data = new int[8];
+
+        for(int i= 0;i<8;i++){
+            data[i] = fromSensor[2*i] & 0xFF;
+        }
+
+        for(int i = 0; i < 8; i++){
+            sensors[i] = data[i] > ConstantsMap.BLACK_WHITE_CUTOFF;
+        }      
 
         return sensors;
     }
-
-    public double getCameraAverage(int strip){
-        boolean[] isFrontCameraOnStrip = getCameraData(strip);
+    public double getLineAverage(int strip){
+        boolean[] isFrontCameraOnStrip = getLineData(strip);
         
         double sum = 0.0d;
         int camerasOn = 0;
