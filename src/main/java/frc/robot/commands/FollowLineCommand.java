@@ -152,7 +152,8 @@ public class FollowLineCommand extends Command {
         
         maybeThisWillWorkButIDRK();
     }
-
+    
+    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
     //vision stage, get us closer to the line
     protected void stageOne() {
         System.out.println("stage 1");
@@ -162,7 +163,6 @@ public class FollowLineCommand extends Command {
         stageOneComplete = true;
     }
 
-    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
     //once we hit the line, make sure we go forward 2 inches
     protected void stageTwo() {
         //stageTwoComplete = true;
@@ -294,8 +294,8 @@ public class FollowLineCommand extends Command {
         double frontAverage = followLineSubsystem.getLineAverage(1);
 
         if (frontAverage == 0 || frontAverage == Float.NaN) {
-            driveSubsystem.setRightSpeed(0);
-            driveSubsystem.setLeftSpeed(0);
+            driveSubsystem.stop();//this sets both speeds to 0 
+
             System.out.println("killededed");
             return;//Kills it because the sensor is either not working or off of the tape 
         }
@@ -351,8 +351,7 @@ public class FollowLineCommand extends Command {
                 driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
             }
         } else {
-            driveSubsystem.setLeftSpeed(0);
-            driveSubsystem.setRightSpeed(0);
+            driveSubsystem.stop();
 
             runningFLC = false;//We have completed the process 
             return;
