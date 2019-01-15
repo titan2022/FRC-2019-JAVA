@@ -1,18 +1,17 @@
-import cv2 as cv2
+import cv2
 import numpy as np
 import math
-from networktables import NetworkTables
+import networktables
 
 # To see messages from networktables, you must setup logging
-import logging
+#import logging
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
 
-ip = 10.20.22.2
 # As a client to connect to a robot
-NetworkTables.initialize(ip) 
+networktables.initialize(ip) 
 
-sd = NetworkTables.getTable('SmartDashboard')
+sd = networktables.getTable('SmartDashboard')
 
 centerx = 640
 centery = 360
@@ -50,7 +49,7 @@ def find_contours(input, external_only):
 	else:
 		mode = cv2.RETR_LIST
 	method = cv2.CHAIN_APPROX_SIMPLE
-	im2, contours, hierarchy =cv2.findContours(input, mode=mode, method=method)
+	contours, hierarchy = cv2.findContours(input, mode=mode, method=method)
 	return contours
 
 
@@ -170,7 +169,7 @@ def process(img):
         im = cv2.imread('images/rect.jpg')
         imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         ret, thresh = cv2.threshold(imgray, 127, 255, 0)
-        im2, rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         rect = rectcontours[0]
 
         cntscore = 1000
@@ -227,7 +226,7 @@ def process(img):
                 print(distance)
         return img
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
 cap.set(cv2.CAP_PROP_EXPOSURE, -50)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
