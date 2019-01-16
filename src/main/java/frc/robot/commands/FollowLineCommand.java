@@ -140,6 +140,7 @@ public class FollowLineCommand extends Command {
         // } else if(!stageSixComplete) {
         //     stageSix();
         // } 
+<<<<<<< HEAD
 
         maybeThisWillWorkButIDRK();
     }
@@ -158,6 +159,13 @@ public class FollowLineCommand extends Command {
         }
     }
 
+=======
+        
+        approach();
+    }
+    
+    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
+>>>>>>> f8e92135e9676795fff5d4989b69e53ca011de39
     //vision stage, get us closer to the line
     protected void stageOne() {
         System.out.println("stage 1");
@@ -292,7 +300,7 @@ public class FollowLineCommand extends Command {
     }
 
     //New method relying only on the sensors (a bit simpler than doing the calculations)
-    protected void maybeThisWillWorkButIDRK() {
+    protected void approach() {
         //Triggers when we have a camera on the sensor
         double frontAverage = followLineSubsystem.getLineAverage(1);
 
@@ -301,8 +309,8 @@ public class FollowLineCommand extends Command {
         System.out.println("what is our average?" + followLineSubsystem.getLineAverage(0));
 
         if (frontAverage == 0 || frontAverage == Float.NaN) {
-            driveSubsystem.setRightSpeed(0);
-            driveSubsystem.setLeftSpeed(0);
+            driveSubsystem.stop();//this sets both speeds to 0 
+
             System.out.println("killededed");
             return;//Kills it because the sensor is either not working or off of the tape 
         }
@@ -322,44 +330,42 @@ public class FollowLineCommand extends Command {
 
             if (frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) {//We are way to the left of the sensors, so we need to start turning (right) 
                 System.out.println("we should compensate left!");
-
                 overCompensate = true;
 
-                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.tankDrive(-0.5 * ConstantsMap.APPROACH_SPEED, 2 * ConstantsMap.APPROACH_SPEED);
             } else if (frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) { //Turn Left
                 System.out.println("we should compensate right!");
-
                 overCompensate = true;
 
-                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.tankDrive(2 * ConstantsMap.APPROACH_SPEED, -0.5 * ConstantsMap.APPROACH_SPEED);
             } else if (Math.abs(ConstantsMap.SENSOR_AVERAGE_CENTER - frontAverage) <= ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW) {//We are within the tolerance, so we just move forward 
                 System.out.println("we have fixed it, so no more overcompensating!");
-               
                 overCompensate = false;
-                
-                driveSubsystem.setLeftSpeed(ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setRightSpeed(ConstantsMap.APPROACH_SPEED);
+
+                driveSubsystem.tankDrive(ConstantsMap.APPROACH_SPEED, ConstantsMap.APPROACH_SPEED);
             } else if(frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
                 && frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
                 && overCompensate) {
                 System.out.println("compensating left!");
 
-                driveSubsystem.setRightSpeed(2 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setLeftSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.tankDrive(-0.5 * ConstantsMap.APPROACH_SPEED, 2 * ConstantsMap.APPROACH_SPEED);
             }
             else if(frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
                 && frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
                 && overCompensate){
                 System.out.println("compensating right!");
 
-                driveSubsystem.setRightSpeed(-0.5 * ConstantsMap.APPROACH_SPEED);
-                driveSubsystem.setLeftSpeed(2 * ConstantsMap.APPROACH_SPEED);
+                driveSubsystem.tankDrive(2 * ConstantsMap.APPROACH_SPEED, -0.5 * ConstantsMap.APPROACH_SPEED);
             }
         } else {
+<<<<<<< HEAD
             driveSubsystem.setLeftSpeed(0);
             driveSubsystem.setRightSpeed(0);
+=======
+            driveSubsystem.stop();
+
+            runningFLC = false;//We have completed the process 
+>>>>>>> f8e92135e9676795fff5d4989b69e53ca011de39
             return;
         }
 
