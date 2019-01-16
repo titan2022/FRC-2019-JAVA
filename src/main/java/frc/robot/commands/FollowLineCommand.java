@@ -14,9 +14,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
-
 
 /**
  * Add your docs here.
@@ -28,7 +28,6 @@ public class FollowLineCommand extends Command {
     //stage one variables (Vision Stage)
     protected boolean stageOneComplete;
 
-    /*
     //stage two variables
     protected boolean stageTwoComplete;
     double leftEncoderDistanceGoal;
@@ -60,10 +59,6 @@ public class FollowLineCommand extends Command {
 
     //stage six variables
     protected boolean stageSixComplete;
-    */
-
-    //Checks to see if we are running rn 
-    protected boolean runningFLC;
 
     //Maybe this will work variables 
     protected double startEncoderAvg;
@@ -93,12 +88,9 @@ public class FollowLineCommand extends Command {
 
     //this is to be called upon initialization and whenever the button is hit twice
     protected void setupForRun() { 
-        //turns on runningFLC 
-        runningFLC = true;
-        
         //setup stage 1 variables
         stageOneComplete = false;
-        /*
+
         //stage 2
         stageTwoComplete = false;
         leftEncoderDistanceGoal = 0;
@@ -120,8 +112,7 @@ public class FollowLineCommand extends Command {
         stageFiveComplete = false;
 
         //stage 6
-        stageSixComplete = false; 
-        */  
+        stageSixComplete = false;   
         
         //maybe 
         firstRun = true;
@@ -133,7 +124,7 @@ public class FollowLineCommand extends Command {
         
 
         /*if(limit switch hit){
-            setupForRun();//reset for next run
+            setupForRun(    );//reset for next run
             somehow mark that we are done, maybe interrrupt?
         }else{*/
         // if(!stageOneComplete) {
@@ -149,8 +140,22 @@ public class FollowLineCommand extends Command {
         // } else if(!stageSixComplete) {
         //     stageSix();
         // } 
-        
+
         maybeThisWillWorkButIDRK();
+    }
+
+    protected void vision(){
+
+        double horizontalAngle = 0;
+        double verticalAngle = 0;
+
+        if(horizontalAngle > ConstantsMap.VISION_THRESHOLD){
+            //turn left
+        }else if(horizontalAngle < ConstantsMap.VISION_THRESHOLD){
+            //turn right
+        } else{
+            //go straight
+        }
     }
 
     //vision stage, get us closer to the line
@@ -162,7 +167,6 @@ public class FollowLineCommand extends Command {
         stageOneComplete = true;
     }
 
-    /*DELETE THIS AT SOME POINT LATER WHEN OTHER METHODS WORK 
     //once we hit the line, make sure we go forward 2 inches
     protected void stageTwo() {
         //stageTwoComplete = true;
@@ -286,12 +290,15 @@ public class FollowLineCommand extends Command {
         System.out.println("stage 6");
         stageSixComplete = true;
     }
-    */
 
     //New method relying only on the sensors (a bit simpler than doing the calculations)
     protected void maybeThisWillWorkButIDRK() {
         //Triggers when we have a camera on the sensor
         double frontAverage = followLineSubsystem.getLineAverage(1);
+
+        System.out.println("LinefollowIDK start");
+        System.out.println("what sensors are on?" + Arrays.toString(followLineSubsystem.getLineData(0)));
+        System.out.println("what is our average?" + followLineSubsystem.getLineAverage(0));
 
         if (frontAverage == 0 || frontAverage == Float.NaN) {
             driveSubsystem.setRightSpeed(0);
@@ -300,7 +307,7 @@ public class FollowLineCommand extends Command {
             return;//Kills it because the sensor is either not working or off of the tape 
         }
 
-        if (firstRun) {//this sets up the first few values we need 
+        if (firstRun) {
             startEncoderAvg =  (driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2;
             encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
 
@@ -353,16 +360,16 @@ public class FollowLineCommand extends Command {
         } else {
             driveSubsystem.setLeftSpeed(0);
             driveSubsystem.setRightSpeed(0);
-
-            runningFLC = false;//We have completed the process 
             return;
         }
+
+        System.out.println("LinefollowIDK end");
     }
   
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return !runningFLC;
+        return stageSixComplete;
     }
   
     // Called once after isFinished returns true
@@ -373,7 +380,12 @@ public class FollowLineCommand extends Command {
 
     // Called for manual interruption of command
     protected void kill() {
-        runningFLC = false;
+        stageOneComplete = true;
+        stageTwoComplete = true;
+        stageThreeComplete = true; 
+        stageFourComplete = true;
+        stageFiveComplete = true;
+        stageSixComplete = true;
 
         System.out.println("FollowLineCommand kill");
     }

@@ -29,6 +29,7 @@ public class ConstantsMap {
     public static final double SENSOR_AVERAGE_TOLERANCE_HIGH = 1.0d;
     public static final double SENSOR_AVERAGE_TOLERANCE_LOW = 0.1d;
     public static final double SENSOR_AVERAGE_CENTER = 3.5d;
+    public static final double VISION_THRESHOLD = 0.5; //degrees
 
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
