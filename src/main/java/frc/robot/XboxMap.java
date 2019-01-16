@@ -91,8 +91,8 @@ public class XboxMap {
 	 	return oi.xbox.getAValue();
 	}
 
-	//TODO B is also being used for outtake (Change later)
-	static public boolean interruptFollowLine() {
+	//TODO B is also being used for outtake (Change later) // Put it on the other controller??
+	static public boolean interruptFollowLineCommand() {
 		return oi.xbox.getBValue();
 	}
 }

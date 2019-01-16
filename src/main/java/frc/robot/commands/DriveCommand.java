@@ -55,7 +55,8 @@ public class DriveCommand extends Command {
 		// } 
 		if (runFollowLineCommand) {
 			if (!fLC.isFinished()) {
-				if (XboxMap.interruptFollowLine()) {
+				//interruptFollowLine is called when B button is held down 
+				if (XboxMap.interruptFollowLineCommand()) {
 					fLC.kill();//Make this a thing
 				} else {
 					fLC.execute();
@@ -102,6 +103,7 @@ public class DriveCommand extends Command {
 			}
 
 			//Check for follow line command call
+			//The runFollowLineCommand() is called when the A button is calledd 
 			if (XboxMap.runFollowLineCommand()) {
 				runFollowLineCommand = true;
 				fLC = new FollowLineCommand();
