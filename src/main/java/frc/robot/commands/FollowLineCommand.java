@@ -14,6 +14,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -94,6 +95,7 @@ public class FollowLineCommand extends Command {
     //this is to be called upon initialization and whenever the button is hit twice
     protected void setupForRun() { 
         //turns on runningFLC 
+        System.out.println("we made it true");
         runningFLC = true;
         
         //setup stage 1 variables
@@ -149,7 +151,7 @@ public class FollowLineCommand extends Command {
         // } else if(!stageSixComplete) {
         //     stageSix();
         // } 
-        
+        System.out.println("We execute");
         approach();
     }
     
@@ -291,7 +293,13 @@ public class FollowLineCommand extends Command {
     //New method relying only on the sensors (a bit simpler than doing the calculations)
     protected void approach() {
         //Triggers when we have a camera on the sensor
+        System.out.println("fdjskal;fjkdsajfkl;dsajfkld;sajfkl;dsajkfldsjakl;fjdsakl;fjdklsajflkd;sa");
         double frontAverage = followLineSubsystem.getLineAverage(1);
+
+        System.out.println("approach begin");
+
+        System.out.println("raw sensor data:" + Arrays.toString(followLineSubsystem.getRawData()));
+        System.out.println("t/f sensor data:" + Arrays.toString(followLineSubsystem.getLineData(0)));
 
         if (frontAverage == 0 || frontAverage == Float.NaN) {
             driveSubsystem.stop();//this sets both speeds to 0 
@@ -344,15 +352,18 @@ public class FollowLineCommand extends Command {
             }
         } else {
             driveSubsystem.stop();
-
+            System.out.println("We are bad");
             runningFLC = false;//We have completed the process 
             return;
         }
+
+        System.out.println("approach end");
     }
   
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
+        System.out.println("we are really dumb " + runningFLC);
         return !runningFLC;
     }
   

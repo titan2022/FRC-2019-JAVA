@@ -54,16 +54,20 @@ public class DriveCommand extends Command {
     	//	turtlemode = !turtlemode;
 		// } 
 		if (runFollowLineCommand) {
+			System.out.println("fuck me");
 			if (!fLC.isFinished()) {
 				if (XboxMap.interruptFollowLine()) {
+					System.out.println("bu hao");
 					fLC.kill();//Make this a thing
 				} else {
+					System.out.println("jfkdlsajklfdsajklfdsa");
 					fLC.execute();
 				}
 			} else {
 				runFollowLineCommand = false;
 			}
 		} else {
+			//System.out.println("We fucked");
 			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
 
@@ -103,8 +107,10 @@ public class DriveCommand extends Command {
 
 			//Check for follow line command call
 			if (XboxMap.runFollowLineCommand()) {
+				System.out.println("Cyka Blyat");
 				runFollowLineCommand = true;
 				fLC = new FollowLineCommand();
+				fLC.initialize();
 			}
 		}
 		
