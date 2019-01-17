@@ -32,6 +32,9 @@ public class RobotMap {
     public static final int SHOULDER_ENCODER_PORT_A = 11;
     public static final int SHOULDER_ENCODER_PORT_B = 12;
 
+    public static final int SHOULDER_ENCODER_PORT_C = 420;
+    public static final int SHOULDER_ENCODER_PORT_D = 420;
+
     public static final int WRIST_ENCODER_PORT_A = 13;
     public static final int WRIST_ENCODER_PORT_B = 14;
 }
