@@ -106,6 +106,7 @@ public class DriveCommand extends Command {
 			}
 
 			//Check for follow line command call
+			//The runFollowLineCommand() is called when the A button is calledd 
 			if (XboxMap.runFollowLineCommand()) {
 				System.out.println("Cyka Blyat");
 				runFollowLineCommand = true;
