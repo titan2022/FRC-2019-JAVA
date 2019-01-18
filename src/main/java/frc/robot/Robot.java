@@ -7,17 +7,14 @@
 
 package frc.robot;
 
-import java.util.Arrays;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.FollowLineCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 
@@ -33,10 +30,12 @@ public class Robot extends TimedRobot {
 
   public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public static GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
 
   Command autonomousCommand;
   Command driveCommand;
+  Command solenoidValveCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
@@ -46,11 +45,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
-    chooser.setDefaultOption("Default Auto", new ExampleCommand());
+    
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", chooser);
+
     driveCommand = new DriveCommand();
-    autonomousCommand = new FollowLineCommand();
   }
 
   /**
@@ -61,14 +60,8 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
-  int count = 0;
   @Override
   public void robotPeriodic() {
-    // count++;
-    // if(count == 20){
-    //   System.out.println(Arrays.toString(followLineSubsystem.getLineData(1)));
-    //   count = 0;
-    // }
   }
 
   /**
@@ -98,7 +91,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    
+    autonomousCommand = chooser.getSelected();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -130,8 +123,10 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
     driveCommand.start();
-    
+    solenoidValveCommand.start();
+
   }
 
   /**
