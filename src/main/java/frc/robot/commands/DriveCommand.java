@@ -56,7 +56,7 @@ public class DriveCommand extends Command {
 		if (runFollowLineCommand) {
 			System.out.println("fuck me");
 			if (!fLC.isFinished()) {
-				if (XboxMap.interruptFollowLine()) {
+				if (XboxMap.interruptFollowLineCommand()) {
 					System.out.println("bu hao");
 					fLC.kill();//Make this a thing
 				} else {
