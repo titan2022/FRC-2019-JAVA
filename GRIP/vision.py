@@ -1,7 +1,14 @@
+#!/usr/bin/env python3
+
 import cv2
 import numpy as np
 import math
-import networktables
+import sys
+import json
+import time
+from networktables import NetworkTablesInstance
+from cscore import CameraServer, VideoSource
+
 
 # To see messages from networktables, you must setup logging
 #import logging
@@ -9,19 +16,98 @@ import networktables
 #logging.basicConfig(level=logging.DEBUG)
 
 # As a client to connect to a robot
-networktables.initialize(ip) 
+class CameraConfig: pass
 
-sd = networktables.getTable('SmartDashboard')
 
 centerx = 640
 centery = 360
-camera_height = 31
-target_bottom_height=63
+camera_height = 6
+target_bottom_height=25.5
 target_height = 6
 target_width = 13
 camera_fov_x = 60
 camera_fov_y= 40
+camera_angle = 30
 
+
+team = None
+server = False
+cameraConfigs = []
+configFile = "/boot/frc.json"
+
+"""Report parse error."""
+def parseError(str):
+        print("config error in '" + configFile + "': " + str, file=sys.stderr)
+
+"""Read single camera configuration."""
+def readCameraConfig(config):
+        cam = CameraConfig()
+
+        # name
+        try:
+                cam.name = config["name"]
+        except KeyError:
+                parseError("could not read camera name")
+                return False
+
+        # path
+        try:
+                cam.path = config["path"]
+        except KeyError:
+                parseError("camera '{}': could not read path".format(cam.name))
+                return False
+
+        cam.config = config
+
+        cameraConfigs.append(cam)
+        return True
+
+
+def readConfig():
+        global team
+        global server
+
+        # parse file
+        try:
+                with open(configFile, "rt") as f:
+                        j = json.load(f)
+        except OSError as err:
+                print("could not open '{}': {}".format(configFile, err), file=sys.stderr)
+                return False
+
+        # top level must be an object
+        if not isinstance(j, dict):
+                parseError("must be JSON object")
+                return False
+
+        # team number
+        try:
+                team = j["team"]
+        except KeyError:
+                parseError("could not read team number")
+                return False
+
+        # ntmode (optional)
+        if "ntmode" in j:
+                str = j["ntmode"]
+                if str.lower() == "client":
+                        server = False
+                elif str.lower() == "server":
+                        server = True
+                else:
+                        parseError("could not understand ntmode value '{}'".format(str))
+
+        # cameras
+        try:
+                cameras = j["cameras"]
+        except KeyError:
+                parseError("could not read cameras")
+                return False
+        for camera in cameras:
+                if not readCameraConfig(camera):
+                        return False
+
+        return True
 def rgb_threshold(input, red, green, blue):
         """Segment an image based on color ranges.
         Args:
@@ -49,7 +135,7 @@ def find_contours(input, external_only):
 	else:
 		mode = cv2.RETR_LIST
 	method = cv2.CHAIN_APPROX_SIMPLE
-	contours, hierarchy = cv2.findContours(input, mode=mode, method=method)
+	im2, contours, hierarchy = cv2.findContours(input, mode=mode, method=method)
 	return contours
 
 
@@ -102,7 +188,7 @@ def getAngleX(center):
         return math.atan(2*center*math.tan((60 * math.pi / 180 )/2)/1280) * 180 / math.pi;
 def getAngleY(center):
         center = center - 720/2
-        return math.atan(2*center*math.tan((camera_fov_y * math.pi / 180 )/2)/720) * 180 / math.pi * -1;
+        return math.atan(2*center*math.tan((camera_fov_y * math.pi / 180 )/2)/720) * 180 / math.pi * -1 + camera_angle;
 def getDistance(angle):
         return (35 / math.tan(angle* math.pi / 180))
 def process(img):
@@ -169,7 +255,7 @@ def process(img):
         im = cv2.imread('images/rect.jpg')
         imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         ret, thresh = cv2.threshold(imgray, 127, 255, 0)
-        rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        im2, rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         rect = rectcontours[0]
 
         cntscore = 1000
@@ -219,27 +305,64 @@ def process(img):
                 cv2.rectangle(img,(x2,y2),(x2+w2,y2+h2),(0,0,255),2)
                 #print(getAngleX(cx))
                 y_angle = getAngleY(cy)
-                print(y_angle)
+                print("y_angle" +str(y_angle))
+                print("x_angle" + str(getAngleX(cx)))
                 sd.putNumber("y_angle", y_angle)
+                sd.putNumber("x_angle", getAngleX(cx))
+
                 distance = getDistance(y_angle)
+                print("distance" + str(distance))
+
                 sd.putNumber("distance", distance)
-                print(distance)
+                #print(distance)
         return img
 
-cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
-cap.set(cv2.CAP_PROP_EXPOSURE, -50)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+def startCamera(config):
+        print("Starting camera '{}' on {}".format(config.name, config.path))
+        camera = CameraServer.getInstance() \
+        .startAutomaticCapture(name=config.name, path=config.path)
 
-while(True):
-    # Capture frame-by-frame
-    ret, frame = cap.read()
-    # Our operations on the frame come here
-    img = process(frame)
-    cv2.imshow('frame',img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
+        camera.setConfigJson(json.dumps(config.config))
+
+        
+
+        return camera
+if __name__ == "__main__":
+        if len(sys.argv) >= 2:
+                configFile = sys.argv[1]
+
+        # read configuration
+        if not readConfig():
+                sys.exit(1)
+        ntinst = NetworkTablesInstance.getDefault()
+        if server:
+                print("Setting up NetworkTables server")
+                ntinst.startServer()
+        else:
+                print("Setting up NetworkTables client for team {}".format(team))
+                ntinst.startClientTeam(team)
+
+        sd = ntinst.getTable('SmartDashboard')
+        #cap = cv2.VideoCapture(0)
+        #cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+        #cap.set(cv2.CAP_PROP_EXPOSURE, -50)
+        #cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        cameras = []
+        for cameraConfig in cameraConfigs:
+                cameras.append(startCamera(cameraConfig))
+        cam = cameras[0]
+        #cam.setResolution(1280, 720)
+        cs = CameraServer.getInstance()
+        cvSink = cs.getVideo(camera=cam)
+        processedstream = cs.putVideo("Processed",1280,720)
+        while(True):
+               
+                cvSink.grabFrame(img)
+                
+                processedstream.putFrame(process(img))
+                
+                #cv2.imshow('frame',img)
+                
+        # When everything done, release the capture
+        cap.release()
