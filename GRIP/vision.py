@@ -8,6 +8,7 @@ import json
 import time
 from networktables import NetworkTablesInstance
 from cscore import CameraServer, VideoSource
+import cscore
 
 
 # To see messages from networktables, you must setup logging
@@ -319,9 +320,8 @@ def process(img):
 
 def startCamera(config):
         print("Starting camera '{}' on {}".format(config.name, config.path))
-        camera = CameraServer.getInstance() \
-        .startAutomaticCapture(name=config.name, path=config.path)
-
+        #camera = CameraServer.getInstance().startAutomaticCapture(name=config.name, path=config.path)
+        camera = cscore.UsbCamera(name=config.name, path=config.path)
         camera.setConfigJson(json.dumps(config.config))
 
         
@@ -356,11 +356,12 @@ if __name__ == "__main__":
         cs = CameraServer.getInstance()
         cvSink = cs.getVideo(camera=cam)
         processedstream = cs.putVideo("Processed",1280,720)
+        img = np.zeros([1280,720,3],dtype=np.uint8)
         while(True):
-               
-                cvSink.grabFrame(img)
                 
-                processedstream.putFrame(process(img))
+                time, img2 = cvSink.grabFrame(img,.1)
+
+                processedstream.putFrame(process(img2))
                 
                 #cv2.imshow('frame',img)
                 
