@@ -42,7 +42,7 @@ public class XboxMap {
 		return oi.xbox.getBackValue();
 	}
 	
-	static public boolean piston() {
+	static public boolean grabPiston() {
 		return oi.xbox.getLeftBumperValue();
 	}
 	
@@ -86,10 +86,16 @@ public class XboxMap {
 	// static public double left() {
 	// 	return oi.ps4.getLeftY();
 	// }
+	//placeholder command
+	static public boolean releasePiston()
+	{
+		return oi.xbox.getAValue();
+	}
 
 	static public boolean runFollowLineCommand() {
 	 	return oi.xbox.getAValue();
 	}
+	
 
 	//TODO B is also being used for outtake (Change later)
 	static public boolean interruptFollowLine() {
