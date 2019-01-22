@@ -58,8 +58,8 @@ public class ArmSubsystem extends Subsystem {
         return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360;
     }
 
-    public double getShoulderEncoderAngle(double gearRatio) {
-        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360.00 * gearRatio;
+    public double getShoulderEncoderAngle() {
+        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360.00 * ConstantsMap.SHOULDER_GEAR_RATIO;
     }
 
     @Override

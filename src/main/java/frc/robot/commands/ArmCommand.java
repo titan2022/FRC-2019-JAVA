@@ -82,6 +82,6 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
     }
 
     public double pidCurrentSP() {
-        return 90.00 - armSubsystem.getShoulderEncoderAngle(ConstantsMap.SHOULDER_GEAR_RATIO);
+        return 90.00 - armSubsystem.getShoulderEncoderAngle();
     }
 }
