@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
+import frc.robot.pids.Motortronic;
 
 /**
  * Add your docs here.
@@ -41,8 +42,16 @@ public class ArmSubsystem extends Subsystem {
         return wristEncoder;
     }
 
-    public WPI_TalonSRX getWristTalon() {
-        return wristJointMotor;
+    public Encoder getShoulderEncoder() {
+        return shoulderEncoder;
+    }
+
+    public Motortronic getWristMotortronic() {
+        return new Motortronic(wristJointMotor);
+    }
+
+    public Motortronic getShoulderMotortronic() {
+        return new Motortronic(new WPI_TalonSRX[] {shoulderJointMotor1, shoulderJointMotor2});
     }
 
     public void setShoulderJointSpeed(double speed) {

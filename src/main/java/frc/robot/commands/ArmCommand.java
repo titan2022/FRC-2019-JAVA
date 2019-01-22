@@ -23,7 +23,7 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmCommand extends Command {
     ArmSubsystem armSubsystem = Robot.armSubsystem;
-    EncoderMotorPID wristLevelPID;
+    EncoderMotorPID wristLevelPID, armMovementPID;
 
     public ArmCommand() {
         requires(armSubsystem);
@@ -32,8 +32,10 @@ public class ArmCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
-        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), new Motortronic(armSubsystem.getWristTalon()), ConstantsMap.WRIST_ZERO_KP,
+        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristMotortronic(), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
+        armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderEncoder(), armSubsystem.getShoulderMotortronic(), ConstantsMap.SHOULDER_MV_KP,
+            ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF).setOutputRange(-1,1);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -53,7 +55,8 @@ public class ArmCommand extends Command {
 
         if (wristLevelPID.isEnabled()) return;
 
-        armSubsystem.setShoulderJointSpeed(ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
+        armMovementPID.setSetpoint(ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
+        // TODO: make wrist stay in position thru levelling pid
         armSubsystem.setWristJointSpeed(ConstantsMap.WRIST_SPEED_MULT * moveWristJoint);
     }
 

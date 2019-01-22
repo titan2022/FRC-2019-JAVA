@@ -35,4 +35,9 @@ public class ConstantsMap {
     public static final double SHOULDER_GEAR_RATIO = 350.0;
     public static final double SHOULDER_MIN_ANGLE = 23.0;
     public static final double SHOULDER_MAX_ANGLE = 121.0;
+
+    public static final double SHOULDER_MV_KP = 1.0;
+    public static final double SHOULDER_MV_KI = 1.0;
+    public static final double SHOULDER_MV_KD = 1.0;
+    public static final double SHOULDER_MV_KF = 1.0;
 }
