@@ -21,6 +21,9 @@ public class GrabberCommand extends Command {
   private double grabCount=0;
   private double releaseCount = 0;
   public double milliTime = 500;
+
+  private double lastPressed = 0;
+  private boolean pistonClosed = true;
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
   public GrabberCommand() 
   {
@@ -36,45 +39,21 @@ public class GrabberCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (XboxMap.grabPiston()==true)
+    if(XboxMap.grabPiston() && (System.currentTimeMillis() - lastPressed) > 500)
     {
-      grabberSubsystem.activateTopGrabPiston();
-      grabCount++;
-    } 
-   if((grabCount==1) && (System.currentTimeMillis() - grabPressed) > milliTime) 
+      lastPressed = System.currentTimeMillis();
+      if(pistonClosed)
       {
-        grabPressed = System.currentTimeMillis();
-        grabCount++;
-       grabberSubsystem.reverseTopGrabPiston();
+        grabberSubsystem.activateTopGrabPiston();
+        pistonClosed = !pistonClosed;
       }
-    if((grabCount==2) &&(System.currentTimeMillis() - grabPressed > milliTime))
-    {
-      grabPressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateTopGrabPiston();
-      grabCount=0;
+      else {
+        grabberSubsystem.reverseTopGrabPiston();
+        pistonClosed = !pistonClosed;
+      }
     }
-
-
-    if (XboxMap.releasePiston()==true)
-     {
-      grabberSubsystem.activateHatchReleasePiston();
-      releaseCount++;
-     } 
-   if((releaseCount==1) && (System.currentTimeMillis() - releasePressed) > milliTime) 
-      {
-        releasePressed = System.currentTimeMillis();
-        releaseCount++;
-       grabberSubsystem.reverseHatchReleasePiston();
-      }
-    if((releaseCount==2) &&(System.currentTimeMillis() - releasePressed > milliTime))
-      {
-      releasePressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateHatchReleasePiston();
-      releaseCount=0;
-     }
-   }
+  }
   
-
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {

@@ -46,16 +46,16 @@ public class XboxMap {
 		return oi.xbox.getLeftBumperValue();
 	}
 	
-	static public boolean inTake() {
+	static public boolean inTakeCargo() {
 		return oi.xbox.getAValue();
+	}
+
+	static public boolean outTakeCargo() {
+		return oi.xbox.getBValue();
 	}
 
 	static public boolean override() {
 		return oi.xbox.getXValue();
-	}
-	
-	static public boolean outTake() {
-		return oi.xbox.getBValue();
 	}
 
 	static public double right() {
