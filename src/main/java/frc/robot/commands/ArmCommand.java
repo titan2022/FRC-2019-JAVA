@@ -23,7 +23,7 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public class ArmCommand extends Command {
     ArmSubsystem armSubsystem = Robot.armSubsystem;
-    EncoderMotorPID zeroPid;
+    EncoderMotorPID wristLevelPID;
 
     public ArmCommand() {
         requires(armSubsystem);
@@ -32,7 +32,7 @@ public class ArmCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
-        zeroPid = new EncoderMotorPID(armSubsystem.getWristEncoder(), new Motortronic(armSubsystem.getWristTalon()), ConstantsMap.WRIST_ZERO_KP,
+        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), new Motortronic(armSubsystem.getWristTalon()), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
     }
 
@@ -42,16 +42,16 @@ public class ArmCommand extends Command {
         double moveShoulderJoint = XboxMap.controlShoulderJoint();
         double moveWristJoint = XboxMap.controlWristJoint();
 
-        zeroPid.setSetpoint(pidCurrentSP());
+        wristLevelPID.setSetpoint(pidCurrentSP());
         // TODO: restructure w/ tolerance equality
         if ((armSubsystem.getWristDistance() != 0 && moveShoulderJoint != 0 && moveWristJoint == 0) ||
             XboxMap.enableZeroPid()) {
-            zeroPid.enable();
+            wristLevelPID.enable();
         } else if (armSubsystem.getWristDistance() == 0 || moveWristJoint != 0 ) {
-            zeroPid.disable();
+            wristLevelPID.disable();
         }
 
-        if (zeroPid.isEnabled()) return;
+        if (wristLevelPID.isEnabled()) return;
 
         armSubsystem.setShoulderJointSpeed(ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
         armSubsystem.setWristJointSpeed(ConstantsMap.WRIST_SPEED_MULT * moveWristJoint);
