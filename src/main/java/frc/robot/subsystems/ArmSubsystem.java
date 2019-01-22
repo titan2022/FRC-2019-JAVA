@@ -37,6 +37,14 @@ public class ArmSubsystem extends Subsystem {
 
     }
 
+    public Encoder getWristEncoder() {
+        return wristEncoder;
+    }
+
+    public WPI_TalonSRX getWristTalon() {
+        return wristJointMotor;
+    }
+
     public void setShoulderJointSpeed(double speed) {
         shoulderJointMotor1.set(speed);
         shoulderJointMotor2.set(speed);

@@ -14,12 +14,13 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
+import frc.robot.pids.EncoderMotorPID;
 import frc.robot.ConstantsMap;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class ArmCommand extends Command implements PIDSource, PIDOutput {
+public class ArmCommand extends Command {
     ArmSubsystem armSubsystem = Robot.armSubsystem;
-    PIDController zeroPid = new PIDController(ConstantsMap.WRIST_ZERO_KP, ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, this, this);
+    EncoderMotorPID zeroPid;
 
     public ArmCommand() {
         requires(armSubsystem);
@@ -28,7 +29,8 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
-        zeroPid.setOutputRange(-1, 1);
+        zeroPid = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristTalon(), ConstantsMap.WRIST_ZERO_KP, ConstantsMap.WRIST_ZERO_KI,
+            ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -46,8 +48,14 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
             zeroPid.disable();
         }
 
+        if (zeroPid.isEnabled()) return;
+
         armSubsystem.setShoulderJointSpeed(ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
         armSubsystem.setWristJointSpeed(ConstantsMap.WRIST_SPEED_MULT * moveWristJoint);
+    }
+
+    private void setSpeed(double speed) {
+        armSubsystem.setWristJointSpeed(speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -65,20 +73,6 @@ public class ArmCommand extends Command implements PIDSource, PIDOutput {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
-    }
-
-    public void pidWrite(double output) {
-        armSubsystem.setWristJointSpeed(output);
-    }
-
-    public void setPIDSourceType(PIDSourceType t) {}
-
-    public double pidGet() {
-        return armSubsystem.getWristDistance();
-    }
-
-    public PIDSourceType getPIDSourceType() {
-        return PIDSourceType.kDisplacement;
     }
 
     public double pidCurrentSP() {

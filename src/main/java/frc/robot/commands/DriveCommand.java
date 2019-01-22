@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
-	XboxMap xboxMap = new XboxMap();
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
 	boolean brakeState = false;
@@ -48,25 +47,25 @@ public class DriveCommand extends Command {
 		} */
 
 		if(!fLC.isFinished()) {
-			if(xboxMap.interruptFollowLine()) {
+			if(XboxMap.interruptFollowLine()) {
 				fLC.kill();//Make this a thing
 			}else{
 				fLC.execute();
 			}
 		}	
 		else {
-			double speedLeft = xboxMap.left();
+			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
 			if(Math.abs(speedLeft) < 0.1){
 				speedLeft = 0;
 			}
-			if(xboxMap.shiftHigh()) {
+			if(XboxMap.shiftHigh()) {
 				driveSubsystem.shiftHigh();
 			}
-			if(xboxMap.shiftLow()) {
+			if(XboxMap.shiftLow()) {
 				driveSubsystem.shiftLow();
 			}
-			double speedRight = xboxMap.right();
+			double speedRight = XboxMap.right();
 			//speedRight *= -1;
 			if(Math.abs(speedRight) < 0.1){
 				speedRight = 0; 
@@ -80,7 +79,7 @@ public class DriveCommand extends Command {
 
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
-			if(xboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+			if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
 				brakeState = !brakeState;
 				lastPressed = System.currentTimeMillis();
 			}
