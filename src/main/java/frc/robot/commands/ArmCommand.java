@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.pids.EncoderMotorPID;
+import frc.robot.pids.Motortronic;
 import frc.robot.ConstantsMap;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -29,8 +32,8 @@ public class ArmCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
-        zeroPid = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristTalon(), ConstantsMap.WRIST_ZERO_KP, ConstantsMap.WRIST_ZERO_KI,
-            ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
+        zeroPid = new EncoderMotorPID(armSubsystem.getWristEncoder(), new Motortronic(armSubsystem.getWristTalon()), ConstantsMap.WRIST_ZERO_KP,
+            ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
     }
 
     // Called repeatedly when this Command is scheduled to run
