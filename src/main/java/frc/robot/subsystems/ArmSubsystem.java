@@ -23,19 +23,17 @@ public class ArmSubsystem extends Subsystem {
 
     private WPI_TalonSRX shoulderJointMotor1, shoulderJointMotor2, wristJointMotor;
 
-    private Encoder shoulderEncoder1, shoulderEncoder2, wristEncoder;
+    private Encoder shoulderEncoder, wristEncoder;
 
     public ArmSubsystem() {
         shoulderJointMotor1 = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_1);
         shoulderJointMotor2 = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_2);
-        shoulderEncoder1 = new Encoder(RobotMap.SHOULDER_ENCODER_PORT_A, RobotMap.SHOULDER_ENCODER_PORT_B);
-        shoulderEncoder2 = new Encoder(RobotMap.SHOULDER_ENCODER_PORT_C, RobotMap.SHOULDER_ENCODER_PORT_D);
+        shoulderEncoder = new Encoder(RobotMap.SHOULDER_ENCODER_PORT_A, RobotMap.SHOULDER_ENCODER_PORT_B);
 
         wristJointMotor = new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT);
         wristEncoder = new Encoder(RobotMap.WRIST_ENCODER_PORT_A, RobotMap.WRIST_ENCODER_PORT_B);
         wristEncoder.reset();
-        shoulderEncoder1.reset();
-        shoulderEncoder2.reset();
+        shoulderEncoder.reset();
 
     }
 
