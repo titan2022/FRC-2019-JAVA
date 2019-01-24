@@ -18,7 +18,7 @@ public class GrabberCommand extends Command {
   XboxMap xboxMap = new XboxMap();
   private double grabPressed= 0;
   private double releasePressed = 0;
-  private double grabCount=0;
+  private double grabCount=0; //determines at what stage grabber is at
   private double releaseCount = 0;
   public double milliTime = 500;
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
@@ -36,42 +36,42 @@ public class GrabberCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (XboxMap.grabPiston()==true)
+    if (XboxMap.grabPiston()==true  )
     {
-      grabberSubsystem.activateTopGrabPiston();
+      grabberSubsystem.activateGrab();
       grabCount++;
     } 
    if((grabCount==1) && (System.currentTimeMillis() - grabPressed) > milliTime) 
-      {
+    {
         grabPressed = System.currentTimeMillis();
         grabCount++;
-       grabberSubsystem.reverseTopGrabPiston();
-      }
+       grabberSubsystem.reverseGrab();
+    }
     if((grabCount==2) &&(System.currentTimeMillis() - grabPressed > milliTime))
     {
       grabPressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateTopGrabPiston();
+      grabberSubsystem.deactivateGrab();
       grabCount=0;
     }
 
 
     if (XboxMap.releasePiston()==true)
-     {
-      grabberSubsystem.activateHatchReleasePiston();
+    {
+      grabberSubsystem.activateRelease();
       releaseCount++;
-     } 
+    } 
    if((releaseCount==1) && (System.currentTimeMillis() - releasePressed) > milliTime) 
-      {
+    {
         releasePressed = System.currentTimeMillis();
         releaseCount++;
-       grabberSubsystem.reverseHatchReleasePiston();
-      }
+       grabberSubsystem.reverseRelease();
+    }
     if((releaseCount==2) &&(System.currentTimeMillis() - releasePressed > milliTime))
-      {
+    {
       releasePressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateHatchReleasePiston();
+      grabberSubsystem.deactivateRelease();
       releaseCount=0;
-     }
+    }
    }
   
 

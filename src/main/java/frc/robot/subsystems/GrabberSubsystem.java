@@ -1,3 +1,4 @@
+                                                                                                                                                                                                                                                                                                                                  /*----------------------------------------------------------------------------*/
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
@@ -21,27 +22,27 @@ public class GrabberSubsystem extends Subsystem {
     hatchReleasePiston = new DoubleSolenoid(6, 7);
   }
 
-  public void activateTopGrabPiston() {
+  public void activateGrab() {
     topGrabPiston.set(Value.kForward);
   }
 
-  public void reverseTopGrabPiston() {
+  public void reverseGrab() {
     topGrabPiston.set(Value.kReverse);
   }
 
-  public void deactivateTopGrabPiston() {
+  public void deactivateGrab() {
     topGrabPiston.set(Value.kOff);
   }
 
-  public void activateHatchReleasePiston() {
+  public void activateRelease() {
     hatchReleasePiston.set(Value.kForward);
   }
 
-  public void reverseHatchReleasePiston() {
+  public void reverseRelease() {
     hatchReleasePiston.set(Value.kReverse);
   }
 
-  public void deactivateHatchReleasePiston() {
+  public void deactivateRelease() {
     hatchReleasePiston.set(Value.kOff);
   }
 
