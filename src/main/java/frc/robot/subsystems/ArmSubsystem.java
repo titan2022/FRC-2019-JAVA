@@ -71,14 +71,6 @@ public class ArmSubsystem extends Subsystem {
         return wristEncoder.getDistance();
     }
 
-    public double getWristEncoderAngle() {
-        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360;
-    }
-
-    public double getShoulderEncoderAngle() {
-        return shoulderEncoder.get() / (double) ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION * 360.00 * ConstantsMap.SHOULDER_GEAR_RATIO;
-    }
-
     @Override
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.

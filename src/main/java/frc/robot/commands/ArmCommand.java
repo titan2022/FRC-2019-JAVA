@@ -45,23 +45,27 @@ public class ArmCommand extends Command {
         double moveWristJoint = XboxMap.controlWristJoint();
 
         wristLevelPID.setSetpoint(pidCurrentSP());
-        // TODO: restructure w/ tolerance equality
-        if ((armSubsystem.getWristDistance() != 0 && moveShoulderJoint != 0 && moveWristJoint == 0) ||
-            XboxMap.enableZeroPid()) {
+
+        if ((Math.abs(armSubsystem.getWristDistance()) > ConstantsMap.WRIST_TOLERANCE && Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) || XboxMap.enableZeroPid()) {
             wristLevelPID.enable();
-        } else if (armSubsystem.getWristDistance() == 0 || moveWristJoint != 0 ) {
+        } else if ((Math.abs(armSubsystem.getWristDistance()) < ConstantsMap.WRIST_TOLERANCE) || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
         }
 
-        if (wristLevelPID.isEnabled()) return;
-
-        armMovementPID.setSetpoint(ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
-        // TODO: make wrist stay in position thru levelling pid
+        if (wristLevelPID.isEnabled()) {
+            wristLevelPID.setSetpoint(getWristLevelledAngle());
+            return;
+        }
+        
+        armMovementPID.setSetpoint(armMovementPID.getSetpoint() + ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
         armSubsystem.setWristJointSpeed(ConstantsMap.WRIST_SPEED_MULT * moveWristJoint);
     }
 
-    private void setSpeed(double speed) {
-        armSubsystem.setWristJointSpeed(speed);
+    private double getShoulderEncoderAngle() {
+        return ConstantsMap.SHOULDER_OFFSET + armSubsystem.getShoulderDistance() / 350.0;
+    }
+    private double getWristLevelledAngle() {
+        return 180 - (90 - getShoulderEncoderAngle());
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -82,6 +86,6 @@ public class ArmCommand extends Command {
     }
 
     public double pidCurrentSP() {
-        return 90.00 - armSubsystem.getShoulderEncoderAngle();
+        return 90.00 - getShoulderEncoderAngle();
     }
 }

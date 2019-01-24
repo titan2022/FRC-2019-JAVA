@@ -48,6 +48,10 @@ public class EncoderMotorPID implements PIDSource, PIDOutput {
         return this;
     }
 
+    public double getSetpoint() {
+        return pid.getSetpoint();
+    }
+
     public void pidWrite(double speed) {
         motor.set(speed);
     }
