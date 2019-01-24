@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 /**
  * Add your docs here.
  */
-public class GrabberSubsystem extends Subsystem {
+public class GrabberSubsystem extends Subsystem 
+{
   private DoubleSolenoid topGrabPiston, hatchReleasePiston;
+ 
   public GrabberSubsystem() {
     topGrabPiston = new DoubleSolenoid(4, 5);
     hatchReleasePiston = new DoubleSolenoid(6, 7);
