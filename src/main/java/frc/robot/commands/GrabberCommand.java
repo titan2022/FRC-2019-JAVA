@@ -16,11 +16,12 @@ import frc.robot.OI;
 public class GrabberCommand extends Command {
   OI oi = Robot.oi;
   XboxMap xboxMap = new XboxMap();
-  private double grabPressed= 0;
-  private double releasePressed = 0;
-  private double grabCount=0; //determines at what stage grabber is at
-  private double releaseCount = 0;
+  private double lastPressedVelcro= 0;
+  private double lastPressedHatch= 0;
   public double milliTime = 500;
+  public boolean pistonClosedVelcro = true;
+  public boolean pistonClosedHatch = true;
+
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
   public GrabberCommand() 
   {
@@ -36,43 +37,36 @@ public class GrabberCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (XboxMap.grabPiston()==true  )
+    if (XboxMap.grabPistonVelcro() && System.currentTimeMillis() - lastPressedVelcro > milliTime)
     {
-      grabberSubsystem.activateGrab();
-      grabCount++;
-    } 
-   if((grabCount==1) && (System.currentTimeMillis() - grabPressed) > milliTime) 
-    {
-        grabPressed = System.currentTimeMillis();
-        grabCount++;
-       grabberSubsystem.reverseGrab();
+        lastPressedVelcro = System.currentTimeMillis();
+        if (pistonClosedVelcro)
+        {
+            grabberSubsystem.velcroPushOut();
+            pistonClosedVelcro = false;
+        }
+        else
+        {
+            grabberSubsystem.velcroPushIn();
+            pistonClosedVelcro = true;
+        }
     }
-    if((grabCount==2) &&(System.currentTimeMillis() - grabPressed > milliTime))
+    
+    if(XboxMap.grabPistonHatch() && System.currentTimeMillis() - lastPressedHatch > milliTime)
     {
-      grabPressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateGrab();
-      grabCount=0;
+        lastPressedHatch = System.currentTimeMillis();
+        if (pistonClosedHatch)
+        {
+          grabberSubsystem.hatchPushOut();
+          pistonClosedHatch = false;
+        }
+        else
+        {
+          grabberSubsystem.hatchPushIn();
+          pistonClosedHatch = true;
+        }
     }
-
-
-    if (XboxMap.releasePiston()==true)
-    {
-      grabberSubsystem.activateRelease();
-      releaseCount++;
-    } 
-   if((releaseCount==1) && (System.currentTimeMillis() - releasePressed) > milliTime) 
-    {
-        releasePressed = System.currentTimeMillis();
-        releaseCount++;
-       grabberSubsystem.reverseRelease();
-    }
-    if((releaseCount==2) &&(System.currentTimeMillis() - releasePressed > milliTime))
-    {
-      releasePressed = System.currentTimeMillis();
-      grabberSubsystem.deactivateRelease();
-      releaseCount=0;
-    }
-   }
+  }
   
 
   // Make this return true when this Command no longer needs to run execute()

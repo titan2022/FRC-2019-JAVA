@@ -42,10 +42,14 @@ public class XboxMap {
 		return oi.xbox.getBackValue();
 	}
 	
-	static public boolean grabPiston() {
+	static public boolean grabPistonVelcro() {
 		return oi.xbox.getLeftBumperValue();
 	}
 	
+	static public boolean grabPistonHatch() {
+		return oi.xbox.getRightBumperValue();
+	}
+
 	static public boolean inTake() {
 		return oi.xbox.getAValue();
 	}
@@ -87,10 +91,7 @@ public class XboxMap {
 	// 	return oi.ps4.getLeftY();
 	// }
 	//placeholder command
-	static public boolean releasePiston()
-	{
-		return oi.xbox.getAValue();
-	}
+	
 
 	static public boolean runFollowLineCommand() {
 	 	return oi.xbox.getAValue();

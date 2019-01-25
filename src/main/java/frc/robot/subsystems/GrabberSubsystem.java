@@ -11,41 +11,35 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import frc.robot.ConstantsMap;
+
 
 /**
  * Add your docs here.
  */
 public class GrabberSubsystem extends Subsystem 
 {
-  private DoubleSolenoid topGrabPiston, hatchReleasePiston;
+  private DoubleSolenoid pushVelcro, pushHatch;
  
   public GrabberSubsystem() {
-    topGrabPiston = new DoubleSolenoid(4, 5);
-    hatchReleasePiston = new DoubleSolenoid(6, 7);
+    pushHatch = new DoubleSolenoid(ConstantsMap.SOLENOID_PORT_1, ConstantsMap.SOLENOID_PORT_2);
+    pushVelcro = new DoubleSolenoid(ConstantsMap.SOLENOID_PORT_3, ConstantsMap.SOLENOID_PORT_4);
   }
 
-  public void activateGrab() {
-    topGrabPiston.set(Value.kForward);
+  public void hatchPushOut() {
+    pushHatch.set(Value.kForward);
   }
 
-  public void reverseGrab() {
-    topGrabPiston.set(Value.kReverse);
+  public void hatchPushIn() {
+    pushHatch.set(Value.kReverse);
   }
 
-  public void deactivateGrab() {
-    topGrabPiston.set(Value.kOff);
+  public void velcroPushOut() {
+    pushVelcro.set(Value.kForward);
   }
 
-  public void activateRelease() {
-    hatchReleasePiston.set(Value.kForward);
-  }
-
-  public void reverseRelease() {
-    hatchReleasePiston.set(Value.kReverse);
-  }
-
-  public void deactivateRelease() {
-    hatchReleasePiston.set(Value.kOff);
+  public void velcroPushIn() {
+    pushVelcro.set(Value.kReverse);
   }
 
   @Override
