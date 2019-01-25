@@ -50,6 +50,14 @@ public class XboxMap {
 		return oi.xbox.getRightBumperValue();
 	}
 
+	static public boolean grabberInControl() {
+		return oi.xbox.getZValue(); // Z value isn't real, but we have it here as a placeholder ;)
+	}
+
+	static public boolean grabberOutControl() {
+		return oi.xbox.getJValue(); // J value isn't real, but we have it here as a placeholder ;(
+	}
+
 	static public boolean inTake() {
 		return oi.xbox.getAValue();
 	}
