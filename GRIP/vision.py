@@ -9,6 +9,7 @@ import time
 from networktables import NetworkTablesInstance
 from cscore import CameraServer, VideoSource
 import cscore
+import datetime
 
 
 # To see messages from networktables, you must setup logging
@@ -21,7 +22,7 @@ class CameraConfig: pass
 
 
 centerx = 640
-centery = 360
+centery = 360 
 camera_height = 6
 target_bottom_height=25.5
 target_height = 6
@@ -81,7 +82,7 @@ def readConfig():
                 parseError("must be JSON object")
                 return False
 
-        # team number
+        # team number   
         try:
                 team = j["team"]
         except KeyError:
@@ -192,18 +193,17 @@ def getAngleY(center):
         return math.atan(2*center*math.tan((camera_fov_y * math.pi / 180 )/2)/720) * 180 / math.pi * -1 + camera_angle;
 def getDistance(angle):
         return (35 / math.tan(angle* math.pi / 180))
+
+#code moved from process function
+im = cv2.imread('images/rect.jpg')
+
+rgb_threshold_red = [0.0, 68.0]
+rgb_threshold_green = [92, 255.0]
+rgb_threshold_blue = [0.0, 92]
+rgb_threshold_output = None
+#code moved from process function end
+
 def process(img):
-        rgb_threshold_red = [0.0, 68.0]
-        rgb_threshold_green = [92, 255.0]
-        rgb_threshold_blue = [0.0, 92]
-
-	
-        
-        rgb_threshold_output = None
-
-        
-
-
 
 
         """
@@ -253,7 +253,7 @@ def process(img):
         cnt = None
         cnt2 = None
         
-        im = cv2.imread('images/rect.jpg')
+        
         imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
         ret, thresh = cv2.threshold(imgray, 127, 255, 0)
         im2, rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -355,13 +355,26 @@ if __name__ == "__main__":
         #cam.setResolution(1280, 720)
         cs = CameraServer.getInstance()
         cvSink = cs.getVideo(camera=cam)
-        processedstream = cs.putVideo("Processed",1280,720)
+
+        rawPropertyStream = cs.putVideo("RawProperty", 1280, 720)
+        processedstream = cs.putVideo("Processed", 1280, 720)
+
         img = np.zeros([1280,720,3],dtype=np.uint8)
         while(True):
-                
-                time, img2 = cvSink.grabFrame(img,.1)
+                t1 = datetime.datetime.now()
+                print("grabbing frame")
 
-                processedstream.putFrame(process(img2))
+                time, img2 = cvSink.grabFrame(img, 1)
+                #rawPropertyStream.putFrame(img2)
+   
+                process(img2)
+
+                t2 = datetime.datetime.now()
+                t3 = t2-t1
+                print("putting frame" + str(t3.total_seconds()))
+
+                #processedstream.putFrame(process(img2))
+
                 
                 #cv2.imshow('frame',img)
                 
