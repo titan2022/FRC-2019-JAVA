@@ -12,7 +12,6 @@ import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.OI;
-import edu.wpi.first.wpilibj.Servo;
 
 public class GrabberCommand extends Command {
   OI oi = Robot.oi;
@@ -22,7 +21,6 @@ public class GrabberCommand extends Command {
   public double milliTime = 500;
   public boolean pistonClosedVelcro = true;
   public boolean pistonClosedHatch = true;
-
 
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
   public GrabberCommand() 
@@ -39,7 +37,6 @@ public class GrabberCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    // solenoids activated and deactivated based on input
     if (XboxMap.grabPistonVelcro() && System.currentTimeMillis() - lastPressedVelcro > milliTime)
     {
         lastPressedVelcro = System.currentTimeMillis();
@@ -68,17 +65,6 @@ public class GrabberCommand extends Command {
           grabberSubsystem.hatchPushIn();
           pistonClosedHatch = true;
         }
-    }
-
-    // ball collector runs based on input
-    if (XboxMap.grabberInControl() && !XboxMap.grabberOutControl() && !grabberSubsystem.isRotating)
-    {
-       grabberSubsystem.ballGrabIn();
-    }
-
-    if (XboxMap.grabberOutControl() && !XboxMap.grabberInControl() && !grabberSubsystem.isRotating)
-    {
-       grabberSubsystem.ballPushOut();
     }
   }
   
