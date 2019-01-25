@@ -71,12 +71,12 @@ public class GrabberCommand extends Command {
     }
 
     // ball collector runs based on input
-    if (XboxMap.grabberInControl() && !XboxMap.grabberOutControl() && !grabberSubsystem.isRotating)
+    if (XboxMap.grabberInControl() && !XboxMap.grabberOutControl() && !grabberSubsystem.isRotating())
     {
        grabberSubsystem.ballGrabIn();
     }
 
-    if (XboxMap.grabberOutControl() && !XboxMap.grabberInControl() && !grabberSubsystem.isRotating)
+    if (XboxMap.grabberOutControl() && !XboxMap.grabberInControl() && !grabberSubsystem.isRotating())
     {
        grabberSubsystem.ballPushOut();
     }
