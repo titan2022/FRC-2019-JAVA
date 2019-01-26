@@ -37,7 +37,7 @@ public class XboxMap {
 		return oi.xbox.getLeftY();
 	}
 
-	public static boolean enableZeroPid() {
+	public static boolean enableWristLevelling() {
 		return oi.xbox.getBValue();
 	}
 

@@ -43,7 +43,7 @@ public class ConstantsMap {
     public static final double SHOULDER_MV_KF = 1.0;
 
     public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
-    public static final double WRIST_OFFSET = Float.NaN; //to be determined
+    public static final double WRIST_OFFSET = 0; //to be changed
 
     //Tolerances
     public static final double WRIST_TOLERANCE = Float.NaN; //to be determined

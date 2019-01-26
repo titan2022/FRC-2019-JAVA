@@ -18,6 +18,7 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmCommand extends Command {
     ArmSubsystem armSubsystem = Robot.armSubsystem;
     EncoderMotorPID wristLevelPID, armMovementPID;
+    private boolean enableLevelWrist;
 
     public ArmCommand() {
         requires(armSubsystem);
@@ -38,34 +39,43 @@ public class ArmCommand extends Command {
     protected void execute() {
         double moveShoulderJoint = XboxMap.controlShoulderJoint();
         double moveWristJoint = XboxMap.controlWristJoint();
-
-        //Where the wrist is currently, so the wrist will be held at the height that it is at when the joystick is released.
-        wristLevelPID.setSetpoint(pidCurrentSP());
-
-        //The PID should be enabled and going to the set point when:
-        //The wrist is off the set point target
-        //The driver isn't moving the wrist
-        //The driver is moving the shoulder
-        //The driver wants the wrist to be levelled
-        if ((Math.abs(armSubsystem.getWristDistance()) > ConstantsMap.WRIST_TOLERANCE && Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) || XboxMap.enableZeroPid()) {
-            wristLevelPID.enable();
         
-        //The PID should be disabled when:
-        //The wrist has reached the set point
-        //The driver wants to move the wrist
-        } else if ((Math.abs(armSubsystem.getWristDistance()) > ConstantsMap.WRIST_TOLERANCE) || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
-            wristLevelPID.disable();
-        }
-
-        //When the PID is on it will get new targets for what angle the Encoder should be at, so that it is level
-        if (wristLevelPID.isEnabled()) {
+        //If the joystick is at 0 and the button was true previously then run
+        //or the current button is not equal to the previous press when the joystick is at 0
+        //Otherwise the wrist should not be levelling at the moment
+        if(Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
+        || (enableLevelWrist != XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
-            return;
+            wristLevelPID.enable();
+            enableLevelWrist = true;
         }
+        else
+            enableLevelWrist = false;
+
+        //If the wrist is not being moved and not being levelled
+        //then the angle of the wrist will be preserved
+        //Otherwise the wrist is able to move freely without PID for both types of levelling
+        //The PID will continue working until it has reached its target, the shoulder joystick moves, or enableLevelWrist is on
+        if(!enableLevelWrist && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+        && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
+            wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
+        }
+        else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY)
+            wristLevelPID.disable();
         
-        //THe driver wants the arm or shoulder to move, so it will move at the speed with the multiplier applied.
-        armMovementPID.setSetpoint(armMovementPID.getSetpoint() + ConstantsMap.SHOULDER_SPEED_MULT * moveShoulderJoint);
-        armSubsystem.setWristJointSpeed(ConstantsMap.WRIST_SPEED_MULT * moveWristJoint);
+        //If the shoulder is not being moved it will maintain position
+        //then the angle of the shoulder will be preserved
+        //Otherwise the shoulder is able to move freely without PID
+        //The PID will continue working until it has reached its target or the shoulder joystick moves
+        if(Math.abs(moveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+        && Math.abs(getShoulderEncoderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
+            armMovementPID.setSetpoint(armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
+            armMovementPID.enable();
+        }
+        else if(Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY)
+            armMovementPID.disable();
+
+        //TODO: Write the code to set the speed for the shoulder and wrist when they do not have PID on them. 
     }
 
     /**
@@ -74,7 +84,7 @@ public class ArmCommand extends Command {
      * @return angle in degrees
      */
     private double getShoulderEncoderAngle() {
-        return ConstantsMap.SHOULDER_OFFSET + armSubsystem.getShoulderDistance() / 350.0;
+        return ConstantsMap.SHOULDER_OFFSET + armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO;
     }
 
     /**
@@ -82,7 +92,16 @@ public class ArmCommand extends Command {
      * @return
      */
     private double getWristLevelledAngle() {
-        return 180 - (90 - getShoulderEncoderAngle());
+        return getShoulderEncoderAngle() + ConstantsMap.WRIST_OFFSET;
+    }
+
+    /**
+     * Computes the Encoder angle needed to maintain a constant world space angle
+     * @param angle of the current encoder reading that would like to be maintained in world space
+     * @return angle that the encoder should go to maintain in world space as the shoulder moves
+     */
+    private double getRelativeLevelledAngle(double angle) {
+        return angle - getWristLevelledAngle() + getShoulderEncoderAngle();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -100,9 +119,5 @@ public class ArmCommand extends Command {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
-    }
-
-    public double pidCurrentSP() {
-        return 90.00 - getShoulderEncoderAngle();
     }
 }
