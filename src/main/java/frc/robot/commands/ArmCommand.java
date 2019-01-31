@@ -60,8 +60,10 @@ public class ArmCommand extends Command {
         && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
         }
-        else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY)
+        else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
             wristLevelPID.disable();
+            armSubsystem.setWristJointSpeed(moveWristJoint);
+        }
         
         //If the shoulder is not being moved it will maintain position
         //then the angle of the shoulder will be preserved
@@ -72,10 +74,11 @@ public class ArmCommand extends Command {
             armMovementPID.setSetpoint(armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
             armMovementPID.enable();
         }
-        else if(Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY)
+        else if(Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
             armMovementPID.disable();
+            armSubsystem.setShoulderJointSpeed(moveShoulderJoint);        
+        }
 
-        //TODO: Write the code to set the speed for the shoulder and wrist when they do not have PID on them. 
     }
 
     /**
