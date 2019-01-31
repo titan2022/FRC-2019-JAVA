@@ -19,5 +19,6 @@ public class RobotMap {
     public static final int RIGHT_DRIVE_PORT_1 = 3;
     public static final int RIGHT_DRIVE_PORT_2 = 4;
 
-    
+    public static final int MECANUM_GRABBER_PORT = 0;   //To be determined
+    public static final int ROD_GRABBER_PORT = 0;       //To be determined
 }

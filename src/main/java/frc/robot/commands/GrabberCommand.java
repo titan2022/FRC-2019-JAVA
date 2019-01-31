@@ -19,10 +19,11 @@ public class GrabberCommand extends Command {
   XboxMap xboxMap = new XboxMap();
   private double lastPressedVelcro= 0;
   private double lastPressedHatch= 0;
+  private double lastPressedMecanum = 0;
   public double milliTime = 500;
   public boolean pistonClosedVelcro = true;
   public boolean pistonClosedHatch = true;
-
+  public boolean mecanumDisabled = true;
 
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
   public GrabberCommand() 
@@ -70,15 +71,16 @@ public class GrabberCommand extends Command {
         }
     }
 
-    // ball collector runs based on input
-    if (XboxMap.grabberInControl() && !XboxMap.grabberOutControl() && !grabberSubsystem.isRotating())
+    if(XboxMap.cargoInsert() && System.currentTimeMillis() - lastPressedMecanum > milliTime)
     {
-       grabberSubsystem.ballGrabIn();
+      lastPressedMecanum = System.currentTimeMillis();
+      grabberSubsystem.cargoCollect();
     }
 
-    if (XboxMap.grabberOutControl() && !XboxMap.grabberInControl() && !grabberSubsystem.isRotating())
+    if(XboxMap.cargoRelease() && System.currentTimeMillis() - lastPressedMecanum > milliTime)
     {
-       grabberSubsystem.ballPushOut();
+      lastPressedMecanum = System.currentTimeMillis();
+      grabberSubsystem.cargoPush();
     }
   }
   

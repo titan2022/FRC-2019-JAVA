@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.ConstantsMap;
-import edu.wpi.first.wpilibj.PWMTalonSRX;;
+import frc.robot.RobotMap;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 
 /**
@@ -21,15 +22,13 @@ import edu.wpi.first.wpilibj.PWMTalonSRX;;
 public class GrabberSubsystem extends Subsystem 
 {
   private DoubleSolenoid pushVelcro, pushHatch;
-  private PWMTalonSRX mecanumWheel, bottomRod;
-  private double wheelSpeed= 0.5; /*Hello fellow encoders.  
-  Please regard this value as a placeholder.  This value may be changed if necessary 
-  */
+  private WPI_TalonSRX mecanumWheel, bottomRod;
+  
   public GrabberSubsystem() {
     pushHatch = new DoubleSolenoid(ConstantsMap.SOLENOID_PORT_1, ConstantsMap.SOLENOID_PORT_2);
     pushVelcro = new DoubleSolenoid(ConstantsMap.SOLENOID_PORT_3, ConstantsMap.SOLENOID_PORT_4);
-    mecanumWheel = new PWMTalonSRX(ConstantsMap.SERVO_PORT_1);  
-    bottomRod = new PWMTalonSRX(ConstantsMap.SERVO_PORT_2);
+    mecanumWheel = new WPI_TalonSRX(RobotMap.MECANUM_GRABBER_PORT);  
+    bottomRod = new WPI_TalonSRX(RobotMap.ROD_GRABBER_PORT);
   }
 
   public void hatchPushOut() {
@@ -48,25 +47,18 @@ public class GrabberSubsystem extends Subsystem
     pushVelcro.set(Value.kReverse);
   }
 
-  public void ballGrabIn()
+  public void cargoCollect()
   {
-    mecanumWheel.set(wheelSpeed);
+    mecanumWheel.set(ConstantsMap.MECANUM_WHEEL_SPEED);  //clockwise
+    bottomRod.set(-ConstantsMap.BOTTOM_ROD_SPEED);    //counterclockwise
   }
 
-  public boolean isRotating()
+  public void cargoPush()
   {
-    if(mecanumWheel.get()==wheelSpeed)
-    {
-      return true;
-    }
-    return false;
+    mecanumWheel.set(-ConstantsMap.MECANUM_WHEEL_SPEED);  //counterclockwise
+    bottomRod.set(ConstantsMap.BOTTOM_ROD_SPEED);      //clockwise
   }
 
-  public void ballPushOut()
-  {
-    mecanumWheel.set(-wheelSpeed);
-    
-  }
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
