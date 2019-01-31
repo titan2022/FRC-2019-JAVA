@@ -32,4 +32,11 @@ public class ConstantsMap {
 
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
+
+    public static final int SOLENOID_PORT_1 = 0;
+    public static final int SOLENOID_PORT_2 = 0;
+    public static final int SOLENOID_PORT_3 = 0;
+    public static final int SOLENOID_PORT_4 = 0;
+    public static final int SERVO_PORT_1 = 0;
+    public static final int SERVO_PORT_2 = 0;
 }

@@ -12,18 +12,18 @@ import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.OI;
+import edu.wpi.first.wpilibj.Servo;
 
 public class GrabberCommand extends Command {
   OI oi = Robot.oi;
   XboxMap xboxMap = new XboxMap();
-  private double grabPressed= 0;
-  private double releasePressed = 0;
-  private double grabCount=0;
-  private double releaseCount = 0;
+  private double lastPressedVelcro= 0;
+  private double lastPressedHatch= 0;
   public double milliTime = 500;
+  public boolean pistonClosedVelcro = true;
+  public boolean pistonClosedHatch = true;
 
-  private double lastPressed = 0;
-  private boolean pistonClosed = true;
+
   GrabberSubsystem grabberSubsystem = Robot.grabberSubsystem;
   public GrabberCommand() 
   {
@@ -39,18 +39,46 @@ public class GrabberCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(XboxMap.grabPiston() && (System.currentTimeMillis() - lastPressed) > 500)
+    // solenoids activated and deactivated based on input
+    if (XboxMap.grabPistonVelcro() && System.currentTimeMillis() - lastPressedVelcro > milliTime)
     {
-      lastPressed = System.currentTimeMillis();
-      if(pistonClosed)
-      {
-        grabberSubsystem.activateTopGrabPiston();
-        pistonClosed = !pistonClosed;
-      }
-      else {
-        grabberSubsystem.reverseTopGrabPiston();
-        pistonClosed = !pistonClosed;
-      }
+        lastPressedVelcro = System.currentTimeMillis();
+        if (pistonClosedVelcro)
+        {
+            grabberSubsystem.velcroPushOut();
+            pistonClosedVelcro = false;
+        }
+        else
+        {
+            grabberSubsystem.velcroPushIn();
+            pistonClosedVelcro = true;
+        }
+    }
+    
+    if(XboxMap.grabPistonHatch() && System.currentTimeMillis() - lastPressedHatch > milliTime)
+    {
+        lastPressedHatch = System.currentTimeMillis();
+        if (pistonClosedHatch)
+        {
+          grabberSubsystem.hatchPushOut();
+          pistonClosedHatch = false;
+        }
+        else
+        {
+          grabberSubsystem.hatchPushIn();
+          pistonClosedHatch = true;
+        }
+    }
+
+    // ball collector runs based on input
+    if (XboxMap.grabberInControl() && !XboxMap.grabberOutControl() && !grabberSubsystem.isRotating())
+    {
+       grabberSubsystem.ballGrabIn();
+    }
+
+    if (XboxMap.grabberOutControl() && !XboxMap.grabberInControl() && !grabberSubsystem.isRotating())
+    {
+       grabberSubsystem.ballPushOut();
     }
   }
   
