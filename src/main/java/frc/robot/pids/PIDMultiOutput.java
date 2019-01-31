@@ -6,14 +6,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 /*
  * Controls a group of motors as a unit.
  */
-public class Motortronic {
+public class PIDMultiOutput {
     WPI_TalonSRX motors[];
 
-    public Motortronic(WPI_TalonSRX[] talons) {
+    public PIDMultiOutput(WPI_TalonSRX[] talons) {
         motors = talons;
     }
 
-    public Motortronic(WPI_TalonSRX talon) {
+    public PIDMultiOutput(WPI_TalonSRX talon) {
         motors = new WPI_TalonSRX[] { talon };
     }
 

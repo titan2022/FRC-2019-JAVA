@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
-import frc.robot.pids.Motortronic;
+import frc.robot.pids.PIDMultiOutput;
 
 /**
  * Add your docs here.
@@ -51,12 +51,12 @@ public class ArmSubsystem extends Subsystem {
         return shoulderEncoder;
     }
 
-    public Motortronic getWristMotortronic() {
-        return new Motortronic(wristJointMotor);
+    public PIDMultiOutput getWristPIDMultiOutput() {
+        return new PIDMultiOutput(wristJointMotor);
     }
 
-    public Motortronic getShoulderMotortronic() {
-        return new Motortronic(new WPI_TalonSRX[] {shoulderJointMotor1, shoulderJointMotor2});
+    public PIDMultiOutput getShoulderPIDMultiOutput() {
+        return new PIDMultiOutput(new WPI_TalonSRX[] {shoulderJointMotor1, shoulderJointMotor2});
     }
 
     public void setShoulderJointSpeed(double speed) {

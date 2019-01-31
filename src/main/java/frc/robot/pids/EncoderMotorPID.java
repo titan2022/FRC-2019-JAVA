@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class EncoderMotorPID implements PIDSource, PIDOutput {
     Encoder encoder;
-    Motortronic motor;
+    PIDMultiOutput motor;
     PIDController pid;
     PIDSourceType pidSourceType;
 
-    public EncoderMotorPID(Encoder enc, Motortronic mot, double kp, double ki, double kd, double kf) {
+    public EncoderMotorPID(Encoder enc, PIDMultiOutput mot, double kp, double ki, double kd, double kf) {
         encoder = enc;
         motor = mot;
         pid = new PIDController(kp, ki, kd, kf, this, this);

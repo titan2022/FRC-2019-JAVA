@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.pids.EncoderMotorPID;
-import frc.robot.pids.Motortronic;
+import frc.robot.pids.PIDMultiOutput;
 import frc.robot.ConstantsMap;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -28,9 +28,9 @@ public class ArmCommand extends Command {
     @Override
     protected void initialize() {
         //Generalizes the interface between PID for each mechanism and its components.
-        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristMotortronic(), ConstantsMap.WRIST_ZERO_KP,
+        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristPIDMultiOutput(), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
-        armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderEncoder(), armSubsystem.getShoulderMotortronic(), ConstantsMap.SHOULDER_MV_KP,
+        armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderEncoder(), armSubsystem.getShoulderPIDMultiOutput(), ConstantsMap.SHOULDER_MV_KP,
             ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF).setOutputRange(-1,1);
     }
 
