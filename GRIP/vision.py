@@ -204,8 +204,6 @@ rgb_threshold_output = None
 #code moved from process function end
 
 def process(img):
-
-
         """
         Runs the pipeline and sets all outputs to new values.
         """
@@ -259,8 +257,7 @@ def process(img):
         im2, rectcontours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         rect = rectcontours[0]
 
-        cntscore = 1000
-        cnt2score = 1000
+        double thres = 1;
         
         
         for i in contours:
@@ -306,13 +303,13 @@ def process(img):
                 cv2.rectangle(img,(x2,y2),(x2+w2,y2+h2),(0,0,255),2)
                 #print(getAngleX(cx))
                 y_angle = getAngleY(cy)
-                print("y_angle" +str(y_angle))
-                print("x_angle" + str(getAngleX(cx)))
+                #print("y_angle" +str(y_angle))
+                #print("x_angle" + str(getAngleX(cx)))
                 sd.putNumber("y_angle", y_angle)
                 sd.putNumber("x_angle", getAngleX(cx))
 
                 distance = getDistance(y_angle)
-                print("distance" + str(distance))
+                #print("distance" + str(distance))
 
                 sd.putNumber("distance", distance)
                 #print(distance)
@@ -356,8 +353,8 @@ if __name__ == "__main__":
         cs = CameraServer.getInstance()
         cvSink = cs.getVideo(camera=cam)
 
-        rawPropertyStream = cs.putVideo("RawProperty", 1280, 720)
-        processedstream = cs.putVideo("Processed", 1280, 720)
+        rawPropertyStream = cs.putVideo("Stream", 1280, 720)
+                 = cs.putVideo("StreanProcessed", 1280, 720)
 
         img = np.zeros([1280,720,3],dtype=np.uint8)
         while(True):
@@ -366,16 +363,21 @@ if __name__ == "__main__":
 
                 time, img2 = cvSink.grabFrame(img, 1)
                 #rawPropertyStream.putFrame(img2)
-   
+                t2 = datetime.datetime.now()
+                d1 = t2-t1
+                print("Grabbed Frame: " +  str(d1.total_seconds()))
                 process(img2)
 
-                t2 = datetime.datetime.now()
-                t3 = t2-t1
-                print("putting frame" + str(t3.total_seconds()))
+                t3 = datetime.datetime.now()
+                d2 = t3-t2
+                print("process frame: " + str(d2.total_seconds()))
 
-                #processedstream.putFrame(process(img2))
+                processedstream.putFrame(process(img2))
+                t4 = datetime.datetime.now()
+                d3 = t4-t3
 
-                
+                print("put frame: " + str(d3.total_seconds()))
+
                 #cv2.imshow('frame',img)
                 
         # When everything done, release the capture
