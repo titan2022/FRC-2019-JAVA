@@ -9,6 +9,9 @@ package frc.robot;
 
 import java.util.Arrays;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -34,7 +37,7 @@ public class Robot extends TimedRobot {
   public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
-
+  UsbCamera camera;
   Command autonomousCommand;
   Command driveCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
@@ -51,6 +54,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
+    
+
   }
 
   /**
