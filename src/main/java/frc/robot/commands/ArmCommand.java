@@ -78,6 +78,18 @@ public class ArmCommand extends Command {
             armMovementPID.disable();
             armSubsystem.setShoulderJointSpeed(moveShoulderJoint);        
         }
+        
+        if(armSubsystem.getShoulderLowerLimit()){
+            if(armSubsystem.getShoulderSpeed()<0){
+                armSubsystem.setShoulderJointSpeed(0);
+            }
+        }
+
+        if(armSubsystem.getShoulderUpperLimit()){
+            if(armSubsystem.getShoulderSpeed()>0){
+                armSubsystem.setShoulderJointSpeed(0);
+            }
+        }
 
     }
 

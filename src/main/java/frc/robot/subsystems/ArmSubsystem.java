@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.ConstantsMap;
@@ -23,8 +24,10 @@ public class ArmSubsystem extends Subsystem {
     // here. Call these from Commands.
 
     private WPI_TalonSRX shoulderJointMotor1, shoulderJointMotor2, wristJointMotor;
-
     private Encoder shoulderEncoder, wristEncoder;
+
+    private DigitalInput upperLimit, lowerLimit;
+    
 
     public ArmSubsystem() {
         shoulderJointMotor1 = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_1);
@@ -36,6 +39,8 @@ public class ArmSubsystem extends Subsystem {
         wristEncoder.reset();
         shoulderEncoder.reset();
 
+        DigitalInput upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
+        DigitalInput lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
     }
 
     public Encoder getWristEncoder() {
@@ -69,6 +74,21 @@ public class ArmSubsystem extends Subsystem {
 
     public double getWristDistance() {
         return wristEncoder.getDistance();
+    }
+
+    public boolean getShoulderUpperLimit(){
+        return upperLimit.get();
+    }
+
+    public boolean getShoulderLowerLimit(){
+        return lowerLimit.get();
+    }
+    public double getShoulderSpeed(){
+        return shoulderJointMotor1.get();
+    }
+
+    public double getWristSpeed(){
+        return wristJointMotor.get();
     }
 
     @Override

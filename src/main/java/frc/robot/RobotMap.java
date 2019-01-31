@@ -37,4 +37,7 @@ public class RobotMap {
 
     public static final int WRIST_ENCODER_PORT_A = 13;
     public static final int WRIST_ENCODER_PORT_B = 14;
+
+    public static final int UPPER_ARM_LIMIT_PORT = 15;
+    public static final int LOWER_ARM_LIMIT_PORT = 16;
 }
