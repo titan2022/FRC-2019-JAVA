@@ -43,24 +43,23 @@ public class ArmCommand extends Command {
         //If the joystick is at 0 and the button was true previously then run
         //or the current button is not equal to the previous press when the joystick is at 0
         //Otherwise the wrist should not be levelling at the moment
-        if(Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
-        || (enableLevelWrist != XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+        if (Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
+                || (enableLevelWrist != XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
             enableLevelWrist = true;
-        }
-        else
+        } else {
             enableLevelWrist = false;
+        }
 
         //If the wrist is not being moved and not being levelled
         //then the angle of the wrist will be preserved
         //Otherwise the wrist is able to move freely without PID for both types of levelling
         //The PID will continue working until it has reached its target, the shoulder joystick moves, or enableLevelWrist is on
-        if(!enableLevelWrist && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
-        && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
+        if (!enableLevelWrist && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+                && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
-        }
-        else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
+        } else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
             wristLevelPID.disable();
             armSubsystem.setWristJointSpeed(moveWristJoint);
         }
@@ -69,24 +68,23 @@ public class ArmCommand extends Command {
         //then the angle of the shoulder will be preserved
         //Otherwise the shoulder is able to move freely without PID
         //The PID will continue working until it has reached its target or the shoulder joystick moves
-        if(Math.abs(moveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
-        && Math.abs(getShoulderEncoderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
+        if (Math.abs(moveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+                && Math.abs(getShoulderEncoderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
             armMovementPID.setSetpoint(armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
             armMovementPID.enable();
-        }
-        else if(Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
+        } else if (Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             armMovementPID.disable();
             armSubsystem.setShoulderJointSpeed(moveShoulderJoint);        
         }
         
-        if(armSubsystem.getShoulderLowerLimit()){
-            if(armSubsystem.getShoulderSpeed()<0){
+        if (armSubsystem.getShoulderLowerLimit()) {
+            if (armSubsystem.getShoulderSpeed() < 0) {
                 armSubsystem.setShoulderJointSpeed(0);
             }
         }
 
-        if(armSubsystem.getShoulderUpperLimit()){
-            if(armSubsystem.getShoulderSpeed()>0){
+        if (armSubsystem.getShoulderUpperLimit()) {
+            if (armSubsystem.getShoulderSpeed() > 0) {
                 armSubsystem.setShoulderJointSpeed(0);
             }
         }
