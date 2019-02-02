@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
-import frc.robot.pids.PIDMultiOutput;
+import frc.robot.TalonSet;
 
 /**
  * Add your docs here.
@@ -23,21 +23,22 @@ public class ArmSubsystem extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-    private WPI_TalonSRX shoulderJointMotor1, shoulderJointMotor2, wristJointMotor;
+    private TalonSet shoulderMotors, wristMotor;
     private Encoder shoulderEncoder, wristEncoder;
 
     private DigitalInput upperLimit, lowerLimit;
     
 
     public ArmSubsystem() {
-        shoulderJointMotor1 = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_1);
-        shoulderJointMotor2 = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_2);
         shoulderEncoder = new Encoder(RobotMap.SHOULDER_ENCODER_PORT_A, RobotMap.SHOULDER_ENCODER_PORT_B);
-
-        wristJointMotor = new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT);
         wristEncoder = new Encoder(RobotMap.WRIST_ENCODER_PORT_A, RobotMap.WRIST_ENCODER_PORT_B);
         wristEncoder.reset();
         shoulderEncoder.reset();
+
+        shoulderMotors = new TalonSet(new WPI_TalonSRX[] {new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_1), 
+            new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_2)});
+        
+        wristMotor = new TalonSet(new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT));
 
         DigitalInput upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
         DigitalInput lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
@@ -51,21 +52,20 @@ public class ArmSubsystem extends Subsystem {
         return shoulderEncoder;
     }
 
-    public PIDMultiOutput getWristPIDMultiOutput() {
-        return new PIDMultiOutput(wristJointMotor);
+    public TalonSet getWristTalons() {
+        return wristMotor;
     }
 
-    public PIDMultiOutput getShoulderPIDMultiOutput() {
-        return new PIDMultiOutput(new WPI_TalonSRX[] {shoulderJointMotor1, shoulderJointMotor2});
+    public TalonSet getShoulderTalons() {
+        return shoulderMotors;
     }
 
     public void setShoulderJointSpeed(double speed) {
-        shoulderJointMotor1.set(speed);
-        shoulderJointMotor2.set(speed);
+        shoulderMotors.set(speed);
     }
 
     public void setWristJointSpeed(double speed) {
-        wristJointMotor.set(speed);
+        wristMotor.set(speed);
     }
 
     public double getShoulderDistance() {
@@ -83,12 +83,13 @@ public class ArmSubsystem extends Subsystem {
     public boolean getShoulderLowerLimit(){
         return lowerLimit.get();
     }
+
     public double getShoulderSpeed(){
-        return shoulderJointMotor1.get();
+        return shoulderMotors.get();
     }
 
     public double getWristSpeed(){
-        return wristJointMotor.get();
+        return wristMotor.get();
     }
 
     @Override

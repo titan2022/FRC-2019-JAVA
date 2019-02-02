@@ -1,8 +1,6 @@
 package frc.robot.pids;
 
-import java.util.function.Function;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.TalonSet;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -12,11 +10,11 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class EncoderMotorPID implements PIDSource, PIDOutput {
     Encoder encoder;
-    PIDMultiOutput motor;
+    TalonSet motor;
     PIDController pid;
     PIDSourceType pidSourceType;
 
-    public EncoderMotorPID(Encoder enc, PIDMultiOutput mot, double kp, double ki, double kd, double kf) {
+    public EncoderMotorPID(Encoder enc, TalonSet mot, double kp, double ki, double kd, double kf) {
         encoder = enc;
         motor = mot;
         pid = new PIDController(kp, ki, kd, kf, this, this);
