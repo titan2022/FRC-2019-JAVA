@@ -41,6 +41,19 @@ public class XboxMap {
 		return oi.xbox.getBValue();
 	}
 
+	public static boolean enableCargoPreset() {
+		return oi.xbox.getYValue();
+	}
+
+	//TODO Map to Buttons
+	public static boolean enableLevel2Preset() {
+		return true;
+	}
+
+	public static boolean enableLevel3Preset() {
+		return true;
+	}
+
 	//Universal stop command
 	public static boolean stopSystem() {
 		return oi.xbox.getBackValue();
