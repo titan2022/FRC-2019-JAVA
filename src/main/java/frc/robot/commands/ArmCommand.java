@@ -60,7 +60,7 @@ public class ArmCommand extends Command {
         if (!enableLevelWrist && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
-        } else if(enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY){
+        } else if (enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
             armSubsystem.setWristJointSpeed(moveWristJoint);
         }
