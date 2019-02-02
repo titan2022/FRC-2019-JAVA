@@ -41,11 +41,11 @@ public class XboxMap {
 		return oi.xbox.getBValue();
 	}
 
+	//TODO Map to Buttons
 	public static boolean enableCargoPreset() {
-		return oi.xbox.getYValue();
+		return true;
 	}
 
-	//TODO Map to Buttons
 	public static boolean enableLevel2Preset() {
 		return true;
 	}

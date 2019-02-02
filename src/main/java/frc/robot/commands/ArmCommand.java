@@ -40,7 +40,28 @@ public class ArmCommand extends Command {
         double moveShoulderJoint = XboxMap.controlShoulderJoint();
         double moveWristJoint = XboxMap.controlWristJoint();
         
-        //If the joystick is at 0 and the button was true previously then run
+        if(Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(moveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+            //Do not press multiple presets at the same time.
+            //TODO Set the angles that the arm and wrist should go to.
+            if(XboxMap.enableCargoPreset()) {
+                wristLevelPID.setSetpoint(getRelativeLevelledAngle(0));
+                armMovementPID.setSetpoint(getRelativeLevelledAngle(0));
+            }
+
+            else if(XboxMap.enableLevel2Preset()) {
+                wristLevelPID.setSetpoint(getRelativeLevelledAngle(0));
+                armMovementPID.setSetpoint(getRelativeLevelledAngle(0));
+            }
+
+            else if(XboxMap.enableLevel3Preset()) {
+                wristLevelPID.setSetpoint(getRelativeLevelledAngle(0));
+                armMovementPID.setSetpoint(getRelativeLevelledAngle(0));
+            }
+            wristLevelPID.enable();
+            armMovementPID.enable();
+        }
+
+        //If the joystick is at 0 and the button was true previously then run levelling of the wrist
         //or the current button is not equal to the previous press when the joystick is at 0
         //Otherwise the wrist should not be levelling at the moment
         if(Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
@@ -64,7 +85,7 @@ public class ArmCommand extends Command {
             wristLevelPID.disable();
             armSubsystem.setWristJointSpeed(moveWristJoint);
         }
-        
+
         //If the shoulder is not being moved it will maintain position
         //then the angle of the shoulder will be preserved
         //Otherwise the shoulder is able to move freely without PID
