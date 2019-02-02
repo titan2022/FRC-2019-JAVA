@@ -40,11 +40,12 @@ public class ArmCommand extends Command {
         double moveShoulderJoint = XboxMap.controlShoulderJoint();
         double moveWristJoint = XboxMap.controlWristJoint();
         
-        //If the joystick is at 0 and the button was true previously then run
-        //or the current button is not equal to the previous press when the joystick is at 0
-        //Otherwise the wrist should not be levelling at the moment
+        // If the joystick is at 0 and the button was true previously then run
+        // or [the wrist is currently levelling or being requested to level]
+        // when the joystick is at 0, level the wrist
+        // Otherwise the wrist should not be levelling at the moment
         if (Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
-                || (enableLevelWrist != XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+                || (enableLevelWrist || XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
             enableLevelWrist = true;
