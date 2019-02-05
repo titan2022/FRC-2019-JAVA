@@ -62,15 +62,22 @@ public class FollowLineCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        driveSubsystem.resetGyro();
         System.out.println("FollowLineCommand init");
         lineAngle = SmartDashboard.getNumber("LineAngle", 0.0);
         lineDistance = SmartDashboard.getNumber("LineDistance", 0.0);
         lineRightSide  = SmartDashboard.getBoolean("LineRightSide", true);
         drive = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
         turn = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
-        drive.setInputRange(-180, 180);
+        drive.setInputRange(-180, 180);        
+        drive.setAbsoluteTolerance(ConstantsMap.PID_PERCENT_TOLERANCE);
+        drive.setSetpoint(lineDistance + ConstantsMap.ROBOT_LENGTH/2);
+        drive.setOutputRange(-.05, .05);
         turn.setInputRange(-180, 180);
-        drive.setAbsoluteTolerance(ConstantsMap.);
+        turn.setAbsoluteTolerance(ConstantsMap.PID_PERCENT_TOLERANCE);        
+        turn.setSetpoint(lineAngle);
+        turn.setOutputRange(-.5, .5);
+        drive.enable();
 
     }
 
@@ -90,18 +97,29 @@ public class FollowLineCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        
-        lineup();
-        
-        ///System.out.println("We execute");
-        //approach();
-        
+        if(drive.isEnabled()){
+            if(drive.onTarget()){
+                drive.setEnabled(false);
+                turn.setEnabled(true);
+            }
+            else{
+                double output = drive.get();
+                driveSubsystem.tankDrive(.5+output, .5-output);
+            }
+        }
+        else if(turn.isEnabled()){
+            if(turn.onTarget()){
+                end();
+            }
+            else{
+                double output = turn.get();
+                driveSubsystem.tankDrive(-output, output);
+            }
+        }
+                
     }
   
-    private void lineup(){
-        
-
-    }
+    
     //New method relying only on the sensors (a bit simpler than doing the calculations)
     protected void approach() {
         //Triggers when we have a camera on the sensor
