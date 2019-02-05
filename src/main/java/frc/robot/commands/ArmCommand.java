@@ -64,8 +64,9 @@ public class ArmCommand extends Command {
         //If the joystick is at 0 and the button was true previously then run levelling of the wrist
         //or the current button is not equal to the previous press when the joystick is at 0
         //Otherwise the wrist should not be levelling at the moment
-        if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
-        || (enableLevelWrist != XboxMap.enableWristLevelling()) && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+        //Run so long as we are not moving the joystick, and the switch is on and or the enable level wrist button is hit 
+        //It is only turned off if you move the joystick 
+        if((Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) && (enableLevelWrist || XboxMap.enableWristLevelling())) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
             enableLevelWrist = true;
@@ -80,7 +81,7 @@ public class ArmCommand extends Command {
         if (!enableLevelWrist && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
-        } else if (enableLevelWrist || Math.abs(amountToMoveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
+        } else if (Math.abs(amountToMoveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
             armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
         }
