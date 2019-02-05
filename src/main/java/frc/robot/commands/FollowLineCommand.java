@@ -1,9 +1,228 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2018 FIRST. All Rights Reserved.                             */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
+package frc.robot.commands;
+
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.ConstantsMap;
+import frc.robot.Robot;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FollowLineSubsystem;
+import java.lang.Math;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.kauailabs.navx.frc.AHRS;
+
+
+/**
+ * Add your docs here.
+ */
+public class FollowLineCommand extends Command {
+    FollowLineSubsystem followLineSubsystem = Robot.followLineSubsystem;
+    DriveSubsystem driveSubsystem = Robot.driveSubsystem;
+
+    //stage one variables (Vision Stage)
+    protected boolean stageOneComplete;
+
+    
+
+    //Checks to see if we are running rn 
+    protected boolean runningFLC;
+
+    //Maybe this will work variables 
+    protected double startEncoderAvg;
+    protected double encoderFinalGoal;
+
+    protected boolean firstRun;
+    //Other stuff that we need 
+    
+
+    //moar variables
+    private boolean overCompensate = false;
+
+    protected double estimatedDistanceToWall;
+
+    private double lineAngle;
+    private double lineDistance;
+    private boolean lineRightSide;
+    public FollowLineCommand() {
+        // Use requires() here to declare subsystem dependencies
+        requires(Robot.driveSubsystem);
+    }
+    PIDController drive;
+    PIDController turn;
+    PIDOutput output = new PIDOutput(){
+    
+        @Override
+        public void pidWrite(double output) {
+            
+        }
+    };
+    // Called just before this Command runs the first time
+    @Override
+    protected void initialize() {
+        System.out.println("FollowLineCommand init");
+        lineAngle = SmartDashboard.getNumber("LineAngle", 0.0);
+        lineDistance = SmartDashboard.getNumber("LineDistance", 0.0);
+        lineRightSide  = SmartDashboard.getBoolean("LineRightSide", true);
+        drive = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
+        turn = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
+        drive.setInputRange(-180, 180);
+        turn.setInputRange(-180, 180);
+        drive.setAbsoluteTolerance(ConstantsMap/);
+
+    }
+
+    //this is to be called upon initialization and whenever the button is hit twice
+    protected void setupForRun() { 
+        //turns on runningFLC 
+        System.out.println("we made it true");
+        runningFLC = true;
+        
+        //setup stage 1 variables
+        stageOneComplete = false;
+        
+        //maybe 
+        firstRun = true;
+    }
+  
+    // Called repeatedly when this Command is scheduled to run
+    @Override
+    protected void execute() {
+        
+        lineup();
+        
+        ///System.out.println("We execute");
+        //approach();
+        
+    }
+  
+    private void lineup(){
+        
+
+    }
+    //New method relying only on the sensors (a bit simpler than doing the calculations)
+    protected void approach() {
+        //Triggers when we have a camera on the sensor
+        System.out.println("fdjskal;fjkdsajfkl;dsajfkld;sajfkl;dsajkfldsjakl;fjdsakl;fjdklsajflkd;sa");
+        double frontAverage = followLineSubsystem.getLineAverage(1);
+
+        System.out.println("approach begin");
+
+        System.out.println("raw sensor data:" + Arrays.toString(followLineSubsystem.getRawData()));
+        System.out.println("t/f sensor data:" + Arrays.toString(followLineSubsystem.getLineData(0)));
+
+        if (frontAverage == 0 || frontAverage == Float.NaN) {
+            driveSubsystem.stop();//this sets both speeds to 0 
+
+            System.out.println("killededed");
+            return;//Kills it because the sensor is either not working or off of the tape 
+        }
+
+        if (firstRun) {//this sets up the first few values we need 
+            startEncoderAvg =  (driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2;
+            encoderFinalGoal = startEncoderAvg + 16;//16 in inches 
+
+            firstRun = false;
+        }
+
+        System.out.println("Sensor outputs: " + frontAverage);
+        System.out.println("Encoder Goal: " + encoderFinalGoal + "\nCurrent Encoder Avg: " + ((driveSubsystem.getRightEncoderDistance() +              driveSubsystem.getLeftEncoderDistance()) / 2));
+
+        if (((driveSubsystem.getRightEncoderDistance() + driveSubsystem.getLeftEncoderDistance()) / 2) < encoderFinalGoal) {
+            //Doing the turning with very little error so that we never go out too far that the robot is completely off the center line 
+
+            if (frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) {//We are way to the left of the sensors, so we need to start turning (right) 
+                System.out.println("we should compensate left!");
+                overCompensate = true;
+
+                driveSubsystem.tankDrive(-0.5 * ConstantsMap.APPROACH_SPEED, 2 * ConstantsMap.APPROACH_SPEED);
+            } else if (frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH) { //Turn Left
+                System.out.println("we should compensate right!");
+                overCompensate = true;
+
+                driveSubsystem.tankDrive(2 * ConstantsMap.APPROACH_SPEED, -0.5 * ConstantsMap.APPROACH_SPEED);
+            } else if (Math.abs(ConstantsMap.SENSOR_AVERAGE_CENTER - frontAverage) <= ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW) {//We are within the tolerance, so we just move forward 
+                System.out.println("we have fixed it, so no more overcompensating!");
+                overCompensate = false;
+
+                driveSubsystem.tankDrive(ConstantsMap.APPROACH_SPEED, ConstantsMap.APPROACH_SPEED);
+            } else if(frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER + ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate) {
+                System.out.println("compensating left!");
+
+                driveSubsystem.tankDrive(-0.5 * ConstantsMap.APPROACH_SPEED, 2 * ConstantsMap.APPROACH_SPEED);
+            }
+            else if(frontAverage > ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_HIGH 
+                && frontAverage < ConstantsMap.SENSOR_AVERAGE_CENTER - ConstantsMap.SENSOR_AVERAGE_TOLERANCE_LOW
+                && overCompensate){
+                System.out.println("compensating right!");
+
+                driveSubsystem.tankDrive(2 * ConstantsMap.APPROACH_SPEED, -0.5 * ConstantsMap.APPROACH_SPEED);
+            }
+        } else {
+            driveSubsystem.stop();
+            System.out.println("We are bad");
+            runningFLC = false;//We have completed the process 
+            return;
+        }
+
+        System.out.println("approach end");
+    }
+  
+    // Make this return true when this Command no longer needs to run execute()
+    @Override
+    protected boolean isFinished() {
+        System.out.println("we are really dumb " + runningFLC);
+        return !runningFLC;
+    }
+  
+    // Called once after isFinished returns true
+    @Override
+    protected void end() {
+        System.out.println("FollowLineCommand end");
+    }
+
+    // Called for manual interruption of command
+    protected void kill() {
+        runningFLC = false;
+
+        System.out.println("FollowLineCommand kill");
+    }
+  
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    @Override
+    protected void interrupted() {
+        System.out.println("FollowLineCommand interrupted");
+        kill();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
 
 package frc.robot.commands;
 
@@ -19,9 +238,6 @@ import java.util.Arrays;
 import com.kauailabs.navx.frc.AHRS;
 
 
-/**
- * Add your docs here.
- */
 public class FollowLineCommand extends Command {
     FollowLineSubsystem followLineSubsystem = Robot.followLineSubsystem;
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
@@ -61,7 +277,7 @@ public class FollowLineCommand extends Command {
 
     //stage six variables
     protected boolean stageSixComplete;
-    */
+    
 
     //Checks to see if we are running rn 
     protected boolean runningFLC;
@@ -123,7 +339,7 @@ public class FollowLineCommand extends Command {
 
         //stage 6
         stageSixComplete = false; 
-        */  
+        
         
         //maybe 
         firstRun = true;
@@ -137,7 +353,7 @@ public class FollowLineCommand extends Command {
         /*if(limit switch hit){
             setupForRun();//reset for next run
             somehow mark that we are done, maybe interrrupt?
-        }else{*/
+        }else{
         // if(!stageOneComplete) {
         //     stageOne();
         // } else if(!stageTwoComplete) {
@@ -288,7 +504,7 @@ public class FollowLineCommand extends Command {
         System.out.println("stage 6");
         stageSixComplete = true;
     }
-    */
+    
 
     //New method relying only on the sensors (a bit simpler than doing the calculations)
     protected void approach() {
@@ -388,3 +604,4 @@ public class FollowLineCommand extends Command {
         kill();
     }
 }
+*/

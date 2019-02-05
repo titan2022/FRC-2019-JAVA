@@ -53,7 +53,7 @@ public class DriveCommand extends Command {
     	// if(attack3Map.turtleButton()) {
     	//	turtlemode = !turtlemode;
 		// } 
-		if (runFollowLineCommand) {
+		/* if (runFollowLineCommand) {
 			System.out.println("fuck me");
 			if (!fLC.isFinished()) {
 				if (XboxMap.interruptFollowLineCommand()) {
@@ -66,7 +66,7 @@ public class DriveCommand extends Command {
 			} else {
 				runFollowLineCommand = false;
 			}
-		} else {
+		} else { */
 			//System.out.println("We fucked");
 			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
@@ -107,13 +107,13 @@ public class DriveCommand extends Command {
 
 			//Check for follow line command call
 			//The runFollowLineCommand() is called when the A button is calledd 
-			if (XboxMap.runFollowLineCommand()) {
+			/* if (XboxMap.runFollowLineCommand()) {
 				System.out.println("Cyka Blyat");
 				runFollowLineCommand = true;
 				fLC = new FollowLineCommand();
 				fLC.initialize();
-			}
-		}
+			} */
+		//}
 		
 		//Putting Data up
     	displayData();

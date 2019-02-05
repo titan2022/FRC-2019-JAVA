@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import frc.robot.commands.FollowLineCommand;
+
 /**
 * This class is the glue that binds the controls on the physical operator
 * interface to the commands and command groups that allow control of the robot.
@@ -20,7 +22,7 @@ public class OI {
 	public OI(){
 		xbox = new Xbox(0);
 		//ps4 = new Xbox(1);
-
+		xbox.getAButton().toggleWhenPressed(new FollowLineCommand());
 		//attack3_L = new Attack3(3);
 		//attack3_R = new Attack3(4);
 

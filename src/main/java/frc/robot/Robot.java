@@ -39,7 +39,8 @@ public class Robot extends TimedRobot {
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
   UsbCamera camera;
   Command autonomousCommand;
-  Command driveCommand;
+  public Command driveCommand;
+  Command followLineCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
@@ -54,7 +55,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
-    
+    followLineCommand = new FollowLineCommand();
 
   }
 
@@ -144,6 +145,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    if(XboxMap.runFollowLineCommand()){
+      driveCommand.cancel();
+      followLineCommand.start();
+    }
+    if(XboxMap.interruptFollowLineCommand()){
+      followLineCommand.cancel();
+      driveCommand.start();
+    }
     Scheduler.getInstance().run();
   }
 
