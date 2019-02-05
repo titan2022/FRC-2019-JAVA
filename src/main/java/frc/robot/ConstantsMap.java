@@ -33,4 +33,13 @@ public class ConstantsMap {
 
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
+
+
+    //Follow line pid values
+    public static final double PID_PERCENT_TOLERANCE = .01;
+    public static final double PID_OUTPUT_MAX = .25;
+    public static final double PID_PROPORTION_CONSTANT = 1;
+    public static final double PID_INTEGRAL_CONSTANT = .2;
+    public static final double PID_DERIVATIVE_CONSTANT = .001;
+    public static final double PID_INPUT_MAX = 180;
 }
