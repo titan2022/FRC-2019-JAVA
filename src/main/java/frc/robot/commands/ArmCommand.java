@@ -37,15 +37,16 @@ public class ArmCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        double moveShoulderJoint = XboxMap.controlShoulderJoint();
-        double moveWristJoint = XboxMap.controlWristJoint();
+        double amountToMoveShoulderJoint = XboxMap.controlShoulderJoint();
+        double amountToMoveWristJoint = XboxMap.controlWristJoint();
         
         // If the joystick is at 0 and the button was true previously then run
         // or [the wrist is currently levelling or being requested to level]
         // when the joystick is at 0, level the wrist
         // Otherwise the wrist should not be levelling at the moment
-        if (Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
-                || (enableLevelWrist || XboxMap.enableWristLevelling()) && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+        //Maybe Get rid of last sensitivity check -> seems redundant
+        if (Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && enableLevelWrist
+                || (enableLevelWrist || XboxMap.enableWristLevelling()) && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
             enableLevelWrist = true;
@@ -57,27 +58,28 @@ public class ArmCommand extends Command {
         //then the angle of the wrist will be preserved
         //Otherwise the wrist is able to move freely without PID for both types of levelling
         //The PID will continue working until it has reached its target, the shoulder joystick moves, or enableLevelWrist is on
-        if (!enableLevelWrist && Math.abs(moveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+        if (!enableLevelWrist && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
-        } else if (enableLevelWrist || Math.abs(moveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
+        } else if (enableLevelWrist || Math.abs(amountToMoveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
-            armSubsystem.setWristJointSpeed(moveWristJoint);
+            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
         }
         
         //If the shoulder is not being moved it will maintain position
         //then the angle of the shoulder will be preserved
         //Otherwise the shoulder is able to move freely without PID
         //The PID will continue working until it has reached its target or the shoulder joystick moves
-        if (Math.abs(moveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
+        if (Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getShoulderEncoderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
             armMovementPID.setSetpoint(armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
             armMovementPID.enable();
-        } else if (Math.abs(moveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
+        } else if (Math.abs(amountToMoveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             armMovementPID.disable();
-            armSubsystem.setShoulderJointSpeed(moveShoulderJoint);        
+            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);        
         }
         
+        //Check to see if the wrist or shoulder has reached the limits and we need to stop them 
         if (armSubsystem.getShoulderLowerLimit()) {
             if (armSubsystem.getShoulderSpeed() < 0) {
                 armSubsystem.setShoulderJointSpeed(0);
@@ -90,8 +92,17 @@ public class ArmCommand extends Command {
             }
         }
 
-        //TODO: Write wrist limits
+        if (armSubsystem.getWristLowerLimit()) {
+            if (armSubsystem.getWristSpeed() < 0) {
+                armSubsystem.setShoulderJointSpeed(0);
+            }
+        }
 
+        if (armSubsystem.getWristUpperLimit()) {
+            if (armSubsystem.getWristSpeed() > 0) {
+                armSubsystem.setShoulderJointSpeed(0);
+            }
+        }
     }
 
     /**

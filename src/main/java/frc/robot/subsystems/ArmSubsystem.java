@@ -26,7 +26,7 @@ public class ArmSubsystem extends Subsystem {
     private TalonSet shoulderMotors, wristMotor;
     private Encoder shoulderEncoder, wristEncoder;
 
-    private DigitalInput upperLimit, lowerLimit;
+    private DigitalInput upperLimit, lowerLimit, upperLimitWrist, lowerLimitWrist;
     
 
     public ArmSubsystem() {
@@ -40,8 +40,10 @@ public class ArmSubsystem extends Subsystem {
         
         wristMotor = new TalonSet(new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT));
 
-        DigitalInput upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
-        DigitalInput lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
+        upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
+        lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
+        upperLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
+        lowerLimitWrist = new DigitalInput(RobotMap.UPPER_WRIST_LIMIT_PORT);
     }
 
     public Encoder getWristEncoder() {
@@ -82,6 +84,14 @@ public class ArmSubsystem extends Subsystem {
 
     public boolean getShoulderLowerLimit(){
         return lowerLimit.get();
+    }
+
+    public boolean getWristUpperLimit(){
+        return upperLimitWrist.get();
+    }
+
+    public boolean getWristLowerLimit(){
+        return lowerLimitWrist.get();
     }
 
     public double getShoulderSpeed(){
