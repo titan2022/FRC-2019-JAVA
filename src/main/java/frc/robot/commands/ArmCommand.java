@@ -83,7 +83,7 @@ public class ArmCommand extends Command {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
         } else if (Math.abs(amountToMoveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
-            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+            armSubsystem.setWristJointSpeed(amountToMoveWristJoint * ConstantsMap.WRIST_SPEED_MULT);
         }
 
         //If the shoulder is not being moved it will maintain position
@@ -96,7 +96,7 @@ public class ArmCommand extends Command {
             armMovementPID.enable();
         } else if (Math.abs(amountToMoveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             armMovementPID.disable();
-            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);        
+            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint * ConstantsMap.SHOULDER_SPEED_MULT);        
         }
         
         //Check to see if the wrist or shoulder has reached the limits and we need to stop them 
