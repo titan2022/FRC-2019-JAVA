@@ -30,7 +30,7 @@ public class ConstantsMap {
     public static final double WRIST_ZERO_KF = 0;
 
     public static final double WRIST_SPEED_MULT = .5;
-    public static final double SHOULDER_SPEED_MULT = .5;
+    public static final double SHOULDER_SPEED_MULT = .1;
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double SHOULDER_GEAR_RATIO = 350.0;
