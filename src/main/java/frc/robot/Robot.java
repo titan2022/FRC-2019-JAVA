@@ -9,6 +9,9 @@ package frc.robot;
 
 import java.util.Arrays;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -34,11 +37,12 @@ public class Robot extends TimedRobot {
   public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
-
+  UsbCamera camera;
   Command autonomousCommand;
-  Command driveCommand;
+  public Command driveCommand;
+  Command followLineCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
-
+  CameraServer server;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -51,6 +55,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
+    followLineCommand = new FollowLineCommand();
+    server = CameraServer.getInstance();
+    //server.startAutomaticCapture("Ground",0);
   }
 
   /**
@@ -139,6 +146,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    if(XboxMap.runFollowLineCommand()){
+      driveCommand.cancel();
+      followLineCommand.start();
+    }
+    if(XboxMap.interruptFollowLineCommand()){
+      followLineCommand.cancel();
+      driveCommand.start();
+    }
     Scheduler.getInstance().run();
   }
 

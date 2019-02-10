@@ -11,6 +11,9 @@ package frc.robot;
  * Add your docs here.
  */
 public class ConstantsMap {
+
+
+
     public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
     public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
@@ -29,7 +32,17 @@ public class ConstantsMap {
     public static final double SENSOR_AVERAGE_TOLERANCE_HIGH = 1.0d;
     public static final double SENSOR_AVERAGE_TOLERANCE_LOW = 0.1d;
     public static final double SENSOR_AVERAGE_CENTER = 3.5d;
+    public static final double VISION_THRESHOLD = 0.5; //degrees
 
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
+
+
+    //Follow line pid values
+    public static final double PID_PERCENT_TOLERANCE = .01;
+    public static final double PID_OUTPUT_MAX = .25;
+    public static final double PID_PROPORTION_CONSTANT = 1;
+    public static final double PID_INTEGRAL_CONSTANT = .2;
+    public static final double PID_DERIVATIVE_CONSTANT = .001;
+    public static final double PID_INPUT_MAX = 180;
 }
