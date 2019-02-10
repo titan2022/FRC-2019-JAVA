@@ -56,7 +56,7 @@ public class DriveSubsystem extends Subsystem {
 		right.setInverted(true);
 		
 		//right3.setInverted(false);
-		
+
 		//Instantiate Encoders
 		left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 		right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);

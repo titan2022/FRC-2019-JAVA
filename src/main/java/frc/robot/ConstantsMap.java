@@ -19,6 +19,7 @@ public class ConstantsMap {
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
     public static final double TURTLE_SPEED = .5; //to be determined
 
+
     //for line follower
     public static final double DISTANCE_BETWEEN_SENSORS = 6; //inches
     public static final double DISTANCE_BETWEEN_SENSOR_CAMERAS = .5;//inches 
@@ -37,6 +38,31 @@ public class ConstantsMap {
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
 
+    //For ArmSubsystem
+    public static final double WRIST_ZERO_KP = 1;
+    public static final double WRIST_ZERO_KI = 1;
+    public static final double WRIST_ZERO_KD = 1;
+    public static final double WRIST_ZERO_KF = 0;
+
+    public static final double WRIST_SPEED_MULT = .5;
+    public static final double SHOULDER_SPEED_MULT = .1;
+
+    public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
+    public static final double SHOULDER_GEAR_RATIO = 350.0;
+    public static final double SHOULDER_MIN_ANGLE = 23.0;
+    public static final double SHOULDER_MAX_ANGLE = 121.0;
+
+    public static final double SHOULDER_MV_KP = 1.0;
+    public static final double SHOULDER_MV_KI = 1.0;
+    public static final double SHOULDER_MV_KD = 1.0;
+    public static final double SHOULDER_MV_KF = 1.0;
+
+    public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
+    public static final double WRIST_OFFSET = 0; //to be changed
+
+    //Tolerances
+    public static final double WRIST_TOLERANCE = Float.NaN; //to be determined
+    public static final double SHOULDER_TOLERANCE = Float.NaN; //to be determined
 
     //Follow line pid values
     public static final double PID_PERCENT_TOLERANCE = .01;

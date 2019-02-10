@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FollowLineCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
@@ -32,9 +33,8 @@ import frc.robot.subsystems.FollowLineSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static OI oi;
+    public static OI oi;
 
-  public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
   UsbCamera camera;
@@ -43,6 +43,12 @@ public class Robot extends TimedRobot {
   Command followLineCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
   CameraServer server;
+
+   
+    public static ArmSubsystem armSubsystem = new ArmSubsystem();
+  
+    
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -60,6 +66,7 @@ public class Robot extends TimedRobot {
     //server.startAutomaticCapture("Ground",0);
   }
 
+
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
@@ -68,29 +75,23 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
    */
-  int count = 0;
-  @Override
-  public void robotPeriodic() {
-    // count++;
-    // if(count == 20){
-    //   System.out.println(Arrays.toString(followLineSubsystem.getLineData(1)));
-    //   count = 0;
-    // }
-  }
+
+    public void robotPeriodic() {
+    }
 
   /**
    * This function is called once each time the robot enters Disabled mode.
    * You can use it to reset any subsystem information you want to clear when
    * the robot is disabled.
    */
-  @Override
-  public void disabledInit() {
-  }
+    @Override
+    public void disabledInit() {
+    }
 
-  @Override
-  public void disabledPeriodic() {
-    Scheduler.getInstance().run();
-  }
+    @Override
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
+    }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
@@ -103,9 +104,10 @@ public class Robot extends TimedRobot {
    * chooser code above (like the commented example) or additional comparisons
    * to the switch structure below with additional strings & commands.
    */
+
   @Override
   public void autonomousInit() {
-    
+
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -115,31 +117,33 @@ public class Robot extends TimedRobot {
      */
 
     // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.start();
+        if (autonomousCommand != null) {
+            autonomousCommand.start();
+        }
     }
-  }
 
   /**
    * This function is called periodically during autonomous.
    */
-  @Override
-  public void autonomousPeriodic() {
-    Scheduler.getInstance().run();
-  }
+    @Override
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+    }
 
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
+    @Override
+    public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel();
+        }
     }
     driveCommand.start();
     
   }
+
 
   /**
    * This function is called periodically during operator control.
@@ -157,10 +161,11 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
   }
 
+
   /**
    * This function is called periodically during test mode.
    */
-  @Override
-  public void testPeriodic() {
-  }
+    @Override
+    public void testPeriodic() {
+    }
 }

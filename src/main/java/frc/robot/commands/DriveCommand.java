@@ -23,6 +23,7 @@ public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
 	FollowLineCommand fLC;
+
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
 	boolean brakeState = false;
@@ -68,6 +69,7 @@ public class DriveCommand extends Command {
 			}
 		} else { */
 			//System.out.println("We fucked");
+
 			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
 
@@ -80,6 +82,7 @@ public class DriveCommand extends Command {
 			// if(xboxMap.shiftLow()) {
 			// 	driveSubsystem.shiftLow();
 			// }
+
 			double speedRight = XboxMap.right();
 			//speedRight *= -1;
 			if(Math.abs(speedRight) < 0.1){
