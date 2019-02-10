@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
   public Command driveCommand;
   Command followLineCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
-
+  CameraServer server;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -56,7 +56,8 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
     followLineCommand = new FollowLineCommand();
-
+    server = CameraServer.getInstance();
+    //server.startAutomaticCapture("Ground",0);
   }
 
   /**

@@ -2,7 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ConstantsMap;
 import frc.robot.Robot;
@@ -64,20 +67,45 @@ public class FollowLineCommand extends Command {
     protected void initialize() {
         driveSubsystem.resetGyro();
         System.out.println("FollowLineCommand init");
-        lineAngle = SmartDashboard.getNumber("LineAngle", 0.0);
-        lineDistance = SmartDashboard.getNumber("LineDistance", 0.0);
-        lineRightSide  = SmartDashboard.getBoolean("LineRightSide", true);
-        drive = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
+        driveSubsystem.enableBrake();
+        driveSubsystem.resetEncoders();
+        driveSubsystem.resetGyro();
+        lineAngle = SmartDashboard.getNumber("LineStartAngle", 0.0);
+        lineDistance = SmartDashboard.getNumber("LineStartDistance", 0.0);
+        //lineRightSide  = SmartDashboard.getBoolean("LineRightSide", true);
+        PIDSource source = new PIDSource(){
+        
+            @Override
+            public void setPIDSourceType(PIDSourceType pidSource) {
+                
+                
+            }
+        
+            @Override
+            public double pidGet() {
+                return driveSubsystem.getLeftEncoderDistance();
+            }
+        
+            @Override
+            public PIDSourceType getPIDSourceType() {
+                return null;
+            }
+        };
+        
+        drive = new PIDController(1, 0, 0, source, output);
         turn = new PIDController(1, 0, 0, driveSubsystem.getGyro(), output);
         drive.setInputRange(-180, 180);        
         drive.setAbsoluteTolerance(ConstantsMap.PID_PERCENT_TOLERANCE);
-        drive.setSetpoint(lineDistance + ConstantsMap.ROBOT_LENGTH/2);
-        drive.setOutputRange(-.05, .05);
+        drive.setSetpoint(lineDistance);
+        System.out.println("Set drive setpoint: " + lineDistance);
+        drive.setOutputRange(-ConstantsMap.PID_OUTPUT_MAX, ConstantsMap.PID_OUTPUT_MAX);
+
         turn.setInputRange(-180, 180);
         turn.setAbsoluteTolerance(ConstantsMap.PID_PERCENT_TOLERANCE);        
-        turn.setSetpoint(lineAngle);
+        turn.setSetpoint(90-lineAngle);
         turn.setOutputRange(-.5, .5);
         drive.enable();
+        
 
     }
 
@@ -104,7 +132,9 @@ public class FollowLineCommand extends Command {
             }
             else{
                 double output = drive.get();
-                driveSubsystem.tankDrive(.5+output, .5-output);
+                System.out.println(output);
+
+                driveSubsystem.tankDrive(output, output);
             }
         }
         else if(turn.isEnabled()){
