@@ -32,7 +32,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveSubsystem extends Subsystem {
 
+
 	private TalonSRX left,leftSlave,right,rightSlave;
+
 
 	private AHRS ahrs;
 	
