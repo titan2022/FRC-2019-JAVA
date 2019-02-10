@@ -26,4 +26,8 @@ public class TalonSet {
         // on your hands.
         return motors[0].get();
     }
+
+    public int encTicks() {
+        return motors[0].getSelectedSensorPosition(0);
+    }
 }

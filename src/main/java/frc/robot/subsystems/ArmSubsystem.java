@@ -35,8 +35,11 @@ public class ArmSubsystem extends Subsystem {
         wristEncoder.reset();
         shoulderEncoder.reset();
 
-        shoulderMotors = new TalonSet(new WPI_TalonSRX[] {new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_1), 
-            new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_PORT_2)});
+        WPI_TalonSRX rightShoulder, leftShoulder;
+        rightShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
+        leftShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
+        rightShoulder.setInverted(true);
+        shoulderMotors = new TalonSet(new WPI_TalonSRX[] {rightShoulder, leftShoulder});
         
         wristMotor = new TalonSet(new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT));
 

@@ -44,13 +44,9 @@ public class DriveSubsystem extends Subsystem {
 		right2 = new WPI_TalonSRX(RobotMap.RIGHT_DRIVE_PORT_2);
 		
 		//Invert Motors
-		left1.setInverted(false);
-		left2.setInverted(false);
-		//left3.setInverted(false);
-		right1.setInverted(false);
-		right2.setInverted(false);
-		//right3.setInverted(false);
-
+		right1.setInverted(true);
+		right2.setInverted(true);
+		
 		//Instantiate Encoders
 		leftEncoder = new Encoder(RobotMap.LEFT_ENCODER_PORT_A, RobotMap.LEFT_ENCODER_PORT_B, false);
 		rightEncoder = new Encoder(RobotMap.RIGHT_ENCODER_PORT_A, RobotMap.RIGHT_ENCODER_PORT_B,true);

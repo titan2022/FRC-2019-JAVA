@@ -14,20 +14,20 @@ package frc.robot;
  * floating around.
  */
 public class RobotMap {
-    public static final int LEFT_DRIVE_PORT_1 = 0;
-    public static final int LEFT_DRIVE_PORT_2 = 1;
-    public static final int RIGHT_DRIVE_PORT_1 = 2;
-    public static final int RIGHT_DRIVE_PORT_2 = 3;
+    public static final int LEFT_DRIVE_PORT_1 = 3;
+    public static final int LEFT_DRIVE_PORT_2 = 4;
+    public static final int RIGHT_DRIVE_PORT_1 = 1;
+    public static final int RIGHT_DRIVE_PORT_2 = 2;
 
-    public static final int LEFT_ENCODER_PORT_A = 4;
-    public static final int LEFT_ENCODER_PORT_B = 5;
+    public static final int LEFT_ENCODER_PORT_A = -99999;
+    public static final int LEFT_ENCODER_PORT_B = -99999;
 
-    public static final int RIGHT_ENCODER_PORT_A = 6;
+    public static final int RIGHT_ENCODER_PORT_A = 1;
     public static final int RIGHT_ENCODER_PORT_B = 7;
 
-    public static final int SHOULDER_JOINT_PORT_1 = 8;
-    public static final int SHOULDER_JOINT_PORT_2 = 9;
-    public static final int WRIST_JOINT_PORT = 10;
+    public static final int SHOULDER_JOINT_RIGHT_PORT = 6;
+    public static final int SHOULDER_JOINT_LEFT_PORT = 5;
+    public static final int WRIST_JOINT_PORT = 7;
 
     public static final int SHOULDER_ENCODER_PORT_A = 11;
     public static final int SHOULDER_ENCODER_PORT_B = 12;

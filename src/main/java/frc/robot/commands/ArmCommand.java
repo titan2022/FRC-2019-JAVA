@@ -29,9 +29,9 @@ public class ArmCommand extends Command {
     protected void initialize() {
         //Generalizes the interface between PID for each mechanism and its components.
         wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
-            ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
+            ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF, 0).setOutputRange(-1,1);
         armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderEncoder(), armSubsystem.getWristTalons(), ConstantsMap.SHOULDER_MV_KP,
-            ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF).setOutputRange(-1,1);
+            ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF, ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION).setOutputRange(-1,1);
     }
 
     // Called repeatedly when this Command is scheduled to run
