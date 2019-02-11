@@ -1,30 +1,33 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 /*
  * Controls a group of motors as a unit.
  */
 public class TalonSet {
-    WPI_TalonSRX motors[];
+    TalonSRX motors[];
 
-    public TalonSet(WPI_TalonSRX[] talons) {
+    public TalonSet(TalonSRX[] talons) {
         motors = talons;
+        for (TalonSRX motor : motors) motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
     }
 
-    public TalonSet(WPI_TalonSRX talon) {
-        motors = new WPI_TalonSRX[] { talon };
+    public TalonSet(TalonSRX talon) {
+        motors = new TalonSRX[] { talon };
     }
 
     public void set(double speed) {
-        for (WPI_TalonSRX motor : motors) motor.set(speed);
+        for (TalonSRX motor : motors) motor.set(ControlMode.PercentOutput,speed);
     }
 
     public double get() {
         // As all members of a TalonSet should move in unison,
         // if this value is incorrect, you have a bigger problem
         // on your hands.
-        return motors[0].get();
+        return motors[0].getMotorOutputPercent();
     }
 
     public int encTicks() {

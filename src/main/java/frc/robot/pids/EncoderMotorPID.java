@@ -9,18 +9,18 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class EncoderMotorPID implements PIDSource, PIDOutput {
-    Encoder encoder;
     TalonSet motor;
     PIDController pid;
     PIDSourceType pidSourceType;
+    PIDSource source;
     double dpt;
 
-    public EncoderMotorPID(Encoder enc, TalonSet mot, double kp, double ki, double kd, double kf, double dpt) {
-        encoder = enc;
+    public EncoderMotorPID(TalonSet mot, double kp, double ki, double kd, double kf, double dpt) {
         motor = mot;
         pid = new PIDController(kp, ki, kd, kf, this, this);
         pidSourceType = PIDSourceType.kDisplacement;
         this.dpt = dpt;
+        
     }
 
     public EncoderMotorPID setP(double kp) {
@@ -38,10 +38,10 @@ public class EncoderMotorPID implements PIDSource, PIDOutput {
         return this;
     }
 
-    public EncoderMotorPID setDistancePerTick(double dpt) {
+    /* public EncoderMotorPID setDistancePerTick(double dpt) {
         encoder.setDistancePerPulse(dpt);
         return this;
-    }
+    } */
 
     public EncoderMotorPID setOutputRange(double l, double h) {
         pid.setOutputRange(l,h);

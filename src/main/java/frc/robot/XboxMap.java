@@ -31,16 +31,20 @@ public class XboxMap {
 	static public boolean runFollowLineCommand() {
 	 	return oi.xbox.getAValue();
 	}
-
+	public static boolean startAutoBrakerSystem(){
+		return oi.xbox.getRightBumperValue();
+	}
 	//TODO B is also being used for outtake (Change later) // Put it on the other controller??
-	static public boolean interruptFollowLineCommand() {
-		return oi.xbox.getBValue();
+	
 	public static double controlWristJoint() {
 		return oi.xbox.getRightY();
 	}
 	
 	public static double controlShoulderJoint() {
 		return oi.xbox.getLeftY();
+	}
+	public static boolean toggleArmControl() {
+		return oi.xbox.getXValue();
 	}
 
 	public static boolean enableWristLevelling() {
@@ -60,28 +64,14 @@ public class XboxMap {
 		return true;
 	}
 
-	//Universal stop command
-	public static boolean stopSystem() {
-		return oi.xbox.getBackValue();
-	}
-
-	public static boolean shiftLow() {
-		return oi.ps4.getBValue();
-	}
-	public static boolean shiftHigh() {
-		return oi.ps4.getAValue();
-	}
-	
 	
 	public static double right() {
-		return oi.ps4.getRightY();
+		return oi.xbox.getRightY();
 	}
 	
 	public static double left() {
-		return oi.ps4.getLeftY();
+		return oi.xbox.getLeftY();
 	}
 
-	public static boolean interruptFollowLine() {
-		return false;
-	}
+	
 }

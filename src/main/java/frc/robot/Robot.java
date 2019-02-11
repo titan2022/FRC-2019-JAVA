@@ -17,12 +17,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FollowLineCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 
 /**
@@ -33,22 +32,21 @@ import frc.robot.subsystems.FollowLineSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-    public static OI oi;
+  public static OI oi;
 
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
+  public static ArmSubsystem armSubsystem = new ArmSubsystem();
+
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
   UsbCamera camera;
   Command autonomousCommand;
-  public Command driveCommand;
+  Command driveCommand;
   Command followLineCommand;
+  Command armCommand;
   SendableChooser<Command> chooser = new SendableChooser<>();
   CameraServer server;
-
-   
-    public static ArmSubsystem armSubsystem = new ArmSubsystem();
-  
     
-
+  boolean armEnable;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -56,12 +54,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
-    chooser.setDefaultOption("Default Auto", new ExampleCommand());
+   
     // chooser.addOption("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
     followLineCommand = new FollowLineCommand();
+    armCommand = new ArmCommand();
     server = CameraServer.getInstance();
     //server.startAutomaticCapture("Ground",0);
   }
@@ -139,7 +137,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-    }
+    
     driveCommand.start();
     
   }
@@ -151,13 +149,30 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if(XboxMap.runFollowLineCommand()){
-      driveCommand.cancel();
-      followLineCommand.start();
+      if(followLineCommand.isRunning()){
+        followLineCommand.cancel();
+        driveCommand.start();
+      }
+      else{
+        driveCommand.cancel();
+        followLineCommand.start();
+      }
+      
+    }   
+      
+    
+    if(XboxMap.toggleArmControl()){
+      if(armCommand.isRunning()){
+        armCommand.cancel();
+        driveCommand.start();
+      }
+      else{
+        driveCommand.cancel();
+        armCommand.start();
+
+      }
     }
-    if(XboxMap.interruptFollowLineCommand()){
-      followLineCommand.cancel();
-      driveCommand.start();
-    }
+    SmartDashboard.putBoolean("Arm Conrol", armCommand.isRunning());
     Scheduler.getInstance().run();
   }
 
