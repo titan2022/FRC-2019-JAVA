@@ -9,6 +9,7 @@ package frc.robot;
 
 import java.util.Arrays;
 
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -56,8 +57,9 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
     followLineCommand = new FollowLineCommand();
-    server = CameraServer.getInstance();
-    //server.startAutomaticCapture("Ground",0);
+    UsbCamera c = CameraServer.getInstance().startAutomaticCapture();
+    MjpegServer s = CameraServer.getInstance().addServer("gripStream");
+    s.setSource(c);
   }
 
   /**
