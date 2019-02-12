@@ -57,7 +57,7 @@ public class ArmCommand extends Command {
         }
         else
             wristLevelPID.disable();
-  */
+        */
 
         /*
         if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
@@ -144,6 +144,7 @@ public class ArmCommand extends Command {
             }
         }
         */
+        
 
     }
 
