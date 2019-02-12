@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -58,8 +59,9 @@ public class Robot extends TimedRobot {
     autonomousCommand = new FollowLineCommand();
     followLineCommand = new FollowLineCommand();
     UsbCamera c = CameraServer.getInstance().startAutomaticCapture();
-    MjpegServer s = CameraServer.getInstance().addServer("gripStream");
+    VideoSink s = CameraServer.getInstance().addServer("Process",1185);
     s.setSource(c);
+    
   }
 
   /**
