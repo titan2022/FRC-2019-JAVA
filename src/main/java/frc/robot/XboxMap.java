@@ -60,11 +60,11 @@ public class XboxMap {
 
 	//Driving Controls 
 	public static double right() {
-		return oi.ps4.getRightY();
+		return oi.xbox.getRightY();
 	}
 	
 	public static double left() {
-		return oi.ps4.getLeftY();
+		return oi.xbox.getLeftY();
 	}
 
 	static public boolean runFollowLineCommand() {
