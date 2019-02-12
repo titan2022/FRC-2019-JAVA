@@ -30,12 +30,11 @@ public class ArmCommand extends Command {
         System.out.println("Arm Command Started");
 
         //Generalizes the interface between PID for each mechanism and its components.
-        /*
-        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
+        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF, 0).setOutputRange(-1,1);
-        armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderEncoder(), armSubsystem.getWristTalons(), ConstantsMap.SHOULDER_MV_KP,
+        armMovementPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.SHOULDER_MV_KP,
             ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF, ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION).setOutputRange(-1,1);
-        */
+        
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -52,9 +51,6 @@ public class ArmCommand extends Command {
         armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
         armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
 
-
-
-        /*
         if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             //Do not press multiple presets at the same time.
             //TODO Set the angles that the arm and wrist should go to.
@@ -138,7 +134,7 @@ public class ArmCommand extends Command {
                 armSubsystem.setShoulderJointSpeed(0);
             }
         }
-        */
+
     }
 
     /**
