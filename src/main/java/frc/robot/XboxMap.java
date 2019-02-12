@@ -47,7 +47,7 @@ public class XboxMap {
 
 	//TODO Map to Buttons
 	public static boolean enableCargoPreset() {
-		return true;
+		return oi.xbox.getAValue()	 ;
 	}
 
 	public static boolean enableLevel2Preset() {
