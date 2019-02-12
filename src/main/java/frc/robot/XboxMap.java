@@ -28,12 +28,6 @@ public class XboxMap {
 
 	//Elevator commands
 
-	static public boolean runFollowLineCommand() {
-	 	return oi.xbox.getAValue();
-	}
-	public static boolean startAutoBrakerSystem(){
-		return oi.xbox.getRightBumperValue();
-	}
 	//TODO B is also being used for outtake (Change later) // Put it on the other controller??
 	
 	public static double controlWristJoint() {
@@ -64,14 +58,21 @@ public class XboxMap {
 		return true;
 	}
 
-	
+	//Driving Controls 
 	public static double right() {
-		return oi.xbox.getRightY();
+		return oi.ps4.getRightY();
 	}
 	
 	public static double left() {
-		return oi.xbox.getLeftY();
+		return oi.ps4.getLeftY();
 	}
+
+	static public boolean runFollowLineCommand() {
+		return oi.ps4.getAValue();
+   }
+   public static boolean startAutoBrakerSystem(){
+	   return oi.ps4.getRightBumperValue();
+   }
 
 	
 }
