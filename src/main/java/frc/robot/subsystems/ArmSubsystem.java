@@ -37,7 +37,6 @@ public class ArmSubsystem extends Subsystem {
        // wristEncoder.reset();
         //shoulderEncoder.reset();
 
-        TalonSRX rightShoulder, leftShoulder;
         rightShoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
         leftShoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
         rightShoulder.setInverted(true);
@@ -51,12 +50,14 @@ public class ArmSubsystem extends Subsystem {
         //lowerLimitWrist = new DigitalInput(RobotMap.UPPER_WRIST_LIMIT_PORT);
     }
 
-    public Encoder getWristEncoder() {
-        return wristEncoder;
+    public double getShoulderEncoderAngle()
+    {
+        return 360 * getShoulderTalons().encTicks() * 1.0 / ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION;
     }
 
-    public Encoder getShoulderEncoder() {
-        return shoulderEncoder;
+    public double getWristEncoderAngle()
+    {
+        return 360 * getWristTalons().encTicks() * 1.0 / ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION;
     }
 
     public TalonSet getWristTalons() {
@@ -73,14 +74,6 @@ public class ArmSubsystem extends Subsystem {
 
     public void setWristJointSpeed(double speed) {
         wristMotor.set(speed);
-    }
-
-    public double getShoulderDistance() {
-        return shoulderEncoder.getDistance();
-    }
-
-    public double getWristDistance() {
-        return wristEncoder.getDistance();
     }
 
     public boolean getShoulderUpperLimit(){

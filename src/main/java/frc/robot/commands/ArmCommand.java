@@ -51,6 +51,7 @@ public class ArmCommand extends Command {
         armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
         armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
 
+        /*
         if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             //Do not press multiple presets at the same time.
             //TODO Set the angles that the arm and wrist should go to.
@@ -90,8 +91,8 @@ public class ArmCommand extends Command {
         //Otherwise the wrist is able to move freely without PID for both types of levelling
         //The PID will continue working until it has reached its target, the shoulder joystick moves, or enableLevelWrist is on
         if (!enableLevelWrist && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
-                && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristDistance() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
-            wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristDistance()));
+                && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristEncoderAngle() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
+            wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristEncoderAngle()));
         } else if (Math.abs(amountToMoveWristJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             wristLevelPID.disable();
             armSubsystem.setWristJointSpeed(amountToMoveWristJoint * ConstantsMap.WRIST_SPEED_MULT);
@@ -102,8 +103,8 @@ public class ArmCommand extends Command {
         //Otherwise the shoulder is able to move freely without PID
         //The PID will continue working until it has reached its target or the shoulder joystick moves
         if (Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
-                && Math.abs(getShoulderEncoderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
-            armMovementPID.setSetpoint(armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
+                && Math.abs(getShoulderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
+            armMovementPID.setSetpoint(armSubsystem.getShoulderEncoderAngle() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
             armMovementPID.enable();
         } else if (Math.abs(amountToMoveShoulderJoint) > ConstantsMap.JOYSTICK_SENSITIVITY) {
             armMovementPID.disable();
@@ -134,6 +135,7 @@ public class ArmCommand extends Command {
                 armSubsystem.setShoulderJointSpeed(0);
             }
         }
+        */
 
     }
 
@@ -142,8 +144,8 @@ public class ArmCommand extends Command {
      * 0 degrees is straight down and positive is infront of the robot.
      * @return angle in degrees
      */
-    private double getShoulderEncoderAngle() {
-        return ConstantsMap.SHOULDER_OFFSET + armSubsystem.getShoulderDistance() / ConstantsMap.SHOULDER_GEAR_RATIO;
+    private double getShoulderAngle() {
+        return ConstantsMap.SHOULDER_OFFSET + armSubsystem.getShoulderEncoderAngle() / ConstantsMap.SHOULDER_GEAR_RATIO;
     }
 
     /**
@@ -151,7 +153,7 @@ public class ArmCommand extends Command {
      * @return
      */
     private double getWristLevelledAngle() {
-        return getShoulderEncoderAngle() + ConstantsMap.WRIST_OFFSET;
+        return armSubsystem.getShoulderEncoderAngle() + ConstantsMap.WRIST_OFFSET;
     }
 
     /**
@@ -160,7 +162,7 @@ public class ArmCommand extends Command {
      * @return angle that the encoder should go to maintain in world space as the shoulder moves
      */
     private double getRelativeLevelledAngle(double angle) {
-        return angle - getWristLevelledAngle() + getShoulderEncoderAngle();
+        return angle - getWristLevelledAngle() + getShoulderAngle();
     }
 
     // Make this return true when this Command no longer needs to run execute()
