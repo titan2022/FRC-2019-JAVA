@@ -27,6 +27,8 @@ public class ArmCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        System.out.println("Arm Command Started");
+
         //Generalizes the interface between PID for each mechanism and its components.
         /*
         wristLevelPID = new EncoderMotorPID(armSubsystem.getWristEncoder(), armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
@@ -47,8 +49,8 @@ public class ArmCommand extends Command {
         if (Math.abs(amountToMoveWristJoint) < 0.1) {
             amountToMoveWristJoint = 0;
         }
-        //armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
-        //armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
+        armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
 
 
 
@@ -174,6 +176,8 @@ public class ArmCommand extends Command {
     // Called once after isFinished returns true
     @Override
     protected void end() {
+        System.out.println("Arm Command Stopped");
+
     }
 
     // Called when another command which requires one or more of the same
