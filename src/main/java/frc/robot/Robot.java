@@ -20,9 +20,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowLineCommand;
+import frc.robot.commands.HatchGrabberCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
+import frc.robot.subsystems.HatchGrabberSubsystem;
 
 /**
 * The VM is configured to automatically run this class, and to call the
@@ -38,11 +40,14 @@ public class Robot extends TimedRobot {
     public static ArmSubsystem armSubsystem = new ArmSubsystem();
     
     public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
+    public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
+
     UsbCamera camera;
     Command autonomousCommand;
     Command driveCommand;
     Command followLineCommand;
     Command armCommand;
+    Command hgCommand;
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     
@@ -59,6 +64,7 @@ public class Robot extends TimedRobot {
         driveCommand = new DriveCommand();
         autonomousCommand = new FollowLineCommand();
         followLineCommand = new FollowLineCommand();
+        hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand();
         server = CameraServer.getInstance();
         //server.startAutomaticCapture("Ground",0);
@@ -137,7 +143,7 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        
+        hgCommand.start();
         driveCommand.start();
         
     }

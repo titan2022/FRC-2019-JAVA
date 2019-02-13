@@ -69,10 +69,24 @@ public class XboxMap {
 
 	static public boolean runFollowLineCommand() {
 		return oi.ps4.getAValue();
-   }
-   public static boolean startAutoBrakerSystem(){
+    }
+    public static boolean startAutoBrakerSystem(){
 	   return oi.ps4.getRightBumperValue();
-   }
+    }
 
-	
+	public static boolean ejectHatch() {
+		return oi.xbox.getYValue();
+	}
+
+	public static boolean retractEjectors() {
+		return oi.xbox.getBValue();
+	}
+
+	public static boolean extendGrabber() {
+		return oi.xbox.getRightBumperValue();
+	}
+
+	public static boolean retractGrabber() {
+		return oi.xbox.getLeftBumperValue();
+	}
 }
