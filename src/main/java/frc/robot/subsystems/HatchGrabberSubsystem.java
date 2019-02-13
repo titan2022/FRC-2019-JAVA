@@ -24,9 +24,9 @@ public class HatchGrabberSubsystem extends Subsystem {
     DoubleSolenoid grabberPiston, releasePiston1, releasePiston2;
 
     public HatchGrabberSubsystem() {
+        
         grabberPiston = new DoubleSolenoid(RobotMap.GRAB_PISTON_F, RobotMap.GRAB_PISTON_R);
         releasePiston1 = new DoubleSolenoid(RobotMap.RELEASE_PISTON_1_F, RobotMap.RELEASE_PISTON_1_R);
-        releasePiston2 = new DoubleSolenoid(RobotMap.RELEASE_PISTON_2_F, RobotMap.RELEASE_PISTON_2_R);
     }
 
     public void extendGrabber() {
@@ -39,12 +39,10 @@ public class HatchGrabberSubsystem extends Subsystem {
 
     public void releaseHatch() {
         releasePiston1.set(Value.kForward);
-        releasePiston2.set(Value.kForward);
     }
 
     public void retractEjectors() {
         releasePiston1.set(Value.kReverse);
-        releasePiston2.set(Value.kReverse);
     }
     
     @Override

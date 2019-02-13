@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.pids.EncoderMotorPID;
@@ -85,6 +85,7 @@ public class ArmCommand extends Command {
         //Otherwise the wrist should not be levelling at the moment
         //Run so long as we are not moving the joystick, and the switch is on and or the enable level wrist button is hit 
         //It is only turned off if you move the joystick 
+        System.out.println("Wassup");
         if((Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) && (enableLevelWrist || XboxMap.enableWristLevelling())) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
@@ -97,6 +98,7 @@ public class ArmCommand extends Command {
         //then the angle of the wrist will be preserved
         //Otherwise the wrist is able to move freely without PID for both types of levelling
         //The PID will continue working until it has reached its target, the shoulder joystick moves, or enableLevelWrist is on
+        System.out.println("Wassup again");
         if (!enableLevelWrist && Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getRelativeLevelledAngle(armSubsystem.getWristEncoderAngle() - wristLevelPID.getSetpoint())) > ConstantsMap.WRIST_TOLERANCE) {
             wristLevelPID.setSetpoint(getRelativeLevelledAngle(armSubsystem.getWristEncoderAngle()));
@@ -109,6 +111,7 @@ public class ArmCommand extends Command {
         //then the angle of the shoulder will be preserved
         //Otherwise the shoulder is able to move freely without PID
         //The PID will continue working until it has reached its target or the shoulder joystick moves
+        System.out.println("Wassup again again");
         if (Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY
                 && Math.abs(getShoulderAngle() - armMovementPID.getSetpoint()) > ConstantsMap.SHOULDER_TOLERANCE) {
             armMovementPID.setSetpoint(armSubsystem.getShoulderEncoderAngle() / ConstantsMap.SHOULDER_GEAR_RATIO + ConstantsMap.SHOULDER_OFFSET);
@@ -119,29 +122,32 @@ public class ArmCommand extends Command {
         }
         
         //Check to see if the wrist or shoulder has reached the limits and we need to stop them 
-        if (armSubsystem.getShoulderLowerLimit()) {
-            if (armSubsystem.getShoulderSpeed() < 0) {
-                armSubsystem.setShoulderJointSpeed(0);
-            }
-        }
+        // System.out.println("Hello");
+        // if (armSubsystem.getShoulderLowerLimit()) {
+        //     if (armSubsystem.getShoulderSpeed() < 0) {
+        //         armSubsystem.setShoulderJointSpeed(0);
+        //     }
+        // }
 
-        if (armSubsystem.getShoulderUpperLimit()) {
-            if (armSubsystem.getShoulderSpeed() > 0) {
-                armSubsystem.setShoulderJointSpeed(0);
-            }
-        }
+        // if (armSubsystem.getShoulderUpperLimit()) {
+        //     if (armSubsystem.getShoulderSpeed() > 0) {
+        //         armSubsystem.setShoulderJointSpeed(0);
+        //     }
+        // }
 
-        if (armSubsystem.getWristLowerLimit()) {
-            if (armSubsystem.getWristSpeed() < 0) {
-                armSubsystem.setShoulderJointSpeed(0);
-            }
-        }
+        // if (armSubsystem.getWristLowerLimit()) {
+        //     if (armSubsystem.getWristSpeed() < 0) {
+        //         armSubsystem.setShoulderJointSpeed(0);
+        //         System.out.println("Yeeting");
+        //     }
+        // }
+        SmartDashboard.putBoolean("limit Switch Wrist", armSubsystem.getWristLowerLimit());
 
-        if (armSubsystem.getWristUpperLimit()) {
-            if (armSubsystem.getWristSpeed() > 0) {
-                armSubsystem.setShoulderJointSpeed(0);
-            }
-        }
+        // if (armSubsystem.getWristUpperLimit()) {
+        //     if (armSubsystem.getWristSpeed() > 0) {
+        //         armSubsystem.setShoulderJointSpeed(0);
+        //     }
+        // }
 
     }
 

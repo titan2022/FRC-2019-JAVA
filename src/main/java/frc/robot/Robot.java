@@ -12,6 +12,7 @@ import java.util.Arrays;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -50,7 +51,7 @@ public class Robot extends TimedRobot {
     Command hgCommand;
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
-    
+    Compressor compressor;
     boolean armEnable;
     /**
     * This function is run when the robot is first started up and should be
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot {
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand();
         server = CameraServer.getInstance();
+        compressor = new Compressor(10);
         //server.startAutomaticCapture("Ground",0);
     }
     
@@ -143,6 +145,8 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+        
+        compressor.start();
         hgCommand.start();
         driveCommand.start();
         

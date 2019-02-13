@@ -45,7 +45,7 @@ public class ConstantsMap {
     public static final double WRIST_ZERO_KD = 1;
     public static final double WRIST_ZERO_KF = 0;
 
-    public static final double WRIST_SPEED_MULT = .5;
+    public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
 

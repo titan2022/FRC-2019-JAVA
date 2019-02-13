@@ -24,17 +24,12 @@ public class ArmSubsystem extends Subsystem {
     // here. Call these from Commands.
 
     private TalonSet shoulderMotors, wristMotor;
-    private Encoder shoulderEncoder, wristEncoder;
+
 
     private DigitalInput upperLimit, lowerLimit, upperLimitWrist, lowerLimitWrist;
     
 
     public ArmSubsystem() {
-        shoulderEncoder = new Encoder(RobotMap.SHOULDER_ENCODER_PORT_A, RobotMap.SHOULDER_ENCODER_PORT_B);
-        wristEncoder = new Encoder(RobotMap.WRIST_ENCODER_PORT_A, RobotMap.WRIST_ENCODER_PORT_B);
-        wristEncoder.reset();
-        shoulderEncoder.reset();
-
         WPI_TalonSRX rightShoulder, leftShoulder;
         rightShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
         leftShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
@@ -43,9 +38,9 @@ public class ArmSubsystem extends Subsystem {
         
         wristMotor = new TalonSet(new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT));
 
-        upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
-        lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
-        upperLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
+        //upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
+        //lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
+        //upperLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
         lowerLimitWrist = new DigitalInput(RobotMap.UPPER_WRIST_LIMIT_PORT);
     }
 
@@ -73,14 +68,6 @@ public class ArmSubsystem extends Subsystem {
         wristMotor.set(speed);
     }
 
-    public double getShoulderDistance() {
-        return shoulderEncoder.getDistance();
-    }
-
-    public double getWristDistance() {
-        return wristEncoder.getDistance();
-    }
-
     public boolean getShoulderUpperLimit(){
         return upperLimit.get();
     }
@@ -94,6 +81,7 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public boolean getWristLowerLimit(){
+
         return lowerLimitWrist.get();
     }
 
