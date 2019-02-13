@@ -49,12 +49,12 @@ public class ArmSubsystem extends Subsystem {
         lowerLimitWrist = new DigitalInput(RobotMap.UPPER_WRIST_LIMIT_PORT);
     }
 
-    public Encoder getWristEncoder() {
-        return wristEncoder;
+    public double getShoulderEncoderAngle() {
+        return 360 * getShoulderTalons().encTicks() / ConstantsMap.SHOULDER_ENCODER_TICKS_PER_ROTATION;
     }
 
-    public Encoder getShoulderEncoder() {
-        return shoulderEncoder;
+    public double getWristEncoderAngle() {
+        return 360 * getWristTalons().encTicks() / ConstantsMap.WRIST_ENCODER_TICKS_PER_ROTATION;
     }
 
     public TalonSet getWristTalons() {
