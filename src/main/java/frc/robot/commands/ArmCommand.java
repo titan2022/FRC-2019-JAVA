@@ -59,7 +59,6 @@ public class ArmCommand extends Command {
             wristLevelPID.disable();
         */
 
-        /*
         if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
             //Do not press multiple presets at the same time.
             //TODO Set the angles that the arm and wrist should go to.
@@ -143,8 +142,6 @@ public class ArmCommand extends Command {
                 armSubsystem.setShoulderJointSpeed(0);
             }
         }
-        */
-        
 
     }
 
