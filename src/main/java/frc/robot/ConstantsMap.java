@@ -12,13 +12,11 @@ package frc.robot;
  */
 public class ConstantsMap {
 
-
-
     public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
     public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
     public static final double TURTLE_SPEED = .5; //to be determined
-    public static final double JOYSTICK_SENSITIVITY = 1; //to be determined
+    public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
 
     //for line follower
@@ -73,4 +71,5 @@ public class ConstantsMap {
     public static final double PID_INTEGRAL_CONSTANT = .2;
     public static final double PID_DERIVATIVE_CONSTANT = .001;
     public static final double PID_INPUT_MAX = 180;
+
 }

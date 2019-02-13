@@ -14,6 +14,10 @@ import frc.robot.subsystems.HatchGrabberSubsystem;
 
 public class HatchGrabberCommand extends Command {
     HatchGrabberSubsystem hatchGrabberSubsystem = Robot.hatchGrabberSubsystem;
+    private boolean grabberOut = false;
+    private boolean hatchReleased = false;
+    private double lastPressedG = 0;
+    private double lastPressedH = 0;
 
     public HatchGrabberCommand() {
         requires(hatchGrabberSubsystem);
@@ -27,14 +31,36 @@ public class HatchGrabberCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        if (XboxMap.ejectHatch()) {
-            hatchGrabberSubsystem.releaseHatch();
-        } else if (XboxMap.retractEjectors()) {
-            hatchGrabberSubsystem.retractEjectors();
-        } else if (XboxMap.extendGrabber()) {
-            hatchGrabberSubsystem.extendGrabber();
-        } else if (XboxMap.retractGrabber()) {
-            hatchGrabberSubsystem.retractGrabber();
+        // if (XboxMap.ejectHatch()) {
+        //     hatchGrabberSubsystem.releaseHatch();
+        // } else if (XboxMap.retractEjectors()) {
+        //     hatchGrabberSubsystem.retractEjectors();
+        // } else if (XboxMap.extendGrabber()) {
+        //     hatchGrabberSubsystem.extendGrabber();
+        // } else if (XboxMap.retractGrabber()) {
+        //     hatchGrabberSubsystem.retractGrabber();
+        // }
+
+        if(XboxMap.grabberPiston() && (System.currentTimeMillis() - lastPressedG) > 500) {
+            lastPressedG = System.currentTimeMillis();
+            if(grabberOut) {
+                hatchGrabberSubsystem.extendGrabber();
+                grabberOut = !grabberOut;
+            }
+            else {
+                hatchGrabberSubsystem.retractGrabber();
+                grabberOut = !grabberOut;
+            }
+        }
+
+        if(XboxMap.hatchPiston() && (System.currentTimeMillis() - lastPressedH) > 500) {
+            lastPressedH = System.currentTimeMillis();
+            if(hatchReleased) {
+                hatchGrabberSubsystem.releaseHatch();
+            }
+            else {
+                hatchGrabberSubsystem.retractEjectors();
+            }
         }
     }
     

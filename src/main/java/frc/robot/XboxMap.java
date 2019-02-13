@@ -74,19 +74,27 @@ public class XboxMap {
 	   return oi.ps4.getRightBumperValue();
     }
 
-	public static boolean ejectHatch() {
-		return oi.xbox.getYValue();
-	}
-
-	public static boolean retractEjectors() {
-		return oi.xbox.getBValue();
-	}
-
-	public static boolean extendGrabber() {
-		return oi.xbox.getRightBumperValue();
-	}
-
-	public static boolean retractGrabber() {
+	public static boolean hatchPiston() {
 		return oi.xbox.getLeftBumperValue();
 	}
+
+	public static boolean grabberPiston() {
+		return oi.xbox.getRightBumperValue();
+	}
+	
+	// public static boolean ejectHatch() {
+	// 	return oi.xbox.getYValue();
+	// }
+
+	// public static boolean retractEjectors() {
+	// 	return oi.xbox.getBValue();
+	// }
+
+	// public static boolean extendGrabber() {
+	// 	return oi.xbox.getRightBumperValue();
+	// }
+
+	// public static boolean retractGrabber() {
+	// 	return oi.xbox.getLeftBumperValue();
+	// }
 }
