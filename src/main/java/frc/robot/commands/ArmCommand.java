@@ -80,10 +80,6 @@ public class ArmCommand extends Command {
             armMovementPID.enable();
         }
 
-        //Print out encoder values for testing 
-        SmartDashboard.putNumber("Shoulder Angle", armSubsystem.getShoulderEncoderAngle());
-        SmartDashboard.putNumber("Wrist Angle", armSubsystem.getWristEncoderAngle());
-
         /*
         //If the joystick is at 0 and the button was true previously then run levelling of the wrist
         //or the current button is not equal to the previous press when the joystick is at 0
