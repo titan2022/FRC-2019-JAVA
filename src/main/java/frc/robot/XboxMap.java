@@ -37,10 +37,16 @@ public class XboxMap {
 	public static double controlShoulderJoint() {
 		return oi.xbox.getLeftY();
 	}
+
 	public static boolean toggleArmControl() {
 		return oi.xbox.getXValue();
 	}
-
+	public static boolean zeroWrist() {
+		return oi.xbox.getXValue() && oi.xbox.getAValue() && oi.xbox.getBValue();
+	}
+	public static boolean zeroShoulder() {
+		return oi.xbox.getXValue() && oi.xbox.getYValue() && oi.xbox.getBValue();
+	}
 	public static boolean enableWristLevelling() {
 		return oi.xbox.getBValue();
 	}

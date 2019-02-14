@@ -19,8 +19,11 @@ public class EncoderMotorPID implements PIDSource, PIDOutput {
         motor = mot;
         pid = new PIDController(kp, ki, kd, kf, this, this);
         pidSourceType = PIDSourceType.kDisplacement;
+        
     }
-
+    public PIDController getPID(){
+        return this.pid;
+    }
     public EncoderMotorPID setP(double kp) {
         pid.setP(kp);
         return this;

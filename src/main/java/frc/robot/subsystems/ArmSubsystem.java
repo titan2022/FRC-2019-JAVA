@@ -7,11 +7,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
 import frc.robot.TalonSet;
@@ -30,18 +32,23 @@ public class ArmSubsystem extends Subsystem {
     
 
     public ArmSubsystem() {
-        WPI_TalonSRX rightShoulder, leftShoulder;
-        rightShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
-        leftShoulder = new WPI_TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
+        TalonSRX rightShoulder, leftShoulder,wrist;
+        rightShoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
+        leftShoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
         rightShoulder.setInverted(true);
-        shoulderMotors = new TalonSet(new WPI_TalonSRX[] {rightShoulder, leftShoulder})
-            .setDistance(360 / ConstantsMap.WRIST_ENCODER_TICKS_PER_ROTATION);
-        wristMotor = new TalonSet(new WPI_TalonSRX(RobotMap.WRIST_JOINT_PORT)).setDistance(360 / ConstantsMap.WRIST_ENCODER_TICKS_PER_ROTATION);
+        shoulderMotors = new TalonSet(new TalonSRX[] {rightShoulder, leftShoulder})
+            .setDistance(ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK);
+        wrist = new TalonSRX(RobotMap.WRIST_JOINT_PORT);
+        wrist.setInverted(true);
+        wristMotor = new TalonSet(wrist)
+            .setDistance(ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK);
 
         //upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
         //lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
         //upperLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
         lowerLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
+        lowerLimitWrist.setName("LowerWristLimit");
+        SmartDashboard.putData(lowerLimitWrist);
     }
 
     public double getShoulderEncoderAngle() {
@@ -68,6 +75,13 @@ public class ArmSubsystem extends Subsystem {
         wristMotor.set(speed);
     }
 
+    public void zeroWrist() {
+        wristMotor.zeroEncoder();;
+    }
+    public void zeroShoulder() {
+        shoulderMotors.zeroEncoder();;
+    }
+
     public boolean getShoulderUpperLimit(){
         return upperLimit.get();
     }
@@ -82,7 +96,7 @@ public class ArmSubsystem extends Subsystem {
 
     public boolean getWristLowerLimit(){
 
-        return lowerLimitWrist.get();
+        return !lowerLimitWrist.get();
     }
 
     public double getShoulderSpeed(){

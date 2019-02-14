@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
         // chooser.addOption("My Auto", new MyAutoCommand());
         driveCommand = new DriveCommand();
         autonomousCommand = new FollowLineCommand();
-        followLineCommand = new FollowLineCommand();
+        //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand();
         server = CameraServer.getInstance();
@@ -149,7 +149,8 @@ public class Robot extends TimedRobot {
         }
         
         hgCommand.start();
-        driveCommand.start();
+        armCommand.start();
+        //driveCommand.start();
         
     }
     
@@ -159,7 +160,7 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void teleopPeriodic() {
-        if(XboxMap.runFollowLineCommand()){
+        /* if(XboxMap.runFollowLineCommand()){
             if(followLineCommand.isRunning()){
                 followLineCommand.cancel();
                 driveCommand.start();
@@ -169,10 +170,10 @@ public class Robot extends TimedRobot {
                 followLineCommand.start();
             }
             
-        }   
+        }    */
         
         
-        if(XboxMap.toggleArmControl()){
+        /* if(XboxMap.toggleArmControl()){
             if(armCommand.isRunning()){
                 armCommand.cancel();
                 driveCommand.start();
@@ -182,7 +183,7 @@ public class Robot extends TimedRobot {
                 armCommand.start();
                 
             }
-        }
+        } */
         SmartDashboard.putBoolean("Arm Conrol", armCommand.isRunning());
         Scheduler.getInstance().run();
     }

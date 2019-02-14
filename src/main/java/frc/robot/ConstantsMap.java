@@ -46,11 +46,17 @@ public class ConstantsMap {
     public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
+    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 81);
+    public static final double WRIST_MIN_ANGLE = -100.0;
+    public static final double WRIST_MAX_ANGLE = 100.0;
+
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
+    public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 70 * 5);
+
     public static final double SHOULDER_GEAR_RATIO = 350.0;
-    public static final double SHOULDER_MIN_ANGLE = 23.0;
-    public static final double SHOULDER_MAX_ANGLE = 121.0;
+    public static final double SHOULDER_MIN_ANGLE = -45.0;
+    public static final double SHOULDER_MAX_ANGLE = 90.0;
 
     public static final double SHOULDER_MV_KP = 1.0;
     public static final double SHOULDER_MV_KI = 1.0;

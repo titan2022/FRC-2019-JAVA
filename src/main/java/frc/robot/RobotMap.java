@@ -45,7 +45,7 @@ public class RobotMap {
 
     //TODO Set these to real ports 
     public static final int UPPER_WRIST_LIMIT_PORT = 20;
-    public static final int LOWER_WRIST_LIMIT_PORT = 0;
+    public static final int LOWER_WRIST_LIMIT_PORT = 1;
 
     public static final int GRAB_PISTON_F = 4;
     public static final int GRAB_PISTON_R = 5;

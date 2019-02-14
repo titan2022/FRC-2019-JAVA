@@ -18,8 +18,10 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmCommand extends Command {
     ArmSubsystem armSubsystem = Robot.armSubsystem;
     EncoderMotorPID wristLevelPID, armMovementPID;
-    private boolean enableLevelWrist;
-
+    private boolean enableLevelWrist = true;
+    boolean manualMode = true;
+    private double armAngle;
+    private double wristAngle;
     public ArmCommand() {
         requires(armSubsystem);
     }
@@ -32,14 +34,44 @@ public class ArmCommand extends Command {
         //Generalizes the interface between PID for each mechanism and its components.
         wristLevelPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
-        armMovementPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.SHOULDER_MV_KP,
+        armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderTalons(), ConstantsMap.SHOULDER_MV_KP,
             ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF).setOutputRange(-1,1);
+        
+        armAngle = armSubsystem.getShoulderEncoderAngle();
+        wristAngle = armSubsystem.getWristEncoderAngle();
+        wristLevelPID.getPID().setInputRange(-360, 360);
+        wristLevelPID.getPID().setOutputRange(-1, 1);
+        wristLevelPID.getPID().setContinuous();
+
+        armMovementPID.getPID().setInputRange(-360, 360);
+        armMovementPID.getPID().setOutputRange(-1, 1);
+
+        armMovementPID.getPID().setContinuous();
          
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
+        SmartDashboard.putBoolean("Mnaual Mode", manualMode);
+
+        if(XboxMap.zeroWrist()){
+            armSubsystem.zeroWrist();
+        }
+        else if(XboxMap.zeroShoulder()){
+            armSubsystem.zeroShoulder();
+        }
+        else if(XboxMap.toggleArmControl()){
+            if(manualMode){
+                //wristLevelPID.enable();
+                armMovementPID.enable();
+            } 
+            else{
+                //wristLevelPID.disable();
+                armMovementPID.disable();
+            }
+            manualMode = !manualMode;
+        }
         double amountToMoveShoulderJoint = XboxMap.controlShoulderJoint();
         double amountToMoveWristJoint = XboxMap.controlWristJoint();
         if (Math.abs(amountToMoveShoulderJoint) < 0.1) {
@@ -48,9 +80,46 @@ public class ArmCommand extends Command {
         if (Math.abs(amountToMoveWristJoint) < 0.1) {
             amountToMoveWristJoint = 0;
         }
-        armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
-        armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        
+        if(manualMode){
+            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
+            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        }
+        else{
 
+        
+            if (armSubsystem.getWristLowerLimit()) {
+                if (amountToMoveWristJoint < 0) {
+                    
+                    armSubsystem.setWristJointSpeed(0);
+                    amountToMoveWristJoint = 0;
+                    System.out.println("Yeeting");
+                }
+            }
+            else{
+                armAngle += amountToMoveShoulderJoint;
+                wristAngle += amountToMoveWristJoint;
+            }
+            if(XboxMap.enableWristLevelling()){
+                enableLevelWrist = !enableLevelWrist;
+            }
+
+            if(armAngle > ConstantsMap.SHOULDER_MAX_ANGLE){
+                armAngle = ConstantsMap.SHOULDER_MAX_ANGLE;
+            }
+            if(armAngle < ConstantsMap.SHOULDER_MIN_ANGLE){
+                armAngle = ConstantsMap.SHOULDER_MIN_ANGLE;
+            }
+            if(wristAngle > ConstantsMap.WRIST_MAX_ANGLE){
+                armAngle = ConstantsMap.WRIST_MAX_ANGLE;
+            }
+            if(wristAngle < ConstantsMap.WRIST_MIN_ANGLE){
+                armAngle = ConstantsMap.WRIST_MIN_ANGLE;
+            }
+        }
+        //armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
+        //armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        
         /* if(XboxMap.enableCargoPreset()){
             wristLevelPID.enable();
             wristLevelPID.setSetpoint(45);
@@ -59,7 +128,7 @@ public class ArmCommand extends Command {
             wristLevelPID.disable();
         */
 
-        if(Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY && Math.abs(amountToMoveShoulderJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) {
+        
             //Do not press multiple presets at the same time.
             //TODO Set the angles that the arm and wrist should go to.
             if(XboxMap.enableCargoPreset()) {
@@ -76,18 +145,25 @@ public class ArmCommand extends Command {
                 wristLevelPID.setSetpoint(getRelativeLevelledAngle(0));
                 armMovementPID.setSetpoint(getRelativeLevelledAngle(0));
             }
-            wristLevelPID.enable();
-            armMovementPID.enable();
-        }
+            else if(enableLevelWrist){
+                wristLevelPID.setSetpoint(getRelativeLevelledAngle(armAngle));
+                armMovementPID.setSetpoint(armAngle);
+            }
+            else{
+                wristLevelPID.setSetpoint(wristAngle);
+                armMovementPID.setSetpoint(armAngle);
+            }
+        
 
-        /*
-        //If the joystick is at 0 and the button was true previously then run levelling of the wrist
+        
+       /*  //If the joystick is at 0 and the button was true previously then run levelling of the wrist
         //or the current button is not equal to the previous press when the joystick is at 0
         //Otherwise the wrist should not be levelling at the moment
         //Run so long as we are not moving the joystick, and the switch is on and or the enable level wrist button is hit 
         //It is only turned off if you move the joystick 
+
         System.out.println("Wassup");
-        if((Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) && (enableLevelWrist || XboxMap.enableWristLevelling())) {
+        if((Math.abs(amountToMoveWristJoint) < ConstantsMap.JOYSTICK_SENSITIVITY) && (enableLevelWrist || )) {
             wristLevelPID.setSetpoint(getWristLevelledAngle());
             wristLevelPID.enable();
             enableLevelWrist = true;
@@ -121,7 +197,7 @@ public class ArmCommand extends Command {
             armMovementPID.disable();
             armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint * ConstantsMap.SHOULDER_SPEED_MULT);        
         }
-        */
+         */
         
         //Check to see if the wrist or shoulder has reached the limits and we need to stop them 
         // System.out.println("Hello");
@@ -137,13 +213,7 @@ public class ArmCommand extends Command {
         //     }
         // }
 
-        if (armSubsystem.getWristLowerLimit()) {
-            if (armSubsystem.getWristSpeed() < 0) {
-                armSubsystem.setShoulderJointSpeed(0);
-                System.out.println("Yeeting");
-            }
-        }
-        SmartDashboard.putBoolean("limit Switch Wrist", armSubsystem.getWristLowerLimit());
+        
 
         // if (armSubsystem.getWristUpperLimit()) {
         //     if (armSubsystem.getWristSpeed() > 0) {
@@ -176,7 +246,7 @@ public class ArmCommand extends Command {
      * @return angle that the encoder should go to maintain in world space as the shoulder moves
      */
     private double getRelativeLevelledAngle(double angle) {
-        return angle - getWristLevelledAngle() + getShoulderAngle();
+        return -1 * getShoulderAngle();
     }
 
     // Make this return true when this Command no longer needs to run execute()

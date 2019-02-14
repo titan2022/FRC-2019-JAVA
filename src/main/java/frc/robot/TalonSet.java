@@ -13,11 +13,11 @@ public class TalonSet {
 
     public TalonSet(TalonSRX[] talons) {
         motors = talons;
-        for (TalonSRX motor : motors) motor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
     }
 
     public TalonSet(TalonSRX talon) {
         motors = new TalonSRX[] { talon };
+
     }
 
     public TalonSet setDistance(double dpt) {
@@ -37,9 +37,12 @@ public class TalonSet {
     }
 
     public int getEncoderTicks() {
-        return motors[0].getSelectedSensorPosition(0);
+        return motors[0].getSelectedSensorPosition();
     }
-
+    public void zeroEncoder() {
+        System.out.println("Zeroed");
+        motors[0].setSelectedSensorPosition(0);
+    }
     public double getEncoderDistance() {
         return getEncoderTicks() * dpt;
     }
