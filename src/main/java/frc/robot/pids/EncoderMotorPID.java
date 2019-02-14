@@ -15,12 +15,10 @@ public class EncoderMotorPID implements PIDSource, PIDOutput {
     PIDSource source;
     double dpt;
 
-    public EncoderMotorPID(TalonSet mot, double kp, double ki, double kd, double kf, double dpt) {
+    public EncoderMotorPID(TalonSet mot, double kp, double ki, double kd, double kf) {
         motor = mot;
         pid = new PIDController(kp, ki, kd, kf, this, this);
         pidSourceType = PIDSourceType.kDisplacement;
-        this.dpt = dpt;
-        
     }
 
     public EncoderMotorPID setP(double kp) {
@@ -65,7 +63,7 @@ public class EncoderMotorPID implements PIDSource, PIDOutput {
     }
 
     public double pidGet() {
-        return motor.encTicks() * dpt;
+        return motor.getEncoderDistance();
     }
 
     public EncoderMotorPID setSetpoint(double sp) {

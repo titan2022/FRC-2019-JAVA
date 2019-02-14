@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
  */
 public class TalonSet {
     TalonSRX motors[];
+    double dpt;
 
     public TalonSet(TalonSRX[] talons) {
         motors = talons;
@@ -17,6 +18,11 @@ public class TalonSet {
 
     public TalonSet(TalonSRX talon) {
         motors = new TalonSRX[] { talon };
+    }
+
+    public TalonSet setDistance(double dpt) {
+        this.dpt = dpt;
+        return this;
     }
 
     public void set(double speed) {
@@ -30,7 +36,11 @@ public class TalonSet {
         return motors[0].getMotorOutputPercent();
     }
 
-    public int encTicks() {
+    public int getEncoderTicks() {
         return motors[0].getSelectedSensorPosition(0);
+    }
+
+    public double getEncoderDistance() {
+        return getEncoderTicks() * dpt;
     }
 }
