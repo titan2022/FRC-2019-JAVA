@@ -80,6 +80,11 @@ public class ArmCommand extends Command {
             armMovementPID.enable();
         }
 
+        //Print out encoder values for testing 
+        SmartDashboard.putNumber("Shoulder Angle", armSubsystem.getShoulderEncoderAngle());
+        SmartDashboard.putNumber("Wrist Angle", armSubsystem.getWristEncoderAngle());
+
+        /*
         //If the joystick is at 0 and the button was true previously then run levelling of the wrist
         //or the current button is not equal to the previous press when the joystick is at 0
         //Otherwise the wrist should not be levelling at the moment
@@ -120,6 +125,7 @@ public class ArmCommand extends Command {
             armMovementPID.disable();
             armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint * ConstantsMap.SHOULDER_SPEED_MULT);        
         }
+        */
         
         //Check to see if the wrist or shoulder has reached the limits and we need to stop them 
         // System.out.println("Hello");
@@ -141,7 +147,7 @@ public class ArmCommand extends Command {
         //         System.out.println("Yeeting");
         //     }
         // }
-        SmartDashboard.putBoolean("limit Switch Wrist", armSubsystem.getWristLowerLimit());
+        //SmartDashboard.putBoolean("limit Switch Wrist", armSubsystem.getWristLowerLimit());
 
         // if (armSubsystem.getWristUpperLimit()) {
         //     if (armSubsystem.getWristSpeed() > 0) {
@@ -165,7 +171,7 @@ public class ArmCommand extends Command {
      * @return
      */
     private double getWristLevelledAngle() {
-        return armSubsystem.getShoulderEncoderAngle() + ConstantsMap.WRIST_OFFSET;
+        return armSubsystem.getShoulderEncoderAngle();//Do the math here right now 
     }
 
     /**
