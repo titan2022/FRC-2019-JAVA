@@ -68,7 +68,6 @@ public class Robot extends TimedRobot {
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand();
         server = CameraServer.getInstance();
-        compressor = new Compressor(10);
         //server.startAutomaticCapture("Ground",0);
     }
     
@@ -149,7 +148,6 @@ public class Robot extends TimedRobot {
             autonomousCommand.cancel();
         }
         
-        compressor.start();
         hgCommand.start();
         driveCommand.start();
         
