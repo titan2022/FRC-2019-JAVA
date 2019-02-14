@@ -13,16 +13,16 @@ import frc.robot.XboxMap;
 import frc.robot.pids.EncoderMotorPID;
 import frc.robot.TalonSet;
 import frc.robot.ConstantsMap;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem2;
 
-public class ArmCommand extends Command {
-    ArmSubsystem armSubsystem = Robot.armSubsystem;
+public class ArmCommand2 extends Command {
+    ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
     EncoderMotorPID wristLevelPID, armMovementPID;
     private boolean enableLevelWrist = true;
     boolean manualMode = true;
     private double armAngle;
     private double wristAngle;
-    public ArmCommand() {
+    public ArmCommand2() {
         requires(armSubsystem);
     }
 
@@ -32,11 +32,11 @@ public class ArmCommand extends Command {
         System.out.println("Arm Command Started");
 
         //Generalizes the interface between PID for each mechanism and its components.
-        wristLevelPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
+       /*  wristLevelPID = new EncoderMotorPID(armSubsystem.getWristTalons(), ConstantsMap.WRIST_ZERO_KP,
             ConstantsMap.WRIST_ZERO_KI, ConstantsMap.WRIST_ZERO_KD, ConstantsMap.WRIST_ZERO_KF).setOutputRange(-1,1);
         armMovementPID = new EncoderMotorPID(armSubsystem.getShoulderTalons(), ConstantsMap.SHOULDER_MV_KP,
             ConstantsMap.SHOULDER_MV_KI, ConstantsMap.SHOULDER_MV_KD, ConstantsMap.SHOULDER_MV_KF).setOutputRange(-1,1);
-        
+         */
         armAngle = armSubsystem.getShoulderEncoderAngle();
         wristAngle = armSubsystem.getWristEncoderAngle();
         wristLevelPID.getPID().setInputRange(-360, 360);

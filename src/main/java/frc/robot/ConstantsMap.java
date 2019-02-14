@@ -38,10 +38,12 @@ public class ConstantsMap {
     public static final double HIGH_CUTOFF = 230;
 
     //For ArmSubsystem
-    public static final double WRIST_ZERO_KP = 1;
-    public static final double WRIST_ZERO_KI = 1;
-    public static final double WRIST_ZERO_KD = 1;
-    public static final double WRIST_ZERO_KF = 0;
+    public static final int kSlotIdx = 0;
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
+
+    public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+    
 
     public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
@@ -57,14 +59,17 @@ public class ConstantsMap {
     public static final double SHOULDER_GEAR_RATIO = 350.0;
     public static final double SHOULDER_MIN_ANGLE = -45.0;
     public static final double SHOULDER_MAX_ANGLE = 90.0;
+    public static final int SHOULDER_VELOCITY = 15000;
+    public static final int SHOULDER_ACCEL = 6000;
 
-    public static final double SHOULDER_MV_KP = 1.0;
-    public static final double SHOULDER_MV_KI = 1.0;
-    public static final double SHOULDER_MV_KD = 1.0;
-    public static final double SHOULDER_MV_KF = 1.0;
+   
+    public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+
 
     public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
     public static final double WRIST_OFFSET = 0; //to be changed
+
+
 
     //Tolerances
     public static final double WRIST_TOLERANCE = Float.NaN; //to be determined

@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ArmCommand2;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowLineCommand;
 import frc.robot.commands.HatchGrabberCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.subsystems.HatchGrabberSubsystem;
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     public static OI oi;
     
     public static DriveSubsystem driveSubsystem = new DriveSubsystem();
-    public static ArmSubsystem armSubsystem = new ArmSubsystem();
+    public static ArmSubsystem2 armSubsystem2 = new ArmSubsystem2();
     
     public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
     public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
         autonomousCommand = new FollowLineCommand();
         //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
-        armCommand = new ArmCommand();
+        armCommand = new ArmCommand2();
         server = CameraServer.getInstance();
         //server.startAutomaticCapture("Ground",0);
     }
@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
     
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
-        SmartDashboard.putNumber("Shoulder Angle", armSubsystem.getShoulderEncoderAngle());
-        SmartDashboard.putNumber("Wrist Angle", armSubsystem.getWristEncoderAngle());
+        SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
+        SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
     }
     
     /**
