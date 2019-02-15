@@ -42,10 +42,10 @@ public class XboxMap {
 		return oi.xbox.getXValue();
 	}
 	public static boolean zeroWrist() {
-		return oi.xbox.getXValue() && oi.xbox.getAValue() && oi.xbox.getBValue();
+		return oi.xbox.getLeftBumperValue();
 	}
 	public static boolean zeroShoulder() {
-		return oi.xbox.getXValue() && oi.xbox.getYValue() && oi.xbox.getBValue();
+		return oi.xbox.getRightBumperValue();
 	}
 	public static boolean enableWristLevelling() {
 		return oi.xbox.getBValue();

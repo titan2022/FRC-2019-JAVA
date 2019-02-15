@@ -42,7 +42,6 @@ public class ConstantsMap {
     public static final int kPIDLoopIdx = 0;
     public static final int kTimeoutMs = 30;
 
-    public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
     
 
     public static final double WRIST_SPEED_MULT = .1;
@@ -51,24 +50,29 @@ public class ConstantsMap {
     public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 81);
     public static final double WRIST_MIN_ANGLE = -100.0;
     public static final double WRIST_MAX_ANGLE = 100.0;
+    public static final int WRIST_VELOCITY = 20000;
+    public static final int WRIST_ACCEL = 10000;
+    public static final int  WRIST_FOLLOW_DISTANCE = 20;
+    public static final double WRIST_CHANGE_SETPOINT_SPEED = 2;
+
+    public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 70 * 5);
 
     public static final double SHOULDER_GEAR_RATIO = 350.0;
-    public static final double SHOULDER_MIN_ANGLE = -45.0;
+    public static final double SHOULDER_MIN_ANGLE = -53.0;
     public static final double SHOULDER_MAX_ANGLE = 90.0;
-    public static final int SHOULDER_VELOCITY = 15000;
-    public static final int SHOULDER_ACCEL = 6000;
-
+    public static final int SHOULDER_VELOCITY = 20000;
+    public static final int SHOULDER_ACCEL = 10000;
+    public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
+    public static final double SHOULDER_CHANGE_SETPOINT_SPEED = 2;
    
     public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
 
-    public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
-    public static final double WRIST_OFFSET = 0; //to be changed
-
+    
 
 
     //Tolerances
