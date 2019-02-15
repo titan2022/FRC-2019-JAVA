@@ -88,11 +88,11 @@ public class ConstantsMap {
     public static final double PID_INPUT_MAX = 180;
 
     // PRESETS!!!
-    public static final boolean isHatchGrabber = false;
-    public static final double HATCH_PRESET_1_ANGLE = 0.0;
-    public static final double HATCH_PRESET_2_ANGLE = 10.0;
-    public static final double HATCH_PRESET_3_ANGLE = 20.0;
-    public static final double CARGO_PRESET_1_ANGLE = 5.0;
-    public static final double CARGO_PRESET_2_ANGLE = 15.0;
-    public static final double CARGO_PRESET_3_ANGLE = 25.0;
+    public static final boolean isHatchGrabber = true;
+    public static final double HATCH_PRESET_1_ANGLE = -40.0;
+    public static final double HATCH_PRESET_2_ANGLE = 8.0;
+    public static final double HATCH_PRESET_3_ANGLE = 47.0;
+    public static final double CARGO_PRESET_1_ANGLE = 8.0;
+    public static final double CARGO_PRESET_2_ANGLE = 8.0;
+    public static final double CARGO_PRESET_3_ANGLE = 47.0;
 }

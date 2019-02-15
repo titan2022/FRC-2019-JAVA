@@ -36,7 +36,7 @@ public class ArmCommand2 extends Command {
         
         shoulderAngle = armSubsystem.getShoulderEncoderAngle();
         wristAngle = armSubsystem.getWristEncoderAngle();
-        manualMode = true;
+        manualMode = false;
         enableLevelWrist = false;
          
     }
@@ -56,7 +56,7 @@ public class ArmCommand2 extends Command {
         else if(XboxMap.zeroShoulder()){
             armSubsystem.zeroShoulder();
         }
-        else if(XboxMap.toggleArmControl()){            
+        else if(XboxMap.toggleArmManualControl()){            
             if(manualMode){
                 shoulderAngle = armSubsystem.getShoulderEncoderAngle();
                 wristAngle = armSubsystem.getWristEncoderAngle();

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand2;
+import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowLineCommand;
 import frc.robot.commands.HatchGrabberCommand;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
     CameraServer server;
     Compressor compressor;
     boolean armEnable;
+    Command preset;
     /**
     * This function is run when the robot is first started up and should be
     * used for any initialization code.
@@ -63,11 +65,12 @@ public class Robot extends TimedRobot {
         
         // chooser.addOption("My Auto", new MyAutoCommand());
         driveCommand = new DriveCommand();
-        autonomousCommand = new FollowLineCommand();
         //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand2();
+        preset = new ArmPresetCommand();
         server = CameraServer.getInstance();
+        armEnable = false;
         //server.startAutomaticCapture("Ground",0);
     }
     
@@ -85,6 +88,7 @@ public class Robot extends TimedRobot {
         //Print out encoder values for testing on Arm leveling
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
+        SmartDashboard.putBoolean("Preset Enable", preset.isRunning());
     }
     
     /**
@@ -137,7 +141,7 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
-    
+
     @Override
     public void teleopInit() {
         // This makes sure that the autonomous stops running when
@@ -150,6 +154,7 @@ public class Robot extends TimedRobot {
         
         hgCommand.start();
         armCommand.start();
+        
         //driveCommand.start();
         
     }
@@ -173,18 +178,19 @@ public class Robot extends TimedRobot {
         }    */
         
         
-        /* if(XboxMap.toggleArmControl()){
+        if(XboxMap.toggleArmControl()){
             if(armCommand.isRunning()){
                 armCommand.cancel();
-                driveCommand.start();
+                preset.start();
             }
             else{
-                driveCommand.cancel();
+                preset.cancel();
                 armCommand.start();
                 
             }
-        } */
-        SmartDashboard.putBoolean("Arm Conrol", armCommand.isRunning());
+        } 
+        
+        SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
         Scheduler.getInstance().run();
     }
     

@@ -17,25 +17,31 @@ public class ArmPresetCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        System.out.println("Start Preset");
+        armSubsystem.setShoulderSetPoint(armSubsystem.getShoulderEncoderAngle());
+        armSubsystem.setWristSetPoint(armSubsystem.getWristEncoderAngle());
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        if (XboxMap.cargoPreset1()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_1_ANGLE);
-        } else if (XboxMap.cargoPreset2()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_2_ANGLE);
-        } else if (XboxMap.cargoPreset3()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_3_ANGLE);
-        } else if (XboxMap.hatchPreset1()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_1_ANGLE);
-        } else if (XboxMap.hatchPreset2()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_2_ANGLE);
-        } else if (XboxMap.hatchPreset3()) {
-            armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_3_ANGLE);
+        if(ConstantsMap.isHatchGrabber){
+            if (XboxMap.cargoPreset1()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_1_ANGLE);
+            } else if (XboxMap.cargoPreset2()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_2_ANGLE);
+            } else if (XboxMap.cargoPreset3()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_3_ANGLE);
+            } else if (XboxMap.hatchPreset1()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_1_ANGLE);
+            } else if (XboxMap.hatchPreset2()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_2_ANGLE);
+            } else if (XboxMap.hatchPreset3()) {
+                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_3_ANGLE);
+            }
+            armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());
         }
-        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());
+        
     }
     
     // Make this return true when this Command no longer needs to run execute()
@@ -55,5 +61,6 @@ public class ArmPresetCommand extends Command {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
+        System.out.println("Preset Interupt");
     }
 }

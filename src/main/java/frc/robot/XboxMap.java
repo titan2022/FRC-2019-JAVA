@@ -41,6 +41,9 @@ public class XboxMap {
 	public static boolean toggleArmControl() {
 		return oi.xbox.getXValue();
 	}
+	public static boolean toggleArmManualControl() {
+		return oi.xbox.getAValue();
+	}
 	public static boolean zeroWrist() {
 		return oi.xbox.getLeftBumperValue();
 	}
@@ -51,19 +54,7 @@ public class XboxMap {
 		return oi.xbox.getBValue();
 	}
 
-	//TODO Map to Buttons
-	public static boolean enableCargoPreset() {
-		return oi.xbox.getAValue()	 ;
-	}
-
-	public static boolean enableLevel2Preset() {
-		return true;
-	}
-
-	public static boolean enableLevel3Preset() {
-		return true;
-	}
-
+	
 	//Driving Controls 
 	public static double right() {
 		return oi.xbox.getRightY();
@@ -90,15 +81,15 @@ public class XboxMap {
 
 	// TODO: when we get the control panel, replace these with actual btns
 	public static boolean hatchPreset1() {
-		return false;
+		return oi.xbox.getAValue();
 	}
 
 	public static boolean hatchPreset2() {
-		return false;
+		return oi.xbox.getBValue();
 	}
 
 	public static boolean hatchPreset3() {
-		return false;
+		return oi.xbox.getYValue();
 	}
 
 	public static boolean cargoPreset1() {
