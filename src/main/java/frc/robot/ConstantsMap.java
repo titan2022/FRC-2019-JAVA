@@ -87,4 +87,12 @@ public class ConstantsMap {
     public static final double PID_DERIVATIVE_CONSTANT = .001;
     public static final double PID_INPUT_MAX = 180;
 
+    // PRESETS!!!
+    public static final boolean isHatchGrabber = false;
+    public static final double HATCH_PRESET_1_ANGLE = 0.0;
+    public static final double HATCH_PRESET_2_ANGLE = 10.0;
+    public static final double HATCH_PRESET_3_ANGLE = 20.0;
+    public static final double CARGO_PRESET_1_ANGLE = 5.0;
+    public static final double CARGO_PRESET_2_ANGLE = 15.0;
+    public static final double CARGO_PRESET_3_ANGLE = 25.0;
 }

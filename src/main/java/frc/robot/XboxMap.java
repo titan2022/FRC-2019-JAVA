@@ -87,7 +87,32 @@ public class XboxMap {
 	public static boolean grabberPiston() {
 		return oi.xbox.getRightBumperValue();
 	}
+
+	// TODO: when we get the control panel, replace these with actual btns
+	public static boolean hatchPreset1() {
+		return false;
+	}
+
+	public static boolean hatchPreset2() {
+		return false;
+	}
+
+	public static boolean hatchPreset3() {
+		return false;
+	}
+
+	public static boolean cargoPreset1() {
+		return false;
+	}
 	
+	public static boolean cargoPreset2() {
+		return false;
+	}
+
+	public static boolean cargoPreset3() {
+		return false;
+	}
+
 	// public static boolean ejectHatch() {
 	// 	return oi.xbox.getYValue();
 	// }
