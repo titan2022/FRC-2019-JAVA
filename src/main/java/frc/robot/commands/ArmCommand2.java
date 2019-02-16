@@ -39,6 +39,7 @@ public class ArmCommand2 extends Command {
         wristAngle = armSubsystem.getWristEncoderAngle();
         manualMode = false;
         enableLevelWrist = false;
+
          
     }
 

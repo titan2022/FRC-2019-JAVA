@@ -75,6 +75,9 @@ public class ConstantsMap {
    
     public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
+    //For Grabber
+    public static final double BALL_INTAKE_SPEED = .5;
+    public static final double BALL_OUTTAKE_SPEED = 1;
 
     
 

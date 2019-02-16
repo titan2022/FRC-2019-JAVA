@@ -25,6 +25,7 @@ public class OI {
 		xbox = new XboxController(0);
 		controlPanel1 = new Joystick(1);
 		controlPanel2 = new Joystick(2);
+		
 		//attack3_L = new Attack3(3);
 		//attack3_R = new Attack3(4);
 

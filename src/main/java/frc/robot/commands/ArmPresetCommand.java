@@ -22,7 +22,6 @@ public class ArmPresetCommand extends Command {
         armSubsystem.setShoulderSetPoint(armSubsystem.getShoulderEncoderAngle());
         armSubsystem.setWristSetPoint(armSubsystem.getWristEncoderAngle());
         armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
-
     }
     
     // Called repeatedly when this Command is scheduled to run

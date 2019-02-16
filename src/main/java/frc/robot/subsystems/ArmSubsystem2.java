@@ -155,7 +155,7 @@ public class ArmSubsystem2 extends Subsystem {
             }
             else if (wrist.getControlMode() == ControlMode.MotionMagic){
                 if(wrist.getActiveTrajectoryVelocity() > 0){
-                    setWristSetPoint(0);
+                    setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);
                 }
             }
         }
@@ -170,7 +170,7 @@ public class ArmSubsystem2 extends Subsystem {
             }
             else if (shoulder.getControlMode() == ControlMode.MotionMagic){
                 if(shoulder.getActiveTrajectoryVelocity() < 0){
-                    setShoulderSetPoint(0);
+                    setShoulderSetPoint(ConstantsMap.SHOULDER_MIN_ANGLE);
                 }
             }
             

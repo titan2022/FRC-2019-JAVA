@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand2;
 import frc.robot.commands.ArmPresetCommand;
+import frc.robot.commands.ArmZero;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.HatchGrabberCommand;
 import frc.robot.commands.WristZero;
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     Compressor compressor;
-    boolean armEnable;
+    public boolean debugMode;
     Command preset;
     /**
     * This function is run when the robot is first started up and should be
@@ -70,7 +71,8 @@ public class Robot extends TimedRobot {
         armCommand = new ArmCommand2();
         
         server = CameraServer.getInstance();
-        armEnable = false;
+        debugMode = false;
+        
         //server.startAutomaticCapture("Ground",0);
     }
     
@@ -88,12 +90,15 @@ public class Robot extends TimedRobot {
         //Print out encoder values for testing on Arm leveling
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
-        SmartDashboard.putBoolean("Preset Enable", preset.isRunning());
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
 
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
+
+        if(ControlPanelMap.toggleDebug()){
+            debugMode = !debugMode;
+        }
 
     }
     
@@ -104,6 +109,7 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void disabledInit() {
+        armSubsystem2.setShoulderJointSpeed(0);
     }
     
     @Override
@@ -135,9 +141,10 @@ public class Robot extends TimedRobot {
         */
         
         // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-            autonomousCommand.start();
-        }
+        armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+
+        new WristZero().start();;
+
     }
     
     /**
@@ -154,12 +161,11 @@ public class Robot extends TimedRobot {
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-        
+
+
         hgCommand.start();
-        armCommand.start();
+        armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+        //armCommand.start();
         
         //driveCommand.start();
         
@@ -171,6 +177,14 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void teleopPeriodic() {
+        if(debugMode){
+            if(ControlPanelMap.inTake()){
+                new ArmZero();
+            }
+            if(ControlPanelMap.outTake()){
+                new WristZero();
+            }
+        }
         /* if(XboxMap.runFollowLineCommand()){
             if(followLineCommand.isRunning()){
                 followLineCommand.cancel();

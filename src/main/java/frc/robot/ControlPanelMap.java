@@ -3,6 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import frc.robot.commands.ArmPresetCommand;
+import frc.robot.commands.ArmZero;
+import frc.robot.commands.WristZero;
 
 public class ControlPanelMap {
 	static OI oi = Robot.oi;
@@ -17,7 +19,8 @@ public class ControlPanelMap {
 			cargoBallPreset,
 			ballCollectPreset,
 			hatchCollectPreset,
-			goHome;
+			goHome,
+			toggleDebug;
 
 			
 	public ControlPanelMap(){
@@ -35,6 +38,11 @@ public class ControlPanelMap {
 		hatchCollectPreset = new JoystickButton(oi.controlPanel1,10);
 
 		goHome = new JoystickButton(oi.controlPanel1, 11);
+		toggleDebug = new JoystickButton(oi.controlPanel1, 12);
+	}
+
+	public void normalMode(){
+		
 
 		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
 		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2));
@@ -50,33 +58,45 @@ public class ControlPanelMap {
 		hatchCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.HATCH_COLLECT_PRESET));
 
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
-
 	}
+	public void debugMode(){
+		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
+		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2));
+		rocketHatchPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_3));
+		rocketBallPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_1));
+		rocketBallPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_2));
+		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3));
 
-	
+		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
+		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET));
+
+		ballCollectPreset.whenPressed(new ArmZero());
+		hatchCollectPreset.whenPressed(new WristZero());
+
+		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
+	}
 	public static double controlWristJoint() {
-		return oi.controlPanel1.getY(Hand.kRight);
+		return oi.controlPanel2.getX();
 	}
 	
 	public static double controlShoulderJoint() {
-		return oi.controlPanel2.getY(Hand.kRight);
+		return -oi.controlPanel1.getX();
 	}
 	public static boolean inTake() {
-		return oi.controlPanel2.getRawButtonPressed(1);
+		return oi.controlPanel2.getRawButton(2);
 	}
 	public static boolean outTake() {
-		return oi.controlPanel2.getRawButtonPressed(2);
+		return oi.controlPanel2.getRawButton(1);
 	}
 	public static boolean setBallMode() {
-		return oi.controlPanel2.getRawButtonPressed(2);
+		return oi.controlPanel2.getRawButtonPressed(3);
 	}
 	public static boolean setHatcheMode() {
-		return oi.controlPanel2.getRawButtonPressed(2);
+		return oi.controlPanel2.getRawButtonPressed(4);
 	}
 	public static boolean toggleDebug() {
 		return oi.controlPanel1.getRawButtonPressed(2);
 	}
-	
 /* 
 	public static boolean toggleArmControl() {
 		return oi.xbox.getXButtonPressed();
