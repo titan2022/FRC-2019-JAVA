@@ -66,14 +66,14 @@ public class ConstantsMap {
     public static final double SHOULDER_GEAR_RATIO = 350.0;
     public static final double SHOULDER_MIN_ANGLE = -68.0;
     public static final double SHOULDER_MAX_ANGLE = 90.0;
-    public static final int SHOULDER_VELOCITY = 20000;
-    public static final int SHOULDER_ACCEL = 10000;
+    
     public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
     public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
     public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -50;
 
-   
-    public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+    public static final int SHOULDER_VELOCITY = 20000;
+    public static final int SHOULDER_ACCEL = 10000;
+    public static final Gains shoulderGains = new Gains(0.5, 0.1, 0.0, 0.2, 0, 1.0);
 
     //For Grabber
     public static final double BALL_INTAKE_SPEED = .5;
