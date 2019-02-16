@@ -96,10 +96,10 @@ public class ConstantsMap {
 
     // PRESETS!!!
     public static final boolean isHatchGrabber = true;
-    public static final double ROCKET_HATCH_PRESET_1 = -40.0;
+    public static final double ROCKET_HATCH_PRESET_1 = 0;
     public static final double ROCKET_HATCH_PRESET_2 = 8.0;
     public static final double ROCKET_HATCH_PRESET_3 = 47.0;
-    public static final double ROCKET_BALL_PRESET_1 = 8.0;
+    public static final double ROCKET_BALL_PRESET_1 = 0;
     public static final double ROCKET_BALL_PRESET_2 = 8.0;
     public static final double ROCKET_BALL_PRESET_3 = 47.0;
 

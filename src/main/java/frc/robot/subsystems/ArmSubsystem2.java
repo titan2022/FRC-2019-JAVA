@@ -107,6 +107,7 @@ public class ArmSubsystem2 extends Subsystem {
 
         setWristSetPoint(getWristEncoderAngle());
         setShoulderSetPoint(getShoulderEncoderAngle());
+        
     }
     
     public void setShoulderJointSpeed(double speed) {

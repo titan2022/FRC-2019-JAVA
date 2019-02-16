@@ -43,21 +43,21 @@ public class OI {
 		
 		//attack3_L = new Attack3(3);
 		//attack3_R = new Attack3(4);
-		rocketBallPreset1 = new JoystickButton(controlPanel1, 1);
-		rocketBallPreset2 = new JoystickButton(controlPanel1, 3);
-		rocketBallPreset3 = new JoystickButton(controlPanel1, 5);
-		rocketHatchPreset1 = new JoystickButton(controlPanel1, 2);
-		rocketHatchPreset2 = new JoystickButton(controlPanel1, 4);
-		rocketHatchPreset3 = new JoystickButton(controlPanel1, 6);
+		rocketBallPreset1 = new JoystickButton(controlPanel1, 5);
+		rocketBallPreset2 = new JoystickButton(controlPanel1, 7);
+		rocketBallPreset3 = new JoystickButton(controlPanel1, 9);
+		rocketHatchPreset1 = new JoystickButton(controlPanel1, 6);
+		rocketHatchPreset2 = new JoystickButton(controlPanel1, 8);
+		rocketHatchPreset3 = new JoystickButton(controlPanel1, 10);
 
-		cargoBallPreset = new JoystickButton(controlPanel1, 7);
-		cargoHatchPreset = new JoystickButton(controlPanel1, 8);
+		cargoBallPreset = new JoystickButton(controlPanel1, 3);
+		cargoHatchPreset = new JoystickButton(controlPanel1, 4);
 
-		ballCollectPreset = new JoystickButton(controlPanel1, 9);
-		hatchCollectPreset = new JoystickButton(controlPanel1,10);
+		ballCollectPreset = new JoystickButton(controlPanel1, 1);
+		hatchCollectPreset = new JoystickButton(controlPanel1,2);
 
-		goHome = new JoystickButton(controlPanel1, 11);
-		toggleDebug = new JoystickButton(controlPanel1, 12);
+		goHome = new JoystickButton(controlPanel1, 12);
+		toggleDebug = new JoystickButton(controlPanel1, 11);
 		
 		normalMode();
 
@@ -65,12 +65,12 @@ public class OI {
 	public void normalMode(){
 		
 
-		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_3));
+		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
 		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2));
-		rocketHatchPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
-		rocketBallPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3));
+		rocketHatchPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_3));
+		rocketBallPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_1));
 		rocketBallPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_2));
-		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_1));
+		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3));
 
 		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
 		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET));
