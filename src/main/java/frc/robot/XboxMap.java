@@ -8,13 +8,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class XboxMap {
 	static OI oi = Robot.oi;
 	
 	//Driving Controls 
 	public static double right() {
-		return oi.xbox.getY(Hand.kRight);
+		return -oi.xbox.getY(Hand.kRight);
 	}
 	
 	public static double left() {
@@ -23,6 +24,13 @@ public class XboxMap {
 	public static boolean toggleBrakes(){
 		return oi.xbox.getBumperPressed(Hand.kRight);
 	}
-
+	public static void startRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 1);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 1);
+	}
+	public static void stopRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 0);
+	}
 	
 }

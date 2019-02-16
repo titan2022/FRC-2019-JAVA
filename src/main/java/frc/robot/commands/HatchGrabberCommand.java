@@ -37,25 +37,23 @@ public class HatchGrabberCommand extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        // if (XboxMap.ejectHatch()) {
-        //     hatchGrabberSubsystem.releaseHatch();
-        // } else if (XboxMap.retractEjectors()) {
-        //     hatchGrabberSubsystem.retractEjectors();
-        // } else if (XboxMap.extendGrabber()) {
-        //     hatchGrabberSubsystem.extendGrabber();
-        // } else if (XboxMap.retractGrabber()) {
-        //     hatchGrabberSubsystem.retractGrabber();
-        // }
+
         if(ControlPanelMap.setBallMode()){
             hatchMode = false;
         }
         if(ControlPanelMap.setHatcheMode()){
             hatchMode = true;
+            hatchGrabberSubsystem.stopWheels();
+
         }
         if(hatchMode){
             hatchGrabberSubsystem.extendHatch();
             if(ControlPanelMap.outTake()) {            
                 hatchGrabberSubsystem.ejectHatch();
+                hatchMode = false;
+                hatchGrabberSubsystem.retractHatch();
+                
+
             }
             else{
                 hatchGrabberSubsystem.unEjectHatch();
@@ -63,11 +61,17 @@ public class HatchGrabberCommand extends Command {
         }
         else{
             hatchGrabberSubsystem.retractHatch();
+            
             if(ControlPanelMap.outTake()) {            
                 hatchGrabberSubsystem.outakeWheels();
             }
             else if(ControlPanelMap.inTake()){
+                hatchGrabberSubsystem.unEjectHatch();
+
                 hatchGrabberSubsystem.intakeWheels();
+            }
+            else{
+                hatchGrabberSubsystem.stopWheels();
             }
         }
         SmartDashboard.putBoolean("Hatch Mode",hatchMode);

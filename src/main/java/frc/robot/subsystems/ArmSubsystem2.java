@@ -119,7 +119,7 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public void setWristSetPoint(double angle){
         if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
-            angle = ConstantsMap.WRIST_MIN_ANGLE;
+            angle = ConstantsMap.WRIST_MAX_ANGLE;
         }
         if(angle>ConstantsMap.WRIST_MAX_ANGLE){
             angle =ConstantsMap.WRIST_MAX_ANGLE;
@@ -184,6 +184,13 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public double getShoulderTicks(){
         return shoulder.getSelectedSensorPosition();
+    }
+    public double getShoulderSetPoint(){
+        return shoulder.getActiveTrajectoryPosition()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+    }
+    public double getWristSetPoint(){
+        return wrist.getActiveTrajectoryPosition()* ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
+
     }
 
     public double getWristEncoderAngle() {

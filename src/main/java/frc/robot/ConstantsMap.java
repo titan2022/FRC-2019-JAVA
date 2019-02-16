@@ -15,7 +15,7 @@ public class ConstantsMap {
     public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
     public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
-    public static final double TURTLE_SPEED = .5; //to be determined
+    public static final double TURTLE_SPEED = 1; //to be determined
     public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
 
@@ -70,7 +70,7 @@ public class ConstantsMap {
     public static final int SHOULDER_ACCEL = 10000;
     public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
     public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
-    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -45;
+    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -50;
 
    
     public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);

@@ -89,6 +89,9 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
+        SmartDashboard.putNumber("Shoulder Set", armSubsystem2.getShoulderSetPoint());
+        SmartDashboard.putNumber("Wrist Set", armSubsystem2.getWristSetPoint());
+
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
@@ -109,6 +112,8 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void disabledInit() {
+        XboxMap.stopRumble();
+
         armSubsystem2.setShoulderJointSpeed(0);
     }
     

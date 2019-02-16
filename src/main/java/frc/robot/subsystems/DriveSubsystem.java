@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,7 +35,7 @@ public class DriveSubsystem extends Subsystem {
 
 
 	private AHRS ahrs;
-	
+	private PowerDistributionPanel pdp;
 
 	public DriveSubsystem() {
         System.out.println("Drive Subsystem Init");
@@ -63,7 +64,8 @@ public class DriveSubsystem extends Subsystem {
 		//Instantiate Gyro | Gyro automatically calibrates when given power
         ahrs = new AHRS(SPI.Port.kMXP);
 		stop();
-		
+		pdp = new PowerDistributionPanel(11);
+
 		
 
 		
@@ -74,7 +76,9 @@ public class DriveSubsystem extends Subsystem {
         // Set the default command for a subsystem here.
     	setDefaultCommand(new DriveCommand());
     }
-	
+	public double getVoltage(){
+		return pdp.getVoltage();
+	}
 
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {

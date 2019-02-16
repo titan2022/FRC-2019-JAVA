@@ -45,11 +45,11 @@ public class HatchGrabberSubsystem extends Subsystem {
     }
 
     public void extendHatch() {
-        grabberPiston.set(Value.kForward);
+        grabberPiston.set(Value.kReverse);
     }
     
     public void retractHatch() {
-        grabberPiston.set(Value.kReverse);
+        grabberPiston.set(Value.kForward);
     }
 
     public void ejectHatch() {
