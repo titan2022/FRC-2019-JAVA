@@ -68,8 +68,7 @@ public class Robot extends TimedRobot {
         //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand2();
-        preset = new ArmPresetCommand();
-        zeroWrist = new WristZero();
+        
         server = CameraServer.getInstance();
         armEnable = false;
         //server.startAutomaticCapture("Ground",0);
@@ -185,7 +184,7 @@ public class Robot extends TimedRobot {
         }    */
         
         
-        if(XboxMap.toggleArmControl()){
+        /* if(XboxMap.toggleArmControl()){
             if(armCommand.isRunning()){
                 armCommand.cancel();
                 preset.start();
@@ -206,7 +205,7 @@ public class Robot extends TimedRobot {
                 armCommand.start();
                 
             }
-        } 
+        }  */
         SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
         Scheduler.getInstance().run();
     }

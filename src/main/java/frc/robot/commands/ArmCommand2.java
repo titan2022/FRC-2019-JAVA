@@ -8,10 +8,11 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.ConstantsMap;
+import frc.robot.ControlPanelMap;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.pids.EncoderMotorPID;
-import frc.robot.TalonSet;
 import frc.robot.ConstantsMap;
 import frc.robot.subsystems.ArmSubsystem2;
 
@@ -49,16 +50,16 @@ public class ArmCommand2 extends Command {
 
         
 
-        if(XboxMap.zeroWrist()){
+        /* if(ControlPanelMap.zeroWrist()){
             armSubsystem.zeroWrist();
             wristAngle = armSubsystem.getWristEncoderAngle();
         }
-        else if(XboxMap.zeroShoulder()){
+        else if(ControlPanelMap.zeroShoulder()){
             armSubsystem.zeroShoulder();
             shoulderAngle = armSubsystem.getShoulderEncoderAngle();
 
-        }
-        else if(XboxMap.toggleArmManualControl()){            
+        } */
+        /* if(ControlPanelMap.toggleArmManualControl()){            
             if(manualMode){
                 shoulderAngle = armSubsystem.getShoulderEncoderAngle();
                 wristAngle = armSubsystem.getWristEncoderAngle();
@@ -67,11 +68,11 @@ public class ArmCommand2 extends Command {
             manualMode = !manualMode;
 
         }
-        if(XboxMap.enableWristLevelling()){
+        if(ControlPanelMap.enableWristLevelling()){
             enableLevelWrist = !enableLevelWrist;
-        }
-        double amountToMoveShoulderJoint = XboxMap.controlShoulderJoint();
-        double amountToMoveWristJoint = XboxMap.controlWristJoint();
+        } */
+        double amountToMoveShoulderJoint = ControlPanelMap.controlShoulderJoint();
+        double amountToMoveWristJoint = ControlPanelMap.controlWristJoint();
         
         if (Math.abs(amountToMoveShoulderJoint) < 0.1) {
             amountToMoveShoulderJoint = 0;

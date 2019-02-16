@@ -8,10 +8,11 @@ import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmPresetCommand extends Command {
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
-
-    public ArmPresetCommand() {
+    double preset;
+    public ArmPresetCommand(double angle) {
         // Use requires() here to declare subsystem dependencies
         requires(armSubsystem);
+        preset = angle;
     }
     
     // Called just before this Command runs the first time
@@ -20,43 +21,28 @@ public class ArmPresetCommand extends Command {
         System.out.println("Start Preset");
         armSubsystem.setShoulderSetPoint(armSubsystem.getShoulderEncoderAngle());
         armSubsystem.setWristSetPoint(armSubsystem.getWristEncoderAngle());
+        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
+
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
-    protected void execute() {
-        if(ConstantsMap.isHatchGrabber){
-            if (XboxMap.cargoPreset1()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_1_ANGLE);
-            } else if (XboxMap.cargoPreset2()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_2_ANGLE);
-            } else if (XboxMap.cargoPreset3()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.CARGO_PRESET_3_ANGLE);
-            } else if (XboxMap.hatchPreset1()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_1_ANGLE);
-            } else if (XboxMap.hatchPreset2()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_2_ANGLE);
-            } else if (XboxMap.hatchPreset3()) {
-                armSubsystem.setShoulderSetPoint(ConstantsMap.HATCH_PRESET_3_ANGLE);
-            }
-            armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());
-        }
+    protected void execute() {        
         
     }
     
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        // TODO: will this work or should we use tolerance equality?
-        //return armSubsystem.getShoulderEncoderAngle() == gotoAngle;
-        return false;
+        return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<1;
     }
     
     // Called once after isFinished returns true
     @Override
     protected void end() {
-    }
-    
+        System.out.println("Preset Finished at: " + armSubsystem.getShoulderEncoderAngle() + " degress");
+
+    }    
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     @Override

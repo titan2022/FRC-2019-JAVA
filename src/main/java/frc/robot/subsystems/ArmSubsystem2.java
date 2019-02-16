@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ConstantsMap;
 import frc.robot.RobotMap;
 import frc.robot.TalonSet;
+import frc.robot.commands.ArmCommand2;
 
 /**
  * Add your docs here.
@@ -147,14 +148,32 @@ public class ArmSubsystem2 extends Subsystem {
     public void checkWristLimits(){
         if(getWristLowerLimit()){
             wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+            if(wrist.getControlMode() == ControlMode.PercentOutput){
+                if(wrist.getMotorOutputPercent()>0){
+                    wrist.set(ControlMode.PercentOutput, 0);
+                }
+            }
+            else if (wrist.getControlMode() == ControlMode.MotionMagic){
+                if(wrist.getActiveTrajectoryVelocity() > 0){
+                    setWristSetPoint(0);
+                }
+            }
         }
     }
     public void checkShoulderLimits(){
         if(!lowerLimit.get()){
             shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
-            if(shoulder.getActiveTrajectoryVelocity() < 0){
-                setShoulderSetPoint(0);
+            if(shoulder.getControlMode() == ControlMode.PercentOutput){
+                if(shoulder.getMotorOutputPercent()<0){
+                    shoulder.set(ControlMode.PercentOutput, 0);
+                }
             }
+            else if (shoulder.getControlMode() == ControlMode.MotionMagic){
+                if(shoulder.getActiveTrajectoryVelocity() < 0){
+                    setShoulderSetPoint(0);
+                }
+            }
+            
             
         }
    }
@@ -234,6 +253,6 @@ public class ArmSubsystem2 extends Subsystem {
     @Override
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-        // setDefaultCommand(new MySpecialCommand());
+         setDefaultCommand(new ArmCommand2());
     }
 }

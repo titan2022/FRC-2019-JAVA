@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import frc.robot.RobotMap;
+import frc.robot.commands.DriveCommand;
 import frc.robot.ConstantsMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -71,7 +72,7 @@ public class DriveSubsystem extends Subsystem {
 	
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
-    	//setDefaultCommand(new DriveCommand());
+    	setDefaultCommand(new DriveCommand());
     }
 	
 

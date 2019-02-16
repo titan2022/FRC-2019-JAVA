@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
 * This class is the glue that binds the controls on the physical operator
@@ -16,11 +18,13 @@ public class OI {
 	//User interface Constants
 	public double attackThrottleSensitivity=.1;
 	//Controllers
-	public static Xbox xbox,ps4;
+	public static XboxController xbox,ps4;
+	public static Joystick controlPanel1,controlPanel2;
 
 	public OI(){
-		xbox = new Xbox(0);
-		ps4 = new Xbox(1);
+		xbox = new XboxController(0);
+		controlPanel1 = new Joystick(1);
+		controlPanel2 = new Joystick(2);
 		//attack3_L = new Attack3(3);
 		//attack3_R = new Attack3(4);
 

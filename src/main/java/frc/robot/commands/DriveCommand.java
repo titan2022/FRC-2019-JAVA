@@ -95,9 +95,8 @@ public class DriveCommand extends Command {
 
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
-			if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+			if(XboxMap.toggleBrakes()){  
 				brakeState = !brakeState;
-				lastPressed = System.currentTimeMillis();
 			}
 			if(brakeState){
 				driveSubsystem.enableBrake();
