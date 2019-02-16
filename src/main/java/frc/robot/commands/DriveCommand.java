@@ -11,7 +11,6 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.ConstantsMap;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
-	FollowLineCommand fLC;
 
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	

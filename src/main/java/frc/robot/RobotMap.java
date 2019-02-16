@@ -40,12 +40,13 @@ public class RobotMap {
     public static final int WRIST_ENCODER_PORT_B = 14;
 
     //These might have to change?
-    public static final int UPPER_ARM_LIMIT_PORT = 15;
-    public static final int LOWER_ARM_LIMIT_PORT = 16;
+    public static final int LOWER_ARM_LIMIT_PORT = 0;
+
 
     //TODO Set these to real ports 
-    public static final int UPPER_WRIST_LIMIT_PORT = 20;
-    public static final int LOWER_WRIST_LIMIT_PORT = 1;
+    public static final int LOWER_WRIST_LIMIT_PORT = 2;
+    public static final int LOWER_WRIST_LIMIT_PORT2 = 3;
+
 
     public static final int GRAB_PISTON_F = 4;
     public static final int GRAB_PISTON_R = 5;

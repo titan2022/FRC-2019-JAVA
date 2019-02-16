@@ -47,14 +47,16 @@ public class ArmCommand2 extends Command {
         SmartDashboard.putBoolean("Manual Mode", manualMode);
         SmartDashboard.putBoolean("Level Mode", enableLevelWrist);
 
-        actualShoulderAngle = armSubsystem.getShoulderEncoderAngle();
-        actualWristAngle = armSubsystem.getWristEncoderAngle();
+        
 
         if(XboxMap.zeroWrist()){
             armSubsystem.zeroWrist();
+            wristAngle = armSubsystem.getWristEncoderAngle();
         }
         else if(XboxMap.zeroShoulder()){
             armSubsystem.zeroShoulder();
+            shoulderAngle = armSubsystem.getShoulderEncoderAngle();
+
         }
         else if(XboxMap.toggleArmManualControl()){            
             if(manualMode){
@@ -80,6 +82,8 @@ public class ArmCommand2 extends Command {
         amountToMoveShoulderJoint *= ConstantsMap.SHOULDER_CHANGE_SETPOINT_SPEED;
         amountToMoveWristJoint *= ConstantsMap.WRIST_CHANGE_SETPOINT_SPEED;
 
+        actualShoulderAngle = armSubsystem.getShoulderEncoderAngle();
+        actualWristAngle = armSubsystem.getWristEncoderAngle();
         if(manualMode){
             armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
             armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
@@ -135,5 +139,10 @@ public class ArmCommand2 extends Command {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
+        System.out.println("Arm Command Intrupted");
+
+        armSubsystem.setShoulderJointSpeed(0);
+        armSubsystem.setWristJointSpeed(0);;
+
     }
 }

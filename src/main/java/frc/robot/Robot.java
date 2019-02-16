@@ -21,11 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand2;
 import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.FollowLineCommand;
 import frc.robot.commands.HatchGrabberCommand;
+import frc.robot.commands.WristZero;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.subsystems.HatchGrabberSubsystem;
 
 /**
@@ -41,7 +40,6 @@ public class Robot extends TimedRobot {
     public static DriveSubsystem driveSubsystem = new DriveSubsystem();
     public static ArmSubsystem2 armSubsystem2 = new ArmSubsystem2();
     
-    public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
     public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
 
     UsbCamera camera;
@@ -50,6 +48,8 @@ public class Robot extends TimedRobot {
     Command followLineCommand;
     Command armCommand;
     Command hgCommand;
+    Command zeroWrist;
+
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     Compressor compressor;
@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
         hgCommand = new HatchGrabberCommand();
         armCommand = new ArmCommand2();
         preset = new ArmPresetCommand();
+        zeroWrist = new WristZero();
         server = CameraServer.getInstance();
         armEnable = false;
         //server.startAutomaticCapture("Ground",0);
@@ -89,6 +90,12 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
         SmartDashboard.putBoolean("Preset Enable", preset.isRunning());
+        SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
+        SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
+
+        armSubsystem2.checkShoulderLimits();
+        armSubsystem2.checkWristLimits();
+
     }
     
     /**
@@ -189,7 +196,17 @@ public class Robot extends TimedRobot {
                 
             }
         } 
-        
+        if(XboxMap.zeroWrist()){
+            if(armCommand.isRunning()){
+                armCommand.cancel();
+                zeroWrist.start();
+            }
+            else{
+                zeroWrist.cancel();
+                armCommand.start();
+                
+            }
+        } 
         SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
         Scheduler.getInstance().run();
     }

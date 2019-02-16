@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -32,20 +33,25 @@ public class ArmSubsystem2 extends Subsystem {
 
 
 
-    private DigitalInput upperLimit, lowerLimit, upperLimitWrist, lowerLimitWrist;
-    
+    private DigitalInput lowerLimit, lowerLimitWrist, lowerLimitWrist2;
+    private double wristLimitStartTime,wristLimitStartTime2;
+    private boolean wristLimit,wristLimit2;
     TalonSRX shoulder, shoulderSlave,wrist;
 
     public ArmSubsystem2() {
 
+        lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
         lowerLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
+        lowerLimitWrist2 = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT2);
+
+
         shoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
         shoulderSlave = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
         shoulderSlave.configFactoryDefault();
         shoulder.setInverted(false);
         shoulderSlave.setInverted(true);
         shoulder.setSensorPhase(true);
-
+        shoulder.setNeutralMode(NeutralMode.Brake);
         shoulderSlave.follow(shoulder);
         
         shoulder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
@@ -71,7 +77,7 @@ public class ArmSubsystem2 extends Subsystem {
         //shoulder.configForwardLimitSwitchSource(LimitSwitchSource., LimitSwitchNormal.NormallyClosed);
         wrist = new TalonSRX(RobotMap.WRIST_JOINT_PORT);
         wrist.setInverted(true);
-
+        wrist.setNeutralMode(NeutralMode.Brake);
         wrist.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
 											ConstantsMap.kPIDLoopIdx, 
                                             ConstantsMap.kTimeoutMs);
@@ -96,10 +102,12 @@ public class ArmSubsystem2 extends Subsystem {
         //upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
         //lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
         //upperLimitWrist = new DigitalInput(RobotMap.LOWER_WRIST_LIMIT_PORT);
-        lowerLimitWrist.setName("LowerWristLimit");
-        SmartDashboard.putData(lowerLimitWrist);
-    }
+        lowerLimit.setName("LowerWristLimit");
 
+        setWristSetPoint(getWristEncoderAngle());
+        setShoulderSetPoint(getShoulderEncoderAngle());
+    }
+    
     public void setShoulderJointSpeed(double speed) {
         
         shoulder.set(ControlMode.PercentOutput,speed);
@@ -109,24 +117,26 @@ public class ArmSubsystem2 extends Subsystem {
         wrist.set(ControlMode.PercentOutput,speed);
     }
     public void setWristSetPoint(double angle){
+        if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
+            angle = ConstantsMap.WRIST_MIN_ANGLE;
+        }
         if(angle>ConstantsMap.WRIST_MAX_ANGLE){
-            angle =ConstantsMap.WRIST_MAX_ANGLE-10;
+            angle =ConstantsMap.WRIST_MAX_ANGLE;
         }
         if(angle<ConstantsMap.WRIST_MIN_ANGLE){
-            angle =ConstantsMap.WRIST_MIN_ANGLE+10;
+            angle =ConstantsMap.WRIST_MIN_ANGLE;
         }
         
         double ticks = angle/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         
         wrist.set(ControlMode.MotionMagic, ticks);
-        checkWristLimits();
     }
     public void setShoulderSetPoint(double angle){
         if(angle>ConstantsMap.SHOULDER_MAX_ANGLE){
-            angle =ConstantsMap.SHOULDER_MAX_ANGLE-10;
+            angle =ConstantsMap.SHOULDER_MAX_ANGLE;
         }
         if(angle<ConstantsMap.SHOULDER_MIN_ANGLE){
-            angle =ConstantsMap.SHOULDER_MIN_ANGLE+10;
+            angle =ConstantsMap.SHOULDER_MIN_ANGLE;
         }
         double ticks = angle/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
         shoulder.set(ControlMode.MotionMagic, ticks);
@@ -135,12 +145,18 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
     public void checkWristLimits(){
-        if(!lowerLimitWrist.get()){
-            shoulder.set(ControlMode.PercentOutput, 0);
+        if(getWristLowerLimit()){
+            wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
         }
     }
     public void checkShoulderLimits(){
-
+        if(!lowerLimit.get()){
+            shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
+            if(shoulder.getActiveTrajectoryVelocity() < 0){
+                setShoulderSetPoint(0);
+            }
+            
+        }
    }
 
 
@@ -163,22 +179,47 @@ public class ArmSubsystem2 extends Subsystem {
     public void zeroShoulder() {
         shoulder.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
     }
-    
-    public boolean getShoulderUpperLimit(){
-        return upperLimit.get();
-    }
+
 
     public boolean getShoulderLowerLimit(){
-        return lowerLimit.get();
+        return !lowerLimit.get();
     }
 
-    public boolean getWristUpperLimit(){
-        return upperLimitWrist.get();
-    }
+
 
     public boolean getWristLowerLimit(){
+        double currentTime = System.currentTimeMillis();
 
-        return !lowerLimitWrist.get();
+        if(lowerLimitWrist.get()){
+
+            if(!wristLimit){
+                wristLimitStartTime = System.currentTimeMillis();
+                wristLimit = true;
+            }   
+            if(currentTime - wristLimitStartTime > 100){
+                wristLimit = true;
+            }
+        }
+        else{
+            wristLimit = false;
+
+        }
+        if(lowerLimitWrist2.get()){
+            if(!wristLimit2){
+                wristLimitStartTime2 = System.currentTimeMillis();
+            
+            }  
+            if(currentTime - wristLimitStartTime2 > 100){
+                wristLimit2 = true;
+            }
+        }
+        else{
+            wristLimit2 = false;
+
+        }
+        
+       // return wristLimit || wristLimit2;
+       return lowerLimitWrist2.get() || lowerLimitWrist.get();
     }
 
     public double getShoulderSpeed(){
@@ -188,7 +229,8 @@ public class ArmSubsystem2 extends Subsystem {
     public double getWristSpeed(){
         return wrist.getMotorOutputPercent();
     }
-
+    
+    
     @Override
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
