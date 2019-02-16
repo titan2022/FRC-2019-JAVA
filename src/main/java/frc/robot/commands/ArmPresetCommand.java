@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ConstantsMap;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
@@ -18,23 +19,24 @@ public class ArmPresetCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        
         System.out.println("Start Preset: " + preset);
         armSubsystem.setShoulderSetPoint(preset);
         
-        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
+        armSubsystem.setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);       
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {        
-        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
+        //armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
 
     }
     
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<1;
+        return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<.5;
     }
     
     // Called once after isFinished returns true
