@@ -7,7 +7,11 @@
 
 package frc.robot.commands;
 
+
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.ConstantsMap;
+import frc.robot.ControlPanelMap;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.HatchGrabberSubsystem;
@@ -16,6 +20,7 @@ public class HatchGrabberCommand extends Command {
     HatchGrabberSubsystem hatchGrabberSubsystem = Robot.hatchGrabberSubsystem;
     private boolean grabberOut = false;
     private boolean hatchReleased = false;
+    private boolean hatchMode;
     private double lastPressedG = 0;
     private double lastPressedH = 0;
 
@@ -26,42 +31,53 @@ public class HatchGrabberCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        hatchMode = false;
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        // if (XboxMap.ejectHatch()) {
-        //     hatchGrabberSubsystem.releaseHatch();
-        // } else if (XboxMap.retractEjectors()) {
-        //     hatchGrabberSubsystem.retractEjectors();
-        // } else if (XboxMap.extendGrabber()) {
-        //     hatchGrabberSubsystem.extendGrabber();
-        // } else if (XboxMap.retractGrabber()) {
-        //     hatchGrabberSubsystem.retractGrabber();
-        // }
 
-        if(XboxMap.grabberPiston() && (System.currentTimeMillis() - lastPressedG) > 500) {
-            lastPressedG = System.currentTimeMillis();
-            if(grabberOut) {
-                hatchGrabberSubsystem.extendGrabber();
-                grabberOut = !grabberOut;
+        if(ControlPanelMap.setBallMode()){
+            hatchMode = false;
+        }
+        if(ControlPanelMap.setHatcheMode()){
+            hatchMode = true;
+            hatchGrabberSubsystem.stopWheels();
+
+        }
+        if(hatchMode){
+            hatchGrabberSubsystem.extendHatch();
+            if(ControlPanelMap.outTake()) {            
+                hatchGrabberSubsystem.ejectHatch();
+                hatchMode = false;
+                hatchGrabberSubsystem.retractHatch();
+                
+
             }
-            else {
-                hatchGrabberSubsystem.retractGrabber();
-                grabberOut = !grabberOut;
+            else{
+                hatchGrabberSubsystem.unEjectHatch();
             }
         }
-
-        if(XboxMap.hatchPiston() && (System.currentTimeMillis() - lastPressedH) > 500) {
-            lastPressedH = System.currentTimeMillis();
-            if(hatchReleased) {
-                hatchGrabberSubsystem.releaseHatch();
+        else{
+            hatchGrabberSubsystem.retractHatch();
+            
+            if(ControlPanelMap.outTake()) {            
+                hatchGrabberSubsystem.outakeWheels();
             }
-            else {
-                hatchGrabberSubsystem.retractEjectors();
+            else if(ControlPanelMap.inTake()){
+                hatchGrabberSubsystem.unEjectHatch();
+
+                hatchGrabberSubsystem.intakeWheels();
+            }
+            else{
+                hatchGrabberSubsystem.stopWheels();
             }
         }
+        SmartDashboard.putBoolean("Hatch Mode",hatchMode);
+        
+
+        
     }
     
     // Make this return true when this Command no longer needs to run execute()

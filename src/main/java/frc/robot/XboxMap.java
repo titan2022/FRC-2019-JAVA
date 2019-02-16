@@ -7,100 +7,30 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
 public class XboxMap {
 	static OI oi = Robot.oi;
 	
-	//Drive commands
-
-	
-//	static public boolean controlDriverGear() {
-//		return oi.xbox.getLeftBumperValue();
-//	}
-//	
-	//Grabber commands 
-//	static public double controlUpperGrabberOut(){
-//		return oi.xbox.getRightTriggers();
-//	}
-//	
-//	static public double controlUpperGrabberIn(){
-//		return oi.xbox.getLeftTriggers();
-//	}
-
-	//Elevator commands
-
-	//TODO B is also being used for outtake (Change later) // Put it on the other controller??
-	
-	public static double controlWristJoint() {
-		return oi.xbox.getRightY();
-	}
-	
-	public static double controlShoulderJoint() {
-		return oi.xbox.getLeftY();
-	}
-
-	public static boolean toggleArmControl() {
-		return oi.xbox.getXValue();
-	}
-	public static boolean zeroWrist() {
-		return oi.xbox.getXValue() && oi.xbox.getAValue() && oi.xbox.getBValue();
-	}
-	public static boolean zeroShoulder() {
-		return oi.xbox.getXValue() && oi.xbox.getYValue() && oi.xbox.getBValue();
-	}
-	public static boolean enableWristLevelling() {
-		return oi.xbox.getBValue();
-	}
-
-	//TODO Map to Buttons
-	public static boolean enableCargoPreset() {
-		return oi.xbox.getAValue()	 ;
-	}
-
-	public static boolean enableLevel2Preset() {
-		return true;
-	}
-
-	public static boolean enableLevel3Preset() {
-		return true;
-	}
-
 	//Driving Controls 
 	public static double right() {
-		return oi.xbox.getRightY();
+		return -oi.xbox.getY(Hand.kRight);
 	}
 	
 	public static double left() {
-		return oi.xbox.getLeftY();
+		return oi.xbox.getY(Hand.kLeft);
 	}
-
-	static public boolean runFollowLineCommand() {
-		return oi.ps4.getAValue();
-    }
-    public static boolean startAutoBrakerSystem(){
-	   return oi.ps4.getRightBumperValue();
-    }
-
-	public static boolean hatchPiston() {
-		return oi.xbox.getLeftBumperValue();
+	public static boolean toggleBrakes(){
+		return oi.xbox.getBumperPressed(Hand.kRight);
 	}
-
-	public static boolean grabberPiston() {
-		return oi.xbox.getRightBumperValue();
+	public static void startRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 1);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 1);
+	}
+	public static void stopRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 0);
 	}
 	
-	// public static boolean ejectHatch() {
-	// 	return oi.xbox.getYValue();
-	// }
-
-	// public static boolean retractEjectors() {
-	// 	return oi.xbox.getBValue();
-	// }
-
-	// public static boolean extendGrabber() {
-	// 	return oi.xbox.getRightBumperValue();
-	// }
-
-	// public static boolean retractGrabber() {
-	// 	return oi.xbox.getLeftBumperValue();
-	// }
 }

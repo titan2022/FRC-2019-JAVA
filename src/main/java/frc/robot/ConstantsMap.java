@@ -15,7 +15,7 @@ public class ConstantsMap {
     public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
     public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
-    public static final double TURTLE_SPEED = .5; //to be determined
+    public static final double TURTLE_SPEED = 1; //to be determined
     public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
 
@@ -38,33 +38,49 @@ public class ConstantsMap {
     public static final double HIGH_CUTOFF = 230;
 
     //For ArmSubsystem
-    public static final double WRIST_ZERO_KP = 1;
-    public static final double WRIST_ZERO_KI = 1;
-    public static final double WRIST_ZERO_KD = 1;
-    public static final double WRIST_ZERO_KF = 0;
+    public static final int kSlotIdx = 0;
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
+
+    
 
     public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
     public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 81);
-    public static final double WRIST_MIN_ANGLE = -100.0;
-    public static final double WRIST_MAX_ANGLE = 100.0;
+    public static final double WRIST_MIN_ANGLE = -10.0;
+    public static final double WRIST_MAX_ANGLE = 70.0;
+    public static final double WRIST_IN_ANGLE = 70.0;
+
+    public static final int WRIST_VELOCITY = 20000;
+    public static final int WRIST_ACCEL = 10000;
+    public static final int  WRIST_FOLLOW_DISTANCE = 20;
+    public static final double WRIST_CHANGE_SETPOINT_SPEED = .5;
+
+    public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 70 * 5);
 
     public static final double SHOULDER_GEAR_RATIO = 350.0;
-    public static final double SHOULDER_MIN_ANGLE = -45.0;
+    public static final double SHOULDER_MIN_ANGLE = -68.0;
     public static final double SHOULDER_MAX_ANGLE = 90.0;
+    public static final int SHOULDER_VELOCITY = 20000;
+    public static final int SHOULDER_ACCEL = 10000;
+    public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
+    public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
+    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -50;
 
-    public static final double SHOULDER_MV_KP = 1.0;
-    public static final double SHOULDER_MV_KI = 1.0;
-    public static final double SHOULDER_MV_KD = 1.0;
-    public static final double SHOULDER_MV_KF = 1.0;
+   
+    public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
-    public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
-    public static final double WRIST_OFFSET = 0; //to be changed
+    //For Grabber
+    public static final double BALL_INTAKE_SPEED = .5;
+    public static final double BALL_OUTTAKE_SPEED = 1;
+
+    
+
 
     //Tolerances
     public static final double WRIST_TOLERANCE = Float.NaN; //to be determined
@@ -77,5 +93,23 @@ public class ConstantsMap {
     public static final double PID_INTEGRAL_CONSTANT = .2;
     public static final double PID_DERIVATIVE_CONSTANT = .001;
     public static final double PID_INPUT_MAX = 180;
+
+    // PRESETS!!!
+    public static final boolean isHatchGrabber = true;
+    public static final double ROCKET_HATCH_PRESET_1 = -40.0;
+    public static final double ROCKET_HATCH_PRESET_2 = 8.0;
+    public static final double ROCKET_HATCH_PRESET_3 = 47.0;
+    public static final double ROCKET_BALL_PRESET_1 = 8.0;
+    public static final double ROCKET_BALL_PRESET_2 = 8.0;
+    public static final double ROCKET_BALL_PRESET_3 = 47.0;
+
+    public static final double CARGO_BALL_PRESET = -20.0;
+    public static final double CARGO_HATCH_PRESET = -20.0;
+
+    public static final double HATCH_COLLECT_PRESET = -20.0;
+    public static final double BALL_COLLECT_PRESET = -20.0;
+    
+    public static final double GO_HOME_PRESET = SHOULDER_MIN_ANGLE;   
+
 
 }

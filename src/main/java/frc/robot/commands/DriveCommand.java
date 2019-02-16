@@ -11,8 +11,8 @@ import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.ConstantsMap;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,13 +22,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
-	FollowLineCommand fLC;
 
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
 	boolean brakeState = false;
+	boolean rumble;
 	long lastPressed = 0;
-
 	//Things for follow line command
 	private boolean runFollowLineCommand;
 
@@ -46,6 +45,7 @@ public class DriveCommand extends Command {
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
 		//System.out.println(lineSubsystem.getData());	
+		rumble = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -76,12 +76,6 @@ public class DriveCommand extends Command {
 			if (Math.abs(speedLeft) < 0.1) {
 				speedLeft = 0;
 			}
-			// if(xboxMap.shiftHigh()) {
-			// 	driveSubsystem.shiftHigh();
-			// }
-			// if(xboxMap.shiftLow()) {
-			// 	driveSubsystem.shiftLow();
-			// }
 
 			double speedRight = XboxMap.right();
 			//speedRight *= -1;
@@ -97,9 +91,8 @@ public class DriveCommand extends Command {
 
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
-			if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+			if(XboxMap.toggleBrakes()){  
 				brakeState = !brakeState;
-				lastPressed = System.currentTimeMillis();
 			}
 			if(brakeState){
 				driveSubsystem.enableBrake();
@@ -108,6 +101,19 @@ public class DriveCommand extends Command {
 				driveSubsystem.disableBrake();
 			}
 
+
+			if(driveSubsystem.getVoltage()<6.8){
+				lastPressed = System.currentTimeMillis();
+				XboxMap.startRumble();
+				rumble = true;
+			}
+			else if(rumble && ((System.currentTimeMillis()-lastPressed)>500)){
+				XboxMap.stopRumble();
+				rumble = false;
+			}
+
+
+			
 			//Check for follow line command call
 			//The runFollowLineCommand() is called when the A button is calledd 
 			/* if (XboxMap.runFollowLineCommand()) {

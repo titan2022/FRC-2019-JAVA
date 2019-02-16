@@ -18,13 +18,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ArmCommand;
+import frc.robot.commands.ArmCommand2;
+import frc.robot.commands.ArmPresetCommand;
+import frc.robot.commands.ArmZero;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.FollowLineCommand;
 import frc.robot.commands.HatchGrabberCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.commands.WristZero;
+import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FollowLineSubsystem;
 import frc.robot.subsystems.HatchGrabberSubsystem;
 
 /**
@@ -38,9 +39,8 @@ public class Robot extends TimedRobot {
     public static OI oi;
     
     public static DriveSubsystem driveSubsystem = new DriveSubsystem();
-    public static ArmSubsystem armSubsystem = new ArmSubsystem();
+    public static ArmSubsystem2 armSubsystem2 = new ArmSubsystem2();
     
-    public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
     public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
 
     UsbCamera camera;
@@ -49,10 +49,13 @@ public class Robot extends TimedRobot {
     Command followLineCommand;
     Command armCommand;
     Command hgCommand;
+    Command zeroWrist;
+
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     Compressor compressor;
-    boolean armEnable;
+    public boolean debugMode;
+    Command preset;
     /**
     * This function is run when the robot is first started up and should be
     * used for any initialization code.
@@ -63,11 +66,13 @@ public class Robot extends TimedRobot {
         
         // chooser.addOption("My Auto", new MyAutoCommand());
         driveCommand = new DriveCommand();
-        autonomousCommand = new FollowLineCommand();
         //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
-        armCommand = new ArmCommand();
+        armCommand = new ArmCommand2();
+        
         server = CameraServer.getInstance();
+        debugMode = false;
+        
         //server.startAutomaticCapture("Ground",0);
     }
     
@@ -83,8 +88,21 @@ public class Robot extends TimedRobot {
     
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
-        SmartDashboard.putNumber("Shoulder Angle", armSubsystem.getShoulderEncoderAngle());
-        SmartDashboard.putNumber("Wrist Angle", armSubsystem.getWristEncoderAngle());
+        SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
+        SmartDashboard.putNumber("Shoulder Set", armSubsystem2.getShoulderSetPoint());
+        SmartDashboard.putNumber("Wrist Set", armSubsystem2.getWristSetPoint());
+
+        SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
+        SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
+        SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
+
+        armSubsystem2.checkShoulderLimits();
+        armSubsystem2.checkWristLimits();
+
+        if(ControlPanelMap.toggleDebug()){
+            debugMode = !debugMode;
+        }
+
     }
     
     /**
@@ -94,6 +112,9 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void disabledInit() {
+        XboxMap.stopRumble();
+
+        armSubsystem2.setShoulderJointSpeed(0);
     }
     
     @Override
@@ -125,9 +146,10 @@ public class Robot extends TimedRobot {
         */
         
         // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-            autonomousCommand.start();
-        }
+        armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+
+        new WristZero().start();;
+
     }
     
     /**
@@ -137,19 +159,19 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
-    
+
     @Override
     public void teleopInit() {
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
         // this line or comment it out.
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-        
+
+
         hgCommand.start();
-        armCommand.start();
+        armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+        //armCommand.start();
+        
         //driveCommand.start();
         
     }
@@ -160,6 +182,14 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void teleopPeriodic() {
+        if(debugMode){
+            if(ControlPanelMap.inTake()){
+                new ArmZero();
+            }
+            if(ControlPanelMap.outTake()){
+                new WristZero();
+            }
+        }
         /* if(XboxMap.runFollowLineCommand()){
             if(followLineCommand.isRunning()){
                 followLineCommand.cancel();
@@ -176,15 +206,26 @@ public class Robot extends TimedRobot {
         /* if(XboxMap.toggleArmControl()){
             if(armCommand.isRunning()){
                 armCommand.cancel();
-                driveCommand.start();
+                preset.start();
             }
             else{
-                driveCommand.cancel();
+                preset.cancel();
                 armCommand.start();
                 
             }
-        } */
-        SmartDashboard.putBoolean("Arm Conrol", armCommand.isRunning());
+        } 
+        if(XboxMap.zeroWrist()){
+            if(armCommand.isRunning()){
+                armCommand.cancel();
+                zeroWrist.start();
+            }
+            else{
+                zeroWrist.cancel();
+                armCommand.start();
+                
+            }
+        }  */
+        SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
         Scheduler.getInstance().run();
     }
     
