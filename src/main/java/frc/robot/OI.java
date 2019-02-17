@@ -65,7 +65,8 @@ public class OI {
 
 	}
 	public void normalMode(){
-		
+		System.out.println("Normal Mode OI");
+
 
 		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
 		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2));
@@ -83,7 +84,7 @@ public class OI {
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
 	}
 	public void debugMode(){
-		
+		System.out.println("Debug Mode OI");
 
 		rocketHatchPreset1.whenPressed(null);
 		rocketHatchPreset2.whenPressed(null);

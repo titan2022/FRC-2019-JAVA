@@ -48,7 +48,9 @@ public class ConstantsMap {
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
     public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 81);
-    public static final double WRIST_MIN_ANGLE = -10.0;
+    public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
+    public static final double WRIST_MIN_ANGLE_UP = -55.0;
+
     public static final double WRIST_MAX_ANGLE = 70.0;
     public static final double WRIST_IN_ANGLE = 70.0;
 
@@ -73,7 +75,7 @@ public class ConstantsMap {
 
     public static final int SHOULDER_VELOCITY = 20000;
     public static final int SHOULDER_ACCEL = 10000;
-    public static final Gains shoulderGains = new Gains(0.5, 0.1, 0.0, 0.2, 0, 1.0);
+    public static final Gains shoulderGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
 
     //For Grabber
     public static final double BALL_INTAKE_SPEED = .5;

@@ -23,7 +23,7 @@ public class ArmPresetCommand extends Command {
         System.out.println("Start Preset: " + preset);
         armSubsystem.setShoulderSetPoint(preset);
         
-        armSubsystem.setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);       
+        armSubsystem.setWristSetPoint(-preset-10);       
     }
     
     // Called repeatedly when this Command is scheduled to run
@@ -36,8 +36,8 @@ public class ArmPresetCommand extends Command {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return false;
-        //return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<.5;
+        //return false;
+        return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<.5;
     }
     
     // Called once after isFinished returns true

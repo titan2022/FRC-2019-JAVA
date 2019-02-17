@@ -122,12 +122,23 @@ public class ArmSubsystem2 extends Subsystem {
         if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
             angle = ConstantsMap.WRIST_MAX_ANGLE;
         }
-        if(angle>ConstantsMap.WRIST_MAX_ANGLE){
-            angle =ConstantsMap.WRIST_MAX_ANGLE;
+        else if(getShoulderEncoderAngle()>0){
+            if(angle>ConstantsMap.WRIST_MAX_ANGLE){
+                angle =ConstantsMap.WRIST_MAX_ANGLE;
+            }
+            if(angle<ConstantsMap.WRIST_MIN_ANGLE_UP){
+                angle =ConstantsMap.WRIST_MIN_ANGLE_UP;
+            }
         }
-        if(angle<ConstantsMap.WRIST_MIN_ANGLE){
-            angle =ConstantsMap.WRIST_MIN_ANGLE;
+        else{
+            if(angle>ConstantsMap.WRIST_MAX_ANGLE){
+                angle =ConstantsMap.WRIST_MAX_ANGLE;
+            }
+            if(angle<ConstantsMap.WRIST_MIN_ANGLE_DOWN){
+                angle =ConstantsMap.WRIST_MIN_ANGLE_DOWN;
+            }
         }
+       
         
         double ticks = angle/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         
@@ -246,7 +257,7 @@ public class ArmSubsystem2 extends Subsystem {
         }
         
        // return wristLimit || wristLimit2;
-       return lowerLimitWrist2.get() || lowerLimitWrist.get();
+       return lowerLimitWrist2.get();
     }
 
     public double getShoulderSpeed(){

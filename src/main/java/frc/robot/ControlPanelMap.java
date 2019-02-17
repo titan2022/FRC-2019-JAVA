@@ -37,7 +37,7 @@ public class ControlPanelMap {
 		return oi.controlPanel2.getRawButtonPressed(4);
 	}
 	public static boolean toggleDebug() {
-		return oi.controlPanel1.getRawButtonPressed(2);
+		return oi.controlPanel1.getRawButtonPressed(11);
 	}
 
 /* 
