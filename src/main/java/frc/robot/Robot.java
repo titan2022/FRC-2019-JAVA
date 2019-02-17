@@ -18,11 +18,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FollowLineCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,7 +33,6 @@ import frc.robot.subsystems.FollowLineSubsystem;
 public class Robot extends TimedRobot {
   public static OI oi;
 
-  public static ExampleSubsystem subsystem = new ExampleSubsystem();
   public static DriveSubsystem driveSubsystem = new DriveSubsystem();
   public static FollowLineSubsystem followLineSubsystem = new FollowLineSubsystem();
   UsbCamera camera;
@@ -49,12 +47,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     oi = new OI();
-    chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
-    
+    CameraServer inst = CameraServer.getInstance()
+    inst.addht
 
   }
 
