@@ -86,9 +86,9 @@ public class ArmCommand2 extends Command {
 
         actualShoulderAngle = armSubsystem.getShoulderEncoderAngle();
         actualWristAngle = armSubsystem.getWristEncoderAngle();
-        if(manualMode){
-            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
-            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        if(SmartDashboard.getBoolean("Debug Mode", false)){
+            armSubsystem.setShoulderJointSpeed(.1 * amountToMoveShoulderJoint);
+            armSubsystem.setWristJointSpeed(.1 * amountToMoveWristJoint);
         }
         else{                 
             if(Math.abs((shoulderAngle + amountToMoveShoulderJoint)-actualShoulderAngle)<ConstantsMap.SHOULDER_FOLLOW_DISTANCE){

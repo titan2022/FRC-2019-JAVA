@@ -52,7 +52,7 @@ public class ArmZero extends Command {
     @Override
     protected void end() {
         armSubsystem.setShoulderJointSpeed(0); 
-        System.out.println("Arm Command Stopped");
+        System.out.println("Arm Zero Command Stopped");
 
     }
 
@@ -60,7 +60,7 @@ public class ArmZero extends Command {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
-        System.out.println("Arm Command Intrupted");
+        System.out.println("Arm Zero Command Intrupted");
 
         armSubsystem.setShoulderJointSpeed(0);
         armSubsystem.setWristJointSpeed(0);;

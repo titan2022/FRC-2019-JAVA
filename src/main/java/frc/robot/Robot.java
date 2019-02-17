@@ -75,7 +75,9 @@ public class Robot extends TimedRobot {
         
         //server.startAutomaticCapture("Ground",0);
     }
-    
+    public boolean getDebug(){
+        return debugMode;
+    }
     
     /**
     * This function is called every robot packet, no matter the mode. Use
@@ -96,12 +98,23 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
 
+        SmartDashboard.putBoolean("Debug Mode", debugMode);
+
+
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
 
         if(ControlPanelMap.toggleDebug()){
             debugMode = !debugMode;
+            if(debugMode){
+                oi.debugMode();
+            }
+            else{
+                oi.normalMode();
+            }
+            
         }
+        
 
     }
     
