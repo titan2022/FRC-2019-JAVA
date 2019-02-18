@@ -80,7 +80,7 @@ public class FollowLineCommand extends Command {
 
     public FollowLineCommand() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.subsystem);
+        requires(Robot.driveSubsystem);
     }
   
     // Called just before this Command runs the first time

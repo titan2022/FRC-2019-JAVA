@@ -51,8 +51,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", chooser);
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
-    CameraServer inst = CameraServer.getInstance()
-    inst.addht
+    CameraServer inst = CameraServer.getInstance();
+    UsbCamera cam = new UsbCamera("Line Came", 0);
+    cam.setFPS(30);
+    cam.setResolution(1280, 720);
+    inst.startAutomaticCapture(cam);
+    
 
   }
 
