@@ -106,6 +106,7 @@ public class Robot extends TimedRobot {
 
         if(ControlPanelMap.toggleDebug()){
             debugMode = !debugMode;
+            oi.unbindButtons();
             if(debugMode){
                 oi.debugMode();
             }

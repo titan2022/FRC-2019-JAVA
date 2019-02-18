@@ -1,8 +1,13 @@
 package frc.robot;
 
+import java.lang.reflect.Field;
+import java.util.Vector;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger.ButtonScheduler;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.ArmZero;
 import frc.robot.commands.WristZero;
@@ -73,10 +78,6 @@ public class OI {
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
 	}
 	public void debugMode(){
-		rocketBallPreset1 = null;
-		rocketBallPreset2 = null;
-		rocketBallPreset3 = null;
-
 		rocketBallPreset1 = new JoystickButton(controlPanel1, 5);
 		rocketBallPreset2 = new JoystickButton(controlPanel1, 7);
 		rocketBallPreset3 = new JoystickButton(controlPanel1, 9);
@@ -108,5 +109,17 @@ public class OI {
 		hatchCollectPreset.whenPressed(new ArmZero());
 
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
+	}
+
+	public void unbindButtons() {
+		Field schedulerBtns;
+		try {
+			schedulerBtns = Scheduler.class.getDeclaredField("m_buttons");
+			schedulerBtns.setAccessible(true);
+			((Vector<ButtonScheduler>) schedulerBtns.get(Scheduler.getInstance())).clear();
+		} catch (Exception e) {
+			System.err.println("wpilib broke");
+			return;
+		}
 	}
 }
