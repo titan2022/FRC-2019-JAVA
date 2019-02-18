@@ -1,10 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -14,10 +7,7 @@ import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.ArmZero;
 import frc.robot.commands.WristZero;
 
-/**
-* This class is the glue that binds the controls on the physical operator
-* interface to the commands and command groups that allow control of the robot.
-*/
+
 public class OI {
 	//User interface Constants
 	public double attackThrottleSensitivity=.1;
@@ -42,9 +32,13 @@ public class OI {
 		xbox = new XboxController(0);
 		controlPanel1 = new Joystick(1);
 		controlPanel2 = new Joystick(2);
+
 		
-		//attack3_L = new Attack3(3);
-		//attack3_R = new Attack3(4);
+		
+		normalMode();
+
+	}
+	public void normalMode(){
 		rocketBallPreset1 = new JoystickButton(controlPanel1, 5);
 		rocketBallPreset2 = new JoystickButton(controlPanel1, 7);
 		rocketBallPreset3 = new JoystickButton(controlPanel1, 9);
@@ -60,11 +54,6 @@ public class OI {
 
 		goHome = new JoystickButton(controlPanel1, 12);
 		toggleDebug = new JoystickButton(controlPanel1, 11);
-		
-		normalMode();
-
-	}
-	public void normalMode(){
 		System.out.println("Normal Mode OI");
 
 
@@ -84,9 +73,28 @@ public class OI {
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET));
 	}
 	public void debugMode(){
+		rocketBallPreset1 = null;
+		rocketBallPreset2 = null;
+		rocketBallPreset3 = null;
+
+		rocketBallPreset1 = new JoystickButton(controlPanel1, 5);
+		rocketBallPreset2 = new JoystickButton(controlPanel1, 7);
+		rocketBallPreset3 = new JoystickButton(controlPanel1, 9);
+		rocketHatchPreset1 = new JoystickButton(controlPanel1, 6);
+		rocketHatchPreset2 = new JoystickButton(controlPanel1, 8);
+		rocketHatchPreset3 = new JoystickButton(controlPanel1, 10);
+
+		cargoBallPreset = new JoystickButton(controlPanel1, 3);
+		cargoHatchPreset = new JoystickButton(controlPanel1, 4);
+
+		ballCollectPreset = new JoystickButton(controlPanel1, 1);
+		hatchCollectPreset = new JoystickButton(controlPanel1,2);
+
+		goHome = new JoystickButton(controlPanel1, 12);
+		toggleDebug = new JoystickButton(controlPanel1, 11);
 		System.out.println("Debug Mode OI");
 
-		rocketHatchPreset1.whenPressed(null);
+		/* rocketHatchPreset1.whenPressed(null);
 		rocketHatchPreset2.whenPressed(null);
 		rocketHatchPreset3.whenPressed(null);
 		rocketBallPreset1.whenPressed(null);
@@ -94,7 +102,7 @@ public class OI {
 		rocketBallPreset3.whenPressed(null);
 
 		cargoHatchPreset.whenPressed(null);
-		cargoBallPreset.whenPressed(null);
+		cargoBallPreset.whenPressed(null); */
 
 		ballCollectPreset.whenPressed(new WristZero());
 		hatchCollectPreset.whenPressed(new ArmZero());

@@ -119,10 +119,10 @@ public class ArmSubsystem2 extends Subsystem {
         wrist.set(ControlMode.PercentOutput,speed);
     }
     public void setWristSetPoint(double angle){
-        if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
+        if(shoulder.getActiveTrajectoryPosition()*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
             angle = ConstantsMap.WRIST_MAX_ANGLE;
         }
-        else if(getShoulderEncoderAngle()>0){
+        else if(shoulder.getActiveTrajectoryPosition()*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK>0){
             if(angle>ConstantsMap.WRIST_MAX_ANGLE){
                 angle =ConstantsMap.WRIST_MAX_ANGLE;
             }
@@ -167,6 +167,7 @@ public class ArmSubsystem2 extends Subsystem {
             }
             else if (wrist.getControlMode() == ControlMode.MotionMagic){
                 if(wrist.getActiveTrajectoryVelocity() > 0){
+                
                     setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);
                 }
             }
