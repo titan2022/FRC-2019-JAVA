@@ -7,10 +7,8 @@
 
 package frc.robot;
 
-import java.util.Arrays;
 
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -19,11 +17,8 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand2;
-import frc.robot.commands.ArmPresetCommand;
-import frc.robot.commands.ArmZero;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.HatchGrabberCommand;
-import frc.robot.commands.WristZero;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HatchGrabberSubsystem;
@@ -171,7 +166,6 @@ public class Robot extends TimedRobot {
         // schedule the autonomous command (example)
         armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
 
-        new WristZero().start();;
 
     }
     
@@ -205,49 +199,7 @@ public class Robot extends TimedRobot {
     */
     @Override
     public void teleopPeriodic() {
-        if(debugMode){
-            if(ControlPanelMap.inTake()){
-                new ArmZero();
-            }
-            if(ControlPanelMap.outTake()){
-                new WristZero();
-            }
-        }
-        /* if(XboxMap.runFollowLineCommand()){
-            if(followLineCommand.isRunning()){
-                followLineCommand.cancel();
-                driveCommand.start();
-            }
-            else{
-                driveCommand.cancel();
-                followLineCommand.start();
-            }
-            
-        }    */
         
-        
-        /* if(XboxMap.toggleArmControl()){
-            if(armCommand.isRunning()){
-                armCommand.cancel();
-                preset.start();
-            }
-            else{
-                preset.cancel();
-                armCommand.start();
-                
-            }
-        } 
-        if(XboxMap.zeroWrist()){
-            if(armCommand.isRunning()){
-                armCommand.cancel();
-                zeroWrist.start();
-            }
-            else{
-                zeroWrist.cancel();
-                armCommand.start();
-                
-            }
-        }  */
         SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
         Scheduler.getInstance().run();
     }

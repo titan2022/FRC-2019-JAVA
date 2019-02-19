@@ -1,10 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.ConstantsMap;
 import frc.robot.Robot;
-import frc.robot.XboxMap;
 import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmPresetCommand extends Command {

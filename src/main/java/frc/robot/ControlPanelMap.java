@@ -1,11 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import frc.robot.commands.ArmPresetCommand;
-import frc.robot.commands.ArmZero;
-import frc.robot.commands.WristZero;
-
 public class ControlPanelMap {
 	static OI oi = Robot.oi;
 	
@@ -43,33 +37,8 @@ public class ControlPanelMap {
 		return oi.controlPanel1.getRawButtonPressed(4
 		);
 	}
-	public static boolean toggleManual() {
+	public static boolean toggleManual() {	
 		return oi.controlPanel1.getRawButtonPressed(9);
 	}
-
-/* 
-	public static boolean toggleArmControl() {
-		return oi.xbox.getXButtonPressed();
-	}
-	public static boolean toggleArmManualControl() {
-		return oi.xbox.getAButtonPressed();
-	}
-	public static boolean zeroWrist() {
-		return oi.xbox.getBackButtonPressed();
-	}
-	public static boolean zeroShoulder() {
-		return oi.xbox.getStartButtonPressed();
-	}
-	public static boolean enableWristLevelling() {
-		return oi.xbox.getBButtonPressed();
-	}
-
-
-	public static boolean hatchPiston() {
-		return oi.xbox.getLeftBumperValue();
-	}
-	public static boolean grabberPiston() {
-		return oi.xbox.getRightBumperValue();
-	} */
 
 }

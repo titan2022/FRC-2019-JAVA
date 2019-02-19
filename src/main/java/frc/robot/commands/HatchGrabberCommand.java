@@ -10,19 +10,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.ConstantsMap;
 import frc.robot.ControlPanelMap;
 import frc.robot.Robot;
-import frc.robot.XboxMap;
 import frc.robot.subsystems.HatchGrabberSubsystem;
 
 public class HatchGrabberCommand extends Command {
     HatchGrabberSubsystem hatchGrabberSubsystem = Robot.hatchGrabberSubsystem;
-    private boolean grabberOut = false;
-    private boolean hatchReleased = false;
+
     private boolean hatchMode;
-    private double lastPressedG = 0;
-    private double lastPressedH = 0;
+ 
 
     public HatchGrabberCommand() {
         requires(hatchGrabberSubsystem);
