@@ -13,7 +13,6 @@ import frc.robot.XboxMap;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.ConstantsMap;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,15 +28,12 @@ public class DriveCommand extends Command {
 	boolean brakeState = false;
 	boolean rumble;
 	long lastPressed = 0;
-	//Things for follow line command
-	private boolean runFollowLineCommand;
 
 	
     public DriveCommand() {
 		requires(driveSubsystem);
 		
 		//Set follow Line command booleans 
-		runFollowLineCommand = false;
     }
     
     // Called just before this Command runs the first time
@@ -51,25 +47,7 @@ public class DriveCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {   
-    	// Normal Driving
-    	// if(attack3Map.turtleButton()) {
-    	//	turtlemode = !turtlemode;
-		// } 
-		/* if (runFollowLineCommand) {
-			System.out.println("fuck me");
-			if (!fLC.isFinished()) {
-				if (XboxMap.interruptFollowLineCommand()) {
-					System.out.println("bu hao");
-					fLC.kill();//Make this a thing
-				} else {
-					System.out.println("jfkdlsajklfdsajklfdsa");
-					fLC.execute();
-				}
-			} else {
-				runFollowLineCommand = false;
-			}
-		} else { */
-			//System.out.println("We fucked");
+  
 
 			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
@@ -118,17 +96,6 @@ public class DriveCommand extends Command {
 				rumble = false;
 			}
 
-
-			
-			//Check for follow line command call
-			//The runFollowLineCommand() is called when the A button is calledd 
-			/* if (XboxMap.runFollowLineCommand()) {
-				System.out.println("Cyka Blyat");
-				runFollowLineCommand = true;
-				fLC = new FollowLineCommand();
-				fLC.initialize();
-			} */
-		//}
 		
 		//Putting Data up
     	displayData();

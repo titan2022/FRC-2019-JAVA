@@ -81,12 +81,7 @@ public class ConstantsMap {
     public static final double BALL_INTAKE_SPEED = .5;
     public static final double BALL_OUTTAKE_SPEED = 1;
 
-    
 
-
-    //Tolerances
-    public static final double WRIST_TOLERANCE = Float.NaN; //to be determined
-    public static final double SHOULDER_TOLERANCE = Float.NaN; //to be determined
 
     //Follow line pid values
     public static final double PID_PERCENT_TOLERANCE = .01;

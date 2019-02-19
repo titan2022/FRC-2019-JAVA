@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.buttons.Trigger.ButtonScheduler;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.ArmZero;
-import frc.robot.commands.WristZero;
+import frc.robot.commands.WristForceZero;
 
 
 public class OI {
@@ -105,7 +105,7 @@ public class OI {
 		cargoHatchPreset.whenPressed(null);
 		cargoBallPreset.whenPressed(null); */
 
-		ballCollectPreset.whenPressed(new WristZero());
+		ballCollectPreset.whenPressed(new WristForceZero());
 		hatchCollectPreset.whenPressed(new ArmZero());
 
 		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET,ConstantsMap.WRIST_MAX_ANGLE));

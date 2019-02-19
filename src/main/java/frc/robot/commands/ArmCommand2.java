@@ -1,24 +1,15 @@
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.ConstantsMap;
 import frc.robot.ControlPanelMap;
 import frc.robot.Robot;
-import frc.robot.XboxMap;
-import frc.robot.pids.EncoderMotorPID;
-import frc.robot.ConstantsMap;
 import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmCommand2 extends Command {
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
-    EncoderMotorPID wristLevelPID, armMovementPID;
     private boolean enableLevelWrist = true;
     boolean manualMode = true;
     private double shoulderAngle;
@@ -52,17 +43,6 @@ public class ArmCommand2 extends Command {
         SmartDashboard.putBoolean("Manual Mode", manualMode);
         SmartDashboard.putBoolean("Level Mode", enableLevelWrist);
 
-        
-
-        /* if(ControlPanelMap.zeroWrist()){
-            armSubsystem.zeroWrist();
-            wristAngle = armSubsystem.getWristEncoderAngle();
-        }
-        else if(ControlPanelMap.zeroShoulder()){
-            armSubsystem.zeroShoulder();
-            shoulderAngle = armSubsystem.getShoulderEncoderAngle();
-
-        } */
         /* if(ControlPanelMap.toggleArmManualControl()){            
             if(manualMode){
                 shoulderAngle = armSubsystem.getShoulderEncoderAngle();
@@ -105,18 +85,7 @@ public class ArmCommand2 extends Command {
             if(Math.abs((wristAngle + amountToMoveWristJoint)-actualWristAngle)<ConstantsMap.WRIST_FOLLOW_DISTANCE){
                 wristAngle += amountToMoveWristJoint;
             } 
-            /* if(shoulderAngle > ConstantsMap.SHOULDER_MAX_ANGLE){
-                shoulderAngle = ConstantsMap.SHOULDER_MAX_ANGLE;
-            }
-            if(shoulderAngle < ConstantsMap.SHOULDER_MIN_ANGLE){
-                shoulderAngle = ConstantsMap.SHOULDER_MIN_ANGLE;
-            }
-            if(wristAngle > ConstantsMap.WRIST_MAX_ANGLE){
-                wristAngle = ConstantsMap.WRIST_MAX_ANGLE;
-            }
-            if(wristAngle < ConstantsMap.WRIST_MIN_ANGLE_DOWN){
-                wristAngle = ConstantsMap.WRIST_MIN_ANGLE_DOWN;
-            } */
+        
             if(shoulderAngle != oldShoulderAngle){
                 armSubsystem.setShoulderSetPoint(shoulderAngle);
 

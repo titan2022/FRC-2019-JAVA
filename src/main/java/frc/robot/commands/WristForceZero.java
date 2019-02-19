@@ -1,27 +1,13 @@
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.XboxMap;
-import frc.robot.pids.EncoderMotorPID;
-import frc.robot.TalonSet;
-import frc.robot.ConstantsMap;
+
 import frc.robot.subsystems.ArmSubsystem2;
 
-public class WristZero extends Command {
+public class WristForceZero extends Command {
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
-    private double shoulderAngle;
-    private double wristAngle;
-    private double actualShoulderAngle;
-    private double actualWristAngle;
-    public WristZero() {
+    public WristForceZero() {
         requires(armSubsystem);
     }
 
