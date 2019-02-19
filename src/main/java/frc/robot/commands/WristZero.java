@@ -29,7 +29,7 @@ public class WristZero extends Command {
     @Override
     protected void initialize() {
         System.out.println("Wrist Zero Started");
-        armSubsystem.setWristJointSpeed(.4);      
+        armSubsystem.setWristJointSpeed(.6);      
         
          
     }
@@ -63,7 +63,6 @@ public class WristZero extends Command {
     protected void interrupted() {
         System.out.println("Zero Wrist Command Intrupted");
 
-        armSubsystem.setShoulderJointSpeed(0);
         armSubsystem.setWristJointSpeed(0);;
 
     }

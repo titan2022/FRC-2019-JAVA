@@ -9,27 +9,31 @@ import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmPresetCommand extends Command {
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
-    double preset;
-    public ArmPresetCommand(double angle) {
+    double sPreset;
+    double wPreset;
+
+    public ArmPresetCommand(double sAngle,double wAngle) {
         // Use requires() here to declare subsystem dependencies
         requires(armSubsystem);
-        preset = angle;
+        sPreset = sAngle;
+        wPreset = wAngle;
+
     }
     
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
         
-        System.out.println("Start Preset: " + preset);
-        armSubsystem.setShoulderSetPoint(preset);
+        System.out.println("Start Preset: " + sPreset + " Wrist: " + wPreset);
+        armSubsystem.setShoulderSetPoint(sPreset);
         
-        armSubsystem.setWristSetPoint(-preset-10);       
+        //armSubsystem.setWristSetPoint(wPreset);       
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {        
-        //armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
+        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
 
     }
     
@@ -37,7 +41,7 @@ public class ArmPresetCommand extends Command {
     @Override
     protected boolean isFinished() {
         //return false;
-        return Math.abs(armSubsystem.getShoulderEncoderAngle() - preset)<.5;
+        return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<.5;
     }
     
     // Called once after isFinished returns true

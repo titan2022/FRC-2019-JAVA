@@ -39,6 +39,13 @@ public class ControlPanelMap {
 	public static boolean toggleDebug() {
 		return oi.controlPanel1.getRawButtonPressed(11);
 	}
+	public static boolean toggleLevel() {
+		return oi.controlPanel1.getRawButtonPressed(4
+		);
+	}
+	public static boolean toggleManual() {
+		return oi.controlPanel1.getRawButtonPressed(9);
+	}
 
 /* 
 	public static boolean toggleArmControl() {

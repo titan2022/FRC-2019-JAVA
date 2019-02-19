@@ -47,14 +47,14 @@ public class ConstantsMap {
     public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
-    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 81);
+    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63);
     public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
     public static final double WRIST_MIN_ANGLE_UP = -55.0;
 
-    public static final double WRIST_MAX_ANGLE = 70.0;
-    public static final double WRIST_IN_ANGLE = 70.0;
+    public static final double WRIST_MAX_ANGLE = 80.0;
+    public static final double WRIST_IN_ANGLE = 60.0;
 
-    public static final int WRIST_VELOCITY = 20000;
+    public static final int WRIST_VELOCITY = (int)(316.7/WRIST_ENCODER_ANGLE_PER_TICK);;
     public static final int WRIST_ACCEL = 10000;
     public static final int  WRIST_FOLLOW_DISTANCE = 20;
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .5;
@@ -71,11 +71,11 @@ public class ConstantsMap {
     
     public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
     public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
-    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -50;
+    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -55;
 
-    public static final int SHOULDER_VELOCITY = 20000;
-    public static final int SHOULDER_ACCEL = 10000;
-    public static final Gains shoulderGains = new Gains(0.1, 0.0, 0.1, 0.4, 0, 1.0);
+    public static final int SHOULDER_VELOCITY = 24000/2;
+    public static final int SHOULDER_ACCEL = 24000 ;
+    public static final Gains shoulderGains = new Gains(.05, 0.0, 0, 0.042625, 0, 1.0);
 
     //For Grabber
     public static final double BALL_INTAKE_SPEED = .5;
@@ -100,16 +100,18 @@ public class ConstantsMap {
     public static final boolean isHatchGrabber = true;
     public static final double ROCKET_HATCH_PRESET_1 = 0;
     public static final double ROCKET_HATCH_PRESET_2 = 8.0;
-    public static final double ROCKET_HATCH_PRESET_3 = 47.0;
-    public static final double ROCKET_BALL_PRESET_1 = 0;
-    public static final double ROCKET_BALL_PRESET_2 = 8.0;
-    public static final double ROCKET_BALL_PRESET_3 = 47.0;
+    public static final double ROCKET_HATCH_PRESET_3 = .0;
+    public static final double ROCKET_BALL_PRESET_1 = -40;
+    public static final double ROCKET_BALL_PRESET_2 = 6;
+    public static final double ROCKET_BALL_PRESET_3 = 50;
 
     public static final double CARGO_BALL_PRESET = -20.0;
     public static final double CARGO_HATCH_PRESET = -20.0;
 
     public static final double HATCH_COLLECT_PRESET = -20.0;
-    public static final double BALL_COLLECT_PRESET = -20.0;
+    public static final double BALL_COLLECT_WRIST_PRESET = -30.0;
+    public static final double BALL_COLLECT_SHOULDER_PRESET = -20.0;
+
     
     public static final double GO_HOME_PRESET = SHOULDER_MIN_ANGLE;   
 

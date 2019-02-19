@@ -10,6 +10,7 @@ package frc.robot.commands;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
+import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.ConstantsMap;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -22,7 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
-
+	ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
 	boolean brakeState = false;
@@ -85,6 +86,11 @@ public class DriveCommand extends Command {
 			if(turtlemode) {
 				speedLeft *= ConstantsMap.TURTLE_SPEED;
 				speedRight *= ConstantsMap.TURTLE_SPEED;
+			}
+			if(armSubsystem.getShoulderEncoderAngle()>0){
+				speedLeft *= .5;
+				speedRight *= .5;
+
 			}
 			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
 			driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);

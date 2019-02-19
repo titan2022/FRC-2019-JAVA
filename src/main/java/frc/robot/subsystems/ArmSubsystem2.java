@@ -37,6 +37,12 @@ public class ArmSubsystem2 extends Subsystem {
     private DigitalInput lowerLimit, lowerLimitWrist, lowerLimitWrist2;
     private double wristLimitStartTime,wristLimitStartTime2;
     private boolean wristLimit,wristLimit2;
+
+
+    private double shoulderSet;
+    private double wristSet;
+    private boolean manualMode;
+    private boolean levelMode;
     TalonSRX shoulder, shoulderSlave,wrist;
 
     public ArmSubsystem2() {
@@ -107,22 +113,53 @@ public class ArmSubsystem2 extends Subsystem {
 
         setWristSetPoint(getWristEncoderAngle());
         setShoulderSetPoint(getShoulderEncoderAngle());
-        
+
+        manualMode = false;
+        levelMode = false;
     }
     
     public void setShoulderJointSpeed(double speed) {
         
         shoulder.set(ControlMode.PercentOutput,speed);
     }
-
+    public boolean getManualMode(){
+        return manualMode;
+    }
+    public boolean getLevelMode(){
+        return levelMode;
+    }
+    public void toggleManualMode(){
+        manualMode =  !manualMode;
+    }
+    public void toggleLevelMode(){
+        levelMode =  !levelMode;
+    }
     public void setWristJointSpeed(double speed) {
         wrist.set(ControlMode.PercentOutput,speed);
     }
     public void setWristSetPoint(double angle){
-        if(shoulder.getActiveTrajectoryPosition()*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
-            angle = ConstantsMap.WRIST_MAX_ANGLE;
+        if(shoulder.getControlMode() == ControlMode.MotionMagic){
+            
+            if(shoulderSet*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
+               // System.out.println(shoulderSet + " : " + angle + " : " + ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE);
+                angle = ConstantsMap.WRIST_MAX_ANGLE;
+
+            }
+            else {
+                
+                if(angle>ConstantsMap.WRIST_MAX_ANGLE){
+                    angle =ConstantsMap.WRIST_MAX_ANGLE;
+                }
+                if(angle<ConstantsMap.WRIST_MIN_ANGLE_UP){
+                    angle =ConstantsMap.WRIST_MIN_ANGLE_UP;
+                }
+            }
+            
         }
-        else if(shoulder.getActiveTrajectoryPosition()*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK>0){
+        else{
+            if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
+                angle = ConstantsMap.WRIST_MAX_ANGLE;
+            }
             if(angle>ConstantsMap.WRIST_MAX_ANGLE){
                 angle =ConstantsMap.WRIST_MAX_ANGLE;
             }
@@ -130,19 +167,13 @@ public class ArmSubsystem2 extends Subsystem {
                 angle =ConstantsMap.WRIST_MIN_ANGLE_UP;
             }
         }
-        else{
-            if(angle>ConstantsMap.WRIST_MAX_ANGLE){
-                angle =ConstantsMap.WRIST_MAX_ANGLE;
-            }
-            if(angle<ConstantsMap.WRIST_MIN_ANGLE_DOWN){
-                angle =ConstantsMap.WRIST_MIN_ANGLE_DOWN;
-            }
-        }
+        
        
         
         double ticks = angle/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         
         wrist.set(ControlMode.MotionMagic, ticks);
+        wristSet = ticks;
     }
     public void setShoulderSetPoint(double angle){
         if(angle>ConstantsMap.SHOULDER_MAX_ANGLE){
@@ -153,6 +184,7 @@ public class ArmSubsystem2 extends Subsystem {
         }
         double ticks = angle/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
         shoulder.set(ControlMode.MotionMagic, ticks);
+        shoulderSet = ticks;
         checkShoulderLimits();
 
     }

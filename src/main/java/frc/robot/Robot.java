@@ -100,6 +100,10 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putBoolean("Debug Mode", debugMode);
 
+        SmartDashboard.putBoolean("Manual Mode", armSubsystem2.getManualMode());
+        SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
+
+
 
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
@@ -115,7 +119,12 @@ public class Robot extends TimedRobot {
             }
             
         }
-        
+        if(ControlPanelMap.toggleManual() && debugMode){
+            armSubsystem2.toggleManualMode();
+        }
+        if(ControlPanelMap.toggleLevel() && debugMode){
+            armSubsystem2.toggleLevelMode();
+        }
 
     }
     

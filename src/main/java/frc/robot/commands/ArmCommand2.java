@@ -25,6 +25,8 @@ public class ArmCommand2 extends Command {
     private double wristAngle;
     private double actualShoulderAngle;
     private double actualWristAngle;
+    private double oldShoulderAngle;
+    private double oldWristAngle;
     public ArmCommand2() {
         requires(armSubsystem);
     }
@@ -39,7 +41,8 @@ public class ArmCommand2 extends Command {
         wristAngle = armSubsystem.getWristEncoderAngle();
         manualMode = false;
         enableLevelWrist = false;
-
+        oldShoulderAngle = 0;
+        oldWristAngle = 0;
          
     }
 
@@ -81,8 +84,9 @@ public class ArmCommand2 extends Command {
         if (Math.abs(amountToMoveWristJoint) < 0.1) {
             amountToMoveWristJoint = 0;
         }
-        amountToMoveShoulderJoint *= ConstantsMap.SHOULDER_CHANGE_SETPOINT_SPEED;
-        amountToMoveWristJoint *= ConstantsMap.WRIST_CHANGE_SETPOINT_SPEED;
+        
+       /*  amountToMoveShoulderJoint *= ConstantsMap.SHOULDER_CHANGE_SETPOINT_SPEED;
+        amountToMoveWristJoint *= ConstantsMap.WRIST_CHANGE_SETPOINT_SPEED; */
 
         actualShoulderAngle = armSubsystem.getShoulderEncoderAngle();
         actualWristAngle = armSubsystem.getWristEncoderAngle();
@@ -90,9 +94,9 @@ public class ArmCommand2 extends Command {
             armSubsystem.setShoulderJointSpeed(.1 * amountToMoveShoulderJoint);
             armSubsystem.setWristJointSpeed(.1 * amountToMoveWristJoint);
         } */
-        if(manualMode){
-            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
-            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
+        if(armSubsystem.getManualMode()){
+            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint*2);
+            armSubsystem.setWristJointSpeed(amountToMoveWristJoint*2);
         }
         else{                 
             if(Math.abs((shoulderAngle + amountToMoveShoulderJoint)-actualShoulderAngle)<ConstantsMap.SHOULDER_FOLLOW_DISTANCE){
@@ -113,15 +117,22 @@ public class ArmCommand2 extends Command {
             if(wristAngle < ConstantsMap.WRIST_MIN_ANGLE_DOWN){
                 wristAngle = ConstantsMap.WRIST_MIN_ANGLE_DOWN;
             } */
-            
-            armSubsystem.setShoulderSetPoint(shoulderAngle);
-            if(enableLevelWrist){
-                armSubsystem.setWristSetPoint(-shoulderAngle);
-            }
-            else{
-                armSubsystem.setWristSetPoint(wristAngle);
+            if(shoulderAngle != oldShoulderAngle){
+                armSubsystem.setShoulderSetPoint(shoulderAngle);
 
             }
+            if(wristAngle != oldWristAngle || armSubsystem.getLevelMode()){
+                if(armSubsystem.getLevelMode()){
+                    armSubsystem.setWristSetPoint(-shoulderAngle);
+                }
+                else{
+                    armSubsystem.setWristSetPoint(wristAngle);
+    
+                }
+            }
+            oldWristAngle = wristAngle;
+            oldShoulderAngle = shoulderAngle;
+            
         }
         SmartDashboard.putNumber("Shoulder setPoint", shoulderAngle);
     }
