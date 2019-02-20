@@ -97,15 +97,15 @@ public class ConstantsMap {
     public static final double ROCKET_HATCH_PRESET_2 = 8.0;
     public static final double ROCKET_HATCH_PRESET_3 = .0;
     public static final double ROCKET_BALL_PRESET_1 = -40;
-    public static final double ROCKET_BALL_PRESET_2 = 6;
-    public static final double ROCKET_BALL_PRESET_3 = 50;
+    public static final double ROCKET_BALL_PRESET_2 = 0;
+    public static final double ROCKET_BALL_PRESET_3 = 46;
 
     public static final double CARGO_BALL_PRESET = -20.0;
     public static final double CARGO_HATCH_PRESET = -20.0;
 
     public static final double HATCH_COLLECT_PRESET = -20.0;
-    public static final double BALL_COLLECT_WRIST_PRESET = -30.0;
-    public static final double BALL_COLLECT_SHOULDER_PRESET = -20.0;
+    public static final double BALL_COLLECT_WRIST_PRESET = -3.0;
+    public static final double BALL_COLLECT_SHOULDER_PRESET = -52.0;
 
     
     public static final double GO_HOME_PRESET = SHOULDER_MIN_ANGLE;   
