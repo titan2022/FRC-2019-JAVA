@@ -6,14 +6,23 @@ import frc.robot.subsystems.ArmSubsystem2;
 
 public class ArmPresetCommand extends Command {
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
-    double sPreset;
-    double wPreset;
-
+    double sPreset = 1000;
+    double wPreset = 1000;
+    boolean shoulderFinished;
+    boolean levelMode;
     public ArmPresetCommand(double sAngle,double wAngle) {
         // Use requires() here to declare subsystem dependencies
         requires(armSubsystem);
         sPreset = sAngle;
         wPreset = wAngle;
+        levelMode = false;
+
+    }
+    public ArmPresetCommand(double sAngle) {
+        // Use requires() here to declare subsystem dependencies
+        requires(armSubsystem);
+        sPreset = sAngle;
+        levelMode = true;
 
     }
     
@@ -23,14 +32,22 @@ public class ArmPresetCommand extends Command {
         
         System.out.println("Start Preset: " + sPreset + " Wrist: " + wPreset);
         armSubsystem.setShoulderSetPoint(sPreset);
-        
-        //armSubsystem.setWristSetPoint(wPreset);       
+
     }
     
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {        
-        armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle());       
+        if(levelMode){
+            armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
+        }
+        else{
+            if(Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2 && !shoulderFinished){
+                shoulderFinished = true;
+                armSubsystem.setWristSetPoint(wPreset);
+            }
+        }
+        //armSubsyste
 
     }
     
@@ -38,7 +55,13 @@ public class ArmPresetCommand extends Command {
     @Override
     protected boolean isFinished() {
         //return false;
-        return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<.5;
+        if(levelMode){
+            return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;
+        }
+        else{
+            return Math.abs(armSubsystem.getWristEncoderAngle() - wPreset)<2;
+        }
+        
     }
     
     // Called once after isFinished returns true

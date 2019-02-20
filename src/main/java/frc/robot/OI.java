@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.buttons.Trigger.ButtonScheduler;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.ArmZero;
+import frc.robot.commands.GoHome;
 import frc.robot.commands.WristForceZero;
 
 
@@ -62,20 +63,20 @@ public class OI {
 		System.out.println("Normal Mode OI");
 
 
-		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1,-ConstantsMap.ROCKET_HATCH_PRESET_1));
-		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2,-ConstantsMap.ROCKET_HATCH_PRESET_2));
-		rocketHatchPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_3,-ConstantsMap.ROCKET_HATCH_PRESET_3));
-		rocketBallPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_1,-ConstantsMap.ROCKET_BALL_PRESET_1));
-		rocketBallPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_2,-ConstantsMap.ROCKET_BALL_PRESET_2));
-		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3,-ConstantsMap.ROCKET_BALL_PRESET_3));
+		rocketHatchPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_1));
+		rocketHatchPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_2));
+		rocketHatchPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_HATCH_PRESET_3));
+		rocketBallPreset1.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_1));
+		rocketBallPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_2));
+		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3));
 
-		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET,-ConstantsMap.CARGO_HATCH_PRESET));
-		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET,-ConstantsMap.CARGO_BALL_PRESET));
+		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
+		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET));
 
-		ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET,-ConstantsMap.BALL_COLLECT_WRIST_PRESET));
-		hatchCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.HATCH_COLLECT_PRESET,-ConstantsMap.HATCH_COLLECT_PRESET));
+		ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET,ConstantsMap.BALL_COLLECT_WRIST_PRESET));
+		hatchCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.HATCH_COLLECT_PRESET));
 
-		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET,ConstantsMap.WRIST_MAX_ANGLE));
+		goHome.whenPressed(new GoHome());
 	}
 	public void debugMode(){
 		rocketBallPreset1 = new JoystickButton(controlPanel1, 5);
@@ -108,7 +109,7 @@ public class OI {
 		ballCollectPreset.whenPressed(new WristForceZero());
 		hatchCollectPreset.whenPressed(new ArmZero());
 
-		goHome.whenPressed(new ArmPresetCommand(ConstantsMap.GO_HOME_PRESET,ConstantsMap.WRIST_MAX_ANGLE));
+		goHome.whenPressed(new GoHome());
 	}
 
 	public void unbindButtons() {
