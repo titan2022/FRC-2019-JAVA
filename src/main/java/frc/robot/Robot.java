@@ -120,6 +120,14 @@ public class Robot extends TimedRobot {
         if(ControlPanelMap.toggleLevel() && debugMode){
             armSubsystem2.toggleLevelMode();
         }
+        if(ControlPanelMap.actualZeroWrist() && debugMode){
+            armSubsystem2.zeroWrist();
+            armSubsystem2.setWristSetPoint(0);
+        }
+        if(ControlPanelMap.actualZeroShoulder() && debugMode){
+            armSubsystem2.zeroShoulder();
+            armSubsystem2.setShoulderSetPoint(0);
+        }
 
     }
     

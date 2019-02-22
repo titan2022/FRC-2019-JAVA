@@ -47,11 +47,11 @@ public class ConstantsMap {
     public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
-    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63);
+    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/(4096 * 63);
     public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
     public static final double WRIST_MIN_ANGLE_UP = -55.0;
 
-    public static final double WRIST_MAX_ANGLE = 80.0;
+    public static final double WRIST_MAX_ANGLE =90.0;
     public static final double WRIST_IN_ANGLE = 60.0;
 
     public static final int WRIST_VELOCITY = (int)(316.7/WRIST_ENCODER_ANGLE_PER_TICK);;
@@ -63,10 +63,10 @@ public class ConstantsMap {
 
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
-    public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 49 * 5);
+    public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/(4096 * 49 * 5);
 
     public static final double SHOULDER_GEAR_RATIO = 350.0;
-    public static final double SHOULDER_MIN_ANGLE = -68.0;
+    public static final double SHOULDER_MIN_ANGLE = -64.0;
     public static final double SHOULDER_MAX_ANGLE = 50.0;
     
     public static final int  SHOULDER_FOLLOW_DISTANCE = 20;

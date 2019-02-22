@@ -37,8 +37,8 @@ public class RobotMap {
     public static final int LOWER_WRIST_LIMIT_PORT2 = 3;
 
 
-    public static final int HATCH_PISTON_F = 4;
-    public static final int HATCH_PISTON_R = 5;
-    public static final int RELEASE_PISTON_1_F = 7;
-    public static final int RELEASE_PISTON_1_R = 6;
+    public static final int HATCH_PISTON_F = 3;
+    public static final int HATCH_PISTON_R = 1;
+    public static final int RELEASE_PISTON_1_F = 2;
+    public static final int RELEASE_PISTON_1_R = 0;
 }

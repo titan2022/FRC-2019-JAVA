@@ -36,6 +36,10 @@ public class HatchGrabberCommand extends Command {
 
         if(ControlPanelMap.setBallMode()){
             hatchMode = false;
+            hatchGrabberSubsystem.unEjectHatch();
+
+            hatchGrabberSubsystem.retractHatch();
+
         }
         if(ControlPanelMap.setHatcheMode()){
             hatchMode = true;
@@ -56,7 +60,6 @@ public class HatchGrabberCommand extends Command {
             }
         }
         else{
-            hatchGrabberSubsystem.retractHatch();
             
             if(ControlPanelMap.outTake()) {            
                 hatchGrabberSubsystem.outakeWheels();

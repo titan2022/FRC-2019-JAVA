@@ -40,5 +40,11 @@ public class ControlPanelMap {
 	public static boolean toggleManual() {	
 		return oi.controlPanel1.getRawButtonPressed(9);
 	}
+	public static boolean actualZeroWrist() {	
+		return oi.controlPanel1.getRawButtonPressed(5);
+	}
+	public static boolean actualZeroShoulder() {	
+		return oi.controlPanel1.getRawButtonPressed(6);
+	}
 
 }
