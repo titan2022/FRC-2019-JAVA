@@ -73,7 +73,8 @@ public class OI {
 		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
 		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET));
 
-		ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET,ConstantsMap.BALL_COLLECT_WRIST_PRESET));
+		//ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET,ConstantsMap.BALL_COLLECT_WRIST_PRESET));
+		ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET, ConstantsMap.BALL_COLLECT_WRIST_PRESET));
 		hatchCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.HATCH_COLLECT_PRESET));
 
 		goHome.whenPressed(new GoHome());

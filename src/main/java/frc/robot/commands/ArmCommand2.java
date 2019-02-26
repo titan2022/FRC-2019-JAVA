@@ -18,6 +18,7 @@ public class ArmCommand2 extends Command {
     private double actualWristAngle;
     private double oldShoulderAngle;
     private double oldWristAngle;
+    
     public ArmCommand2() {
         requires(armSubsystem);
     }
