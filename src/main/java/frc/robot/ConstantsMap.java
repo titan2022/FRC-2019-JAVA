@@ -18,6 +18,7 @@ public class ConstantsMap {
     public static final double TURTLE_SPEED = 1; //to be determined
     public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
+    public static final double TIP_TOLERANCE = 8; //to be determined
 
     //for line follower
     public static final double DISTANCE_BETWEEN_SENSORS = 6; //inches
@@ -49,7 +50,7 @@ public class ConstantsMap {
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
     public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63);
     public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
-    public static final double WRIST_MIN_ANGLE_UP = -55.0;
+    public static final double WRIST_MIN_ANGLE_UP = -60.0;
 
     public static final double WRIST_MAX_ANGLE = 80.0;
     public static final double WRIST_IN_ANGLE = 60.0;
@@ -93,9 +94,9 @@ public class ConstantsMap {
 
     // PRESETS!!!
     public static final boolean isHatchGrabber = true;
-    public static final double ROCKET_HATCH_PRESET_1 = 0;
-    public static final double ROCKET_HATCH_PRESET_2 = 8.0;
-    public static final double ROCKET_HATCH_PRESET_3 = .0;
+    public static final double ROCKET_HATCH_PRESET_1 = -54;
+    public static final double ROCKET_HATCH_PRESET_2 = -6.0;
+    public static final double ROCKET_HATCH_PRESET_3 = 29;
     public static final double ROCKET_BALL_PRESET_1 = -40;
     public static final double ROCKET_BALL_PRESET_2 = 0;
     public static final double ROCKET_BALL_PRESET_3 = 46;

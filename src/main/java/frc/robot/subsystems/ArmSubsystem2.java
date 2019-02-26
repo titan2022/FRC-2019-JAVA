@@ -50,6 +50,8 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
         shoulderSlave = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
         shoulderSlave.configFactoryDefault();
+        shoulderSlave.setNeutralMode(NeutralMode.Brake);
+
         shoulder.setInverted(false);
         shoulderSlave.setInverted(true);
         shoulder.setSensorPhase(true);

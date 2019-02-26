@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.ControlPanelMap;
 import frc.robot.Robot;
 import frc.robot.subsystems.ArmSubsystem2;
 
@@ -55,7 +56,10 @@ public class ArmPresetCommand extends Command {
     @Override
     protected boolean isFinished() {
         //return false;
-        if(levelMode){
+        if(Math.abs(ControlPanelMap.controlShoulderJoint()) > .1 || Math.abs(ControlPanelMap.controlWristJoint()) > .1){
+            return true;
+        }
+        else if(levelMode){
             return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;
         }
         else{

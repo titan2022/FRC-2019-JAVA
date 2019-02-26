@@ -67,11 +67,13 @@ public class DriveSubsystem extends Subsystem {
 		pdp = new PowerDistributionPanel(11);
 
 		
-
+		
 		
 		SmartDashboard.putData(ahrs);
 	}
-	
+	public boolean checkTip(){
+		return (Math.abs(ahrs.getRoll()) > ConstantsMap.TIP_TOLERANCE);
+	}
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
     	setDefaultCommand(new DriveCommand());

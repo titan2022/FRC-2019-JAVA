@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArmCommand2;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.GoHome;
 import frc.robot.commands.HatchGrabberCommand;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
@@ -98,7 +99,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Manual Mode", armSubsystem2.getManualMode());
         SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
 
-
+        SmartDashboard.putBoolean("Tipping", driveSubsystem.checkTip());
 
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
@@ -187,6 +188,8 @@ public class Robot extends TimedRobot {
 
         hgCommand.start();
         armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+
+        
         //armCommand.start();
         
         //driveCommand.start();
@@ -201,6 +204,10 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         
         SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
+
+        if(driveSubsystem.checkTip()){
+            new GoHome().start();
+        }
         Scheduler.getInstance().run();
     }
     

@@ -66,8 +66,8 @@ public class DriveCommand extends Command {
 				speedRight *= ConstantsMap.TURTLE_SPEED;
 			}
 			if(armSubsystem.getShoulderEncoderAngle()>0){
-				speedLeft *= .5;
-				speedRight *= .5;
+				speedLeft *= .35;
+				speedRight *= .35;
 
 			}
 			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
