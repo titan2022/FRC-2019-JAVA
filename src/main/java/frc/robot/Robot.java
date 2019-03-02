@@ -52,10 +52,9 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
     CameraServer inst = CameraServer.getInstance();
-    UsbCamera cam = new UsbCamera("Line Came", 0);
-    cam.setFPS(30);
+    UsbCamera cam = inst.startAutomaticCapture();
     cam.setResolution(1280, 720);
-    inst.startAutomaticCapture(cam);
+    
     
 
   }
