@@ -23,7 +23,6 @@ public class GoToLine extends Command {
     protected double estimatedDistanceToWall;
 
     public GoToLine() {
-        // Use requires() here to declare subsystem dependencies
         requires(Robot.driveSubsystem);
     }
   
