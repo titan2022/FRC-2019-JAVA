@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowLineCommand;
+import frc.robot.commands.GoToDistance;
+import frc.robot.pids.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FollowLineSubsystem;
 
@@ -75,6 +77,7 @@ public class Robot extends TimedRobot {
     //   System.out.println(Arrays.toString(followLineSubsystem.getLineData(1)));
     //   count = 0;
     // }
+    SmartDashboard.putNumber("Angle",driveSubsystem.getGyroAngle());
   }
 
   /**
@@ -145,6 +148,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    if(XboxMap.interruptFollowLine()){
+     //new TurnToAngle(.5, 0, .5, 0, 90).start();
+     System.out.println("Here");
+     new GoToDistance(20).start();
+    }
     Scheduler.getInstance().run();
   }
 

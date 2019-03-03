@@ -53,60 +53,50 @@ public class DriveCommand extends Command {
     	// if(attack3Map.turtleButton()) {
     	//	turtlemode = !turtlemode;
 		// } 
-		if (runFollowLineCommand) {
-			if (!fLC.isFinished()) {
-				if (XboxMap.interruptFollowLine()) {
-					fLC.kill();//Make this a thing
-				} else {
-					fLC.execute();
-				}
-			} else {
-				runFollowLineCommand = false;
-			}
-		} else {
-			double speedLeft = XboxMap.left();
-			speedLeft *= -1;
+		
+		double speedLeft = XboxMap.left();
+		speedLeft *= -1;
 
-			if (Math.abs(speedLeft) < 0.1) {
-				speedLeft = 0;
-			}
-			// if(xboxMap.shiftHigh()) {
-			// 	driveSubsystem.shiftHigh();
-			// }
-			// if(xboxMap.shiftLow()) {
-			// 	driveSubsystem.shiftLow();
-			// }
-			double speedRight = XboxMap.right();
-			//speedRight *= -1;
-			if(Math.abs(speedRight) < 0.1){
-				speedRight = 0; 
-			}
-			if(turtlemode) {
-				speedLeft *= ConstantsMap.TURTLE_SPEED;
-				speedRight *= ConstantsMap.TURTLE_SPEED;
-			}
-			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
-			driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
-
-			//Auto Brake Mode
-			//attack3Map.startAutoBrakerSystem();
-			if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
-				brakeState = !brakeState;
-				lastPressed = System.currentTimeMillis();
-			}
-			if(brakeState){
-				driveSubsystem.enableBrake();
-			}
-			else if(!brakeState){
-				driveSubsystem.disableBrake();
-			}
-
-			//Check for follow line command call
-			if (XboxMap.runFollowLineCommand()) {
-				runFollowLineCommand = true;
-				fLC = new FollowLineCommand();
-			}
+		if (Math.abs(speedLeft) < 0.1) {
+			speedLeft = 0;
 		}
+		// if(xboxMap.shiftHigh()) {
+		// 	driveSubsystem.shiftHigh();
+		// }
+		// if(xboxMap.shiftLow()) {
+		// 	driveSubsystem.shiftLow();
+		// }
+		double speedRight = XboxMap.right();
+		//speedRight *= -1;
+		if(Math.abs(speedRight) < 0.1){
+			speedRight = 0; 
+		}
+		if(turtlemode) {
+			speedLeft *= ConstantsMap.TURTLE_SPEED;
+			speedRight *= ConstantsMap.TURTLE_SPEED;
+		}
+		driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
+		driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
+
+		//Auto Brake Mode
+		//attack3Map.startAutoBrakerSystem();
+		if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+			brakeState = !brakeState;
+			lastPressed = System.currentTimeMillis();
+		}
+		if(brakeState){
+			driveSubsystem.enableBrake();
+		}
+		else if(!brakeState){
+			driveSubsystem.disableBrake();
+		}
+
+		//Check for follow line command call
+		if (XboxMap.runFollowLineCommand()) {
+			runFollowLineCommand = true;
+			fLC = new FollowLineCommand();
+		}
+	
 		
 		//Putting Data up
     	displayData();

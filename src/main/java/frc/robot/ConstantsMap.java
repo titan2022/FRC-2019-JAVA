@@ -32,4 +32,19 @@ public class ConstantsMap {
 
     public static final double LOW_CUTOFF = 210;
     public static final double HIGH_CUTOFF = 230;
+
+
+
+    public static final int kSlotIdx = 0;
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
+
+
+    public static final Gains driveGains = new Gains(1, 0.0, 0, 0, 0, 1.0);
+
+
+    public static final int DRIVE_VELOCITY = 3400;
+    public static final int DRIVE_ACCEL = 3400;
+
+
 }
