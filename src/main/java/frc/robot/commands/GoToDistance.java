@@ -3,6 +3,7 @@ package frc.robot.commands;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -20,10 +21,16 @@ public class GoToDistance extends Command {
 		//Set follow Line command booleans 
 
     }
+    public GoToDistance() {
+		requires(driveSubsystem);
+		//Set follow Line command booleans 
+
+    }
     
     // Called just before this Command runs the first time
     protected void initialize() {
-    	System.out.println("Drive To Distance init");
+        System.out.println("Drive To Distance init");
+        distance = SmartDashboard.getNumber("LineStartDistance", 0);
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
 		driveSubsystem.setTravel(distance);

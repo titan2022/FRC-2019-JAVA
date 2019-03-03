@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger.ButtonScheduler;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.GoToDistance;
+import frc.robot.commands.GoToLine;
 import frc.robot.pids.TurnToAngle;
 
 
@@ -39,7 +40,7 @@ public class OI {
 	}
 	public void normalMode(){
 		JoystickButton xboxB = new JoystickButton(xbox, 2);
-		xboxB.whenPressed(new TurnToAngle(0.2,0,0,0,-60));
+		xboxB.whenPressed(new GoToLine());
 	}
 	public void debugMode(){
 	}

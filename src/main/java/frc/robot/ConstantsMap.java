@@ -41,6 +41,7 @@ public class ConstantsMap {
 
 
     public static final Gains driveGains = new Gains(1, 0.0, 0, 0, 0, 1.0);
+    public static final Gains turnGains = new Gains(.2, 0.0, .1, 0, 0, 1.0);
 
 
     public static final int DRIVE_VELOCITY = 3400;

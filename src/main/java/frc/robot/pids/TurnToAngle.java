@@ -1,8 +1,12 @@
 package frc.robot.pids;
 
+import frc.robot.ConstantsMap;
+import frc.robot.Gains;
 import frc.robot.Robot;
 import frc.robot.TalonSet;
 import frc.robot.subsystems.DriveSubsystem;
+
+import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -12,6 +16,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnToAngle extends Command implements PIDSource, PIDOutput {
 
@@ -22,20 +27,22 @@ public class TurnToAngle extends Command implements PIDSource, PIDOutput {
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
     double setPoint;
 
-    public TurnToAngle(double kp, double ki, double kd, double kf,double angle) {
+    public TurnToAngle() {
         requires(driveSubsystem);
-        pid = new PIDController(kp, ki, kd, kf, this, this);
+        Gains g = ConstantsMap.turnGains;
+        pid = new PIDController(g.kP, g.kI, g.kD, g.kF, this, this);
         pidSourceType = PIDSourceType.kDisplacement;
-        pid.setPercentTolerance(5);
+        pid.setPercentTolerance(.5);
         pid.setInputRange(-180, 180);
         pid.setOutputRange(-1, 1);
-        setPoint = angle;
+
     }        
 
     @Override
     protected void initialize() {
         System.out.println("TurnToAngle init");
         gyro = driveSubsystem.getGyro();
+        setPoint = SmartDashboard.getNumber("LineStartAngle", 0);
         gyro.reset();
         pid.setSetpoint(setPoint);
         pid.enable();        
