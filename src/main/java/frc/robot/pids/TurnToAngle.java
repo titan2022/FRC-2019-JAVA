@@ -21,24 +21,24 @@ public class TurnToAngle extends Command implements PIDSource, PIDOutput {
     AHRS gyro;
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
     double setPoint;
-    StringBuilder sb;
 
     public TurnToAngle(double kp, double ki, double kd, double kf,double angle) {
+        requires(driveSubsystem);
         pid = new PIDController(kp, ki, kd, kf, this, this);
         pidSourceType = PIDSourceType.kDisplacement;
-        pid.setSetpoint(angle);
         pid.setPercentTolerance(5);
-        requires(driveSubsystem);
-    }
+        pid.setInputRange(-180, 180);
+        pid.setOutputRange(-1, 1);
+        setPoint = angle;
+    }        
 
     @Override
     protected void initialize() {
         System.out.println("TurnToAngle init");
         gyro = driveSubsystem.getGyro();
         gyro.reset();
-        setSetpoint(setPoint);
-        setOutputRange(-1, 1);
-        enable();        
+        pid.setSetpoint(setPoint);
+        pid.enable();        
     }
 
     
@@ -46,20 +46,20 @@ public class TurnToAngle extends Command implements PIDSource, PIDOutput {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        
+        System.out.print(pid.getSetpoint() + " " + gyro.getAngle());
     }
   
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        sb.append(pid.onTarget());
-        sb.append(" ");
         return pid.onTarget();
     }
   
     // Called once after isFinished returns true
     @Override
     protected void end() {
+        pid.disable();
+
         System.out.println("TurnToangle end");
     }
 
@@ -67,6 +67,7 @@ public class TurnToAngle extends Command implements PIDSource, PIDOutput {
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
+        pid.disable();
         System.out.println("TurnToAngle interrupted");
     }
 

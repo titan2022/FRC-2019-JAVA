@@ -42,8 +42,6 @@ public class DriveCommand extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("Drive Comand init");
-    	driveSubsystem.resetEncoders();
-		driveSubsystem.resetGyro();
 		//System.out.println(lineSubsystem.getData());	
     }
 
@@ -92,10 +90,6 @@ public class DriveCommand extends Command {
 		}
 
 		//Check for follow line command call
-		if (XboxMap.runFollowLineCommand()) {
-			runFollowLineCommand = true;
-			fLC = new FollowLineCommand();
-		}
 	
 		
 		//Putting Data up

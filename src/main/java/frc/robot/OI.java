@@ -1,28 +1,58 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
-
 package frc.robot;
 
-/**
-* This class is the glue that binds the controls on the physical operator
-* interface to the commands and command groups that allow control of the robot.
-*/
+import java.lang.reflect.Field;
+import java.util.Vector;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger.ButtonScheduler;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import frc.robot.commands.GoToDistance;
+import frc.robot.pids.TurnToAngle;
+
+
 public class OI {
 	//User interface Constants
 	public double attackThrottleSensitivity=.1;
 	//Controllers
 	public static Xbox xbox,ps4;
-
+	public static Joystick controlPanel1,controlPanel2;
+	public JoystickButton  
+	rocketHatchPreset1,
+	rocketHatchPreset2,
+	rocketHatchPreset3,
+	rocketBallPreset1,
+	rocketBallPreset2,
+	rocketBallPreset3,
+	cargoHatchPreset,
+	cargoBallPreset,
+	ballCollectPreset,
+	hatchCollectPreset,
+	goHome,
+	toggleDebug;
+	
 	public OI(){
 		xbox = new Xbox(0);
-		//ps4 = new Xbox(1);
+		normalMode();
 
-		//attack3_L = new Attack3(3);
-		//attack3_R = new Attack3(4);
+	}
+	public void normalMode(){
+		JoystickButton xboxB = new JoystickButton(xbox, 2);
+		xboxB.whenPressed(new TurnToAngle(0.2,0,0,0,-60));
+	}
+	public void debugMode(){
+	}
 
+	public void unbindButtons() {
+		Field schedulerBtns;
+		try {
+			schedulerBtns = Scheduler.class.getDeclaredField("m_buttons");
+			schedulerBtns.setAccessible(true);
+			((Vector<ButtonScheduler>) schedulerBtns.get(Scheduler.getInstance())).clear();
+		} catch (Exception e) {
+			System.err.println("wpilib broke");
+			return;
+		}
 	}
 }

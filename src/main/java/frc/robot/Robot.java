@@ -51,7 +51,6 @@ public class Robot extends TimedRobot {
     oi = new OI();
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", chooser);
-    driveCommand = new DriveCommand();
     autonomousCommand = new FollowLineCommand();
     CameraServer inst = CameraServer.getInstance();
     UsbCamera cam = inst.startAutomaticCapture();
@@ -139,7 +138,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    driveCommand.start();
     
   }
 
@@ -148,11 +146,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    if(XboxMap.interruptFollowLine()){
-     //new TurnToAngle(.5, 0, .5, 0, 90).start();
-     System.out.println("Here");
-     new GoToDistance(20).start();
-    }
     Scheduler.getInstance().run();
   }
 

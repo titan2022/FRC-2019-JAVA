@@ -114,8 +114,8 @@ public class DriveSubsystem extends Subsystem {
 	
 	public void setTravel(double distance){		
 		resetEncoders();
-		left.set(ControlMode.MotionMagic, distance);
-		right.set(ControlMode.MotionMagic, distance);
+		left.set(ControlMode.MotionMagic, distance/ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
+		right.set(ControlMode.MotionMagic, distance/ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK);
 	}
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
