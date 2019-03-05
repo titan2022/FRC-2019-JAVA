@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import frc.robot.Robot;
+import frc.robot.maths.Vector2;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,7 +31,18 @@ public class GoToDistance extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         System.out.println("Drive To Distance init");
-        distance = SmartDashboard.getNumber("LineStartDistance", 0);
+        double startAngle = SmartDashboard.getNumber("LineStartAngle", 0);
+        double startDistance = SmartDashboard.getNumber("LineStartDistance", 0);
+        double backAngle = SmartDashboard.getNumber("LineBackAngle", 0);
+        double backDistance = SmartDashboard.getNumber("LineStartDistance", 0);
+        Vector2 start = Vector2.fromPolar(startAngle, startDistance);
+        Vector2 back = Vector2.fromPolar(backAngle, backDistance);
+        Vector2 line = start.add(back.multiply(-1));   
+        
+        Vector2 extendedLine = back.proj(line);
+        Vector2 target = start.add(extendedLine.multiply(-1));   
+        distance = Math.sqrt(target.x * target.x + target.y + target.y); 
+        System.out.println("Distance:" + distance);
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
 		driveSubsystem.setTravel(distance);
