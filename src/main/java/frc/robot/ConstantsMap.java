@@ -72,7 +72,7 @@ public class ConstantsMap {
     
     public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
     public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
-    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -55;
+    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -60;
 
     public static final int SHOULDER_VELOCITY = 24000/2;
     public static final int SHOULDER_ACCEL = 24000 ;
@@ -104,7 +104,7 @@ public class ConstantsMap {
     public static final double CARGO_BALL_PRESET = -20.0;
     public static final double CARGO_HATCH_PRESET = -20.0;
 
-    public static final double HATCH_COLLECT_PRESET = -20.0;
+    public static final double HATCH_COLLECT_PRESET = -59.0;
     public static final double BALL_COLLECT_WRIST_PRESET = -11.0;
     public static final double BALL_COLLECT_SHOULDER_PRESET = -46.0;
 

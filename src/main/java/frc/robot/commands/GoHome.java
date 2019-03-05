@@ -19,7 +19,7 @@ public class GoHome extends Command {
     protected void initialize() {        
         
         armSubsystem.setShoulderSetPoint(ConstantsMap.SHOULDER_MIN_ANGLE);
-        armSubsystem.setWristSetPoint(ConstantsMap.SHOULDER_MIN_ANGLE);
+        armSubsystem.setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);
 
 
     }
