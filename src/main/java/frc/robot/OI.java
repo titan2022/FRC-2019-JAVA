@@ -53,7 +53,7 @@ public class OI {
 		rocketHatchPreset3 = new JoystickButton(controlPanel1, 10);
 
 		cargoBallPreset = new JoystickButton(controlPanel1, 3);
-		cargoHatchPreset = new JoystickButton(controlPanel1, 4);
+		//cargoHatchPreset = new JoystickButton(controlPanel1, 4);
 
 		ballCollectPreset = new JoystickButton(controlPanel1, 1);
 		hatchCollectPreset = new JoystickButton(controlPanel1,2);
@@ -70,7 +70,7 @@ public class OI {
 		rocketBallPreset2.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_2));
 		rocketBallPreset3.whenPressed(new ArmPresetCommand(ConstantsMap.ROCKET_BALL_PRESET_3));
 
-		cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
+		//cargoHatchPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_HATCH_PRESET));
 		cargoBallPreset.whenPressed(new ArmPresetCommand(ConstantsMap.CARGO_BALL_PRESET));
 
 		//ballCollectPreset.whenPressed(new ArmPresetCommand(ConstantsMap.BALL_COLLECT_SHOULDER_PRESET,ConstantsMap.BALL_COLLECT_WRIST_PRESET));

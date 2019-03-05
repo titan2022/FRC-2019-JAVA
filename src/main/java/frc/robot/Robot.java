@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
     
     public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
 
-    UsbCamera camera;
+    UsbCamera groundCam,grabCam;
     Command autonomousCommand;
     Command driveCommand;
     Command followLineCommand;
@@ -69,10 +69,16 @@ public class Robot extends TimedRobot {
         server = CameraServer.getInstance();
         debugMode = false;
         
-        //server.startAutomaticCapture("Ground",0);
+        groundCam = new UsbCamera("GroundCam", 0);
+        grabCam = new UsbCamera("GrabCam", 1);
     }
-    public boolean getDebug(){
-        return debugMode;
+    public void switchCam(){
+        if(server.getServer().getSource() == grabCam){
+            server.getServer().setSource(groundCam);
+        }
+        else{
+            server.getServer().setSource(grabCam);
+        }
     }
     
     /**
@@ -207,6 +213,9 @@ public class Robot extends TimedRobot {
 
         if(driveSubsystem.checkTip()){
             new GoHome().start();
+        }
+        if(ControlPanelMap.switchCam() && !debugMode){
+            switchCam();
         }
         Scheduler.getInstance().run();
     }

@@ -34,8 +34,10 @@ public class ControlPanelMap {
 		return oi.controlPanel1.getRawButtonPressed(11);
 	}
 	public static boolean toggleLevel() {
-		return oi.controlPanel1.getRawButtonPressed(4
-		);
+		return oi.controlPanel1.getRawButtonPressed(4);
+	}
+	public static boolean switchCam() {
+		return oi.controlPanel1.getRawButtonPressed(4);
 	}
 	public static boolean toggleManual() {	
 		return oi.controlPanel1.getRawButtonPressed(9);
