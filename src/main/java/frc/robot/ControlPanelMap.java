@@ -8,8 +8,6 @@ public class ControlPanelMap {
 	public ControlPanelMap(){
 		
 	}
-
-	
 	
 	public static double controlWristJoint() {
 		return oi.controlPanel2.getX();
