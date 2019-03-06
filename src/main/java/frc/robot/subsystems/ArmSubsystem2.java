@@ -138,7 +138,6 @@ public class ArmSubsystem2 extends Subsystem {
         if(shoulder.getControlMode() == ControlMode.MotionMagic){
             
             if(shoulderSet*ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK<ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE){
-               // System.out.println(shoulderSet + " : " + angle + " : " + ConstantsMap.SHOULDER_WRIST_FOLD_ANGLE);
                 angle = ConstantsMap.WRIST_MAX_ANGLE;
 
             }
@@ -166,7 +165,8 @@ public class ArmSubsystem2 extends Subsystem {
         }
         
        
-        
+        //System.out.println(shoulderSet + " : " + angle);
+
         double ticks = angle/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         
         wrist.set(ControlMode.MotionMagic, ticks);

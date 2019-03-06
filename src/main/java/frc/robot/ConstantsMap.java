@@ -55,8 +55,8 @@ public class ConstantsMap {
     public static final double WRIST_MAX_ANGLE = 80.0;
     public static final double WRIST_IN_ANGLE = 60.0;
 
-    public static final int WRIST_VELOCITY = (int)(316.7/WRIST_ENCODER_ANGLE_PER_TICK);;
-    public static final int WRIST_ACCEL = 10000;
+    public static final int WRIST_VELOCITY = 18000;
+    public static final int WRIST_ACCEL = (int)Math.floor(18000.0*2.0/3.0);
     public static final int  WRIST_FOLLOW_DISTANCE = 20;
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .5;
 
@@ -74,8 +74,8 @@ public class ConstantsMap {
     public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .5;
     public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -63;
 
-    public static final int SHOULDER_VELOCITY = 24000/2;
-    public static final int SHOULDER_ACCEL = 24000 ;
+    public static final int SHOULDER_VELOCITY = 26000;
+    public static final int SHOULDER_ACCEL = 24000;
     public static final Gains shoulderGains = new Gains(.05, 0.0, 0, 0.042625, 0, 1.0);
 
     //For Grabber

@@ -76,8 +76,8 @@ public class ArmCommand2 extends Command {
             armSubsystem.setWristJointSpeed(.1 * amountToMoveWristJoint);
         } */
         if(armSubsystem.getManualMode()){
-            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint/2);
-            armSubsystem.setWristJointSpeed(amountToMoveWristJoint/2);
+            armSubsystem.setShoulderJointSpeed(amountToMoveShoulderJoint);
+            armSubsystem.setWristJointSpeed(amountToMoveWristJoint);
         }
         else{                 
             if(Math.abs((shoulderAngle + amountToMoveShoulderJoint)-actualShoulderAngle)<ConstantsMap.SHOULDER_FOLLOW_DISTANCE){

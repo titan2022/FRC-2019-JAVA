@@ -71,8 +71,11 @@ public class Robot extends TimedRobot {
         
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
+        server.startAutomaticCapture(groundCam);
+        
     }
-    public void switchCam(){
+    public void switchCamera(){
+        System.out.println("Switched Cam");
         if(server.getServer().getSource() == grabCam){
             server.getServer().setSource(groundCam);
         }
@@ -127,7 +130,9 @@ public class Robot extends TimedRobot {
         if(ControlPanelMap.toggleLevel() && debugMode){
             armSubsystem2.toggleLevelMode();
         }
-
+        if((ControlPanelMap.switchCam()  ||  XboxMap.switchCam())){
+            switchCamera();
+        }
     }
     
     /**
@@ -214,9 +219,7 @@ public class Robot extends TimedRobot {
         if(driveSubsystem.checkTip()){
             new GoHome().start();
         }
-        if((ControlPanelMap.switchCam() || XboxMap.switchCam()) && !debugMode){
-            switchCam();
-        }
+        
         Scheduler.getInstance().run();
     }
     

@@ -16,7 +16,7 @@ public class WristForceZero extends Command {
     protected void initialize() {
         System.out.println("Wrist Zero Started");
         armSubsystem.setWristJointSpeed(.6);      
-        
+        armSubsystem.setShoulderSetPoint(armSubsystem.getShoulderEncoderAngle());
          
     }
 

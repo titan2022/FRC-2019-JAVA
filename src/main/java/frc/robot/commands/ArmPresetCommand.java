@@ -33,7 +33,7 @@ public class ArmPresetCommand extends Command {
         
         System.out.println("Start Preset: " + sPreset + " Wrist: " + wPreset);
         armSubsystem.setShoulderSetPoint(sPreset);
-
+        armSubsystem.setWristSetPoint(0);
     }
     
     // Called repeatedly when this Command is scheduled to run
@@ -63,7 +63,7 @@ public class ArmPresetCommand extends Command {
             return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;
         }
         else{
-            return Math.abs(armSubsystem.getWristEncoderAngle() - wPreset)<2;
+            return Math.abs(armSubsystem.getWristEncoderAngle() - wPreset)<2 && Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;
         }
         
     }
