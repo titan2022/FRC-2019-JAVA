@@ -21,7 +21,7 @@ public class XboxMap {
 	}
 	
 	public static boolean switchCam() {
-		return oi.xbox.getAButton();
+		return oi.xbox.getAButtonPressed();
 	}
 	public static double left() {
 		return oi.xbox.getY(Hand.kLeft);
