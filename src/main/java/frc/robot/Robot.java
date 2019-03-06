@@ -214,7 +214,7 @@ public class Robot extends TimedRobot {
         if(driveSubsystem.checkTip()){
             new GoHome().start();
         }
-        if(ControlPanelMap.switchCam() && !debugMode){
+        if((ControlPanelMap.switchCam() || XboxMap.switchCam()) && !debugMode){
             switchCam();
         }
         Scheduler.getInstance().run();

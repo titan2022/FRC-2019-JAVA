@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
+
+
 public class XboxMap {
 	static OI oi = Robot.oi;
 	
@@ -18,6 +20,9 @@ public class XboxMap {
 		return -oi.xbox.getY(Hand.kRight);
 	}
 	
+	public static boolean switchCam() {
+		return oi.xbox.getAButton();
+	}
 	public static double left() {
 		return oi.xbox.getY(Hand.kLeft);
 	}

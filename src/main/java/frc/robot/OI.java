@@ -18,7 +18,7 @@ public class OI {
 	//User interface Constants
 	public double attackThrottleSensitivity=.1;
 	//Controllers
-	public static XboxController xbox,ps4;
+	public static XboxController xbox;
 	public static Joystick controlPanel1,controlPanel2;
 	public JoystickButton  
 	rocketHatchPreset1,
