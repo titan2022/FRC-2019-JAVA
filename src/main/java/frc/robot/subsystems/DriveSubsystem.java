@@ -36,7 +36,9 @@ public class DriveSubsystem extends Subsystem {
 
 	private AHRS ahrs;
 	private PowerDistributionPanel pdp;
-
+	private boolean isStallCurrent = false;;
+	private long startStallCurrent = 0;
+	private double startBarometricPressure;
 	public DriveSubsystem() {
         System.out.println("Drive Subsystem Init");
 
@@ -65,23 +67,53 @@ public class DriveSubsystem extends Subsystem {
         ahrs = new AHRS(SPI.Port.kMXP);
 		stop();
 		pdp = new PowerDistributionPanel(11);
-
+		startBarometricPressure = ahrs.getBarometricPressure();
 		
 		
 		
 		SmartDashboard.putData(ahrs);
-	}
-	public boolean checkTip(){
-		return (Math.abs(ahrs.getRoll()) > ConstantsMap.TIP_TOLERANCE);
-	}
-    public void initDefaultCommand() {
+	} 
+	public void initDefaultCommand() {
         // Set the default command for a subsystem here.
     	setDefaultCommand(new DriveCommand());
-    }
+	}
+	
+
+	public boolean checkTip(){
+		return (Math.abs(ahrs.getVelocityY()) > ConstantsMap.TIP_TOLERANCE);
+	}
+	public boolean checkDrift(){
+		return (Math.abs(ahrs.getRoll()) > ConstantsMap.DRIFT_TOLERANCE);
+	}    
 	public double getVoltage(){
 		return pdp.getVoltage();
 	}
+	public boolean isStalled(){
+		boolean isStallcondition = left.getOutputCurrent() > ConstantsMap.DRIVE_STALL || right.getOutputCurrent() > ConstantsMap.DRIVE_STALL;
+		if(isStallcondition && !isStallCurrent){
+			isStallCurrent = true;
+			startStallCurrent = System.currentTimeMillis();
+		}
+		else if(!isStallcondition && isStallCurrent){
+			isStallCurrent = false;
+		}
+		if((System.currentTimeMillis() - startStallCurrent) > ConstantsMap.DRIVE_STALL_TIME && isStallCurrent){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	public boolean isCruisingAltitude(){
+		return ahrs.getAltitude() > 350000;
+	}
 
+	public boolean isOnFire(){
+		return left.getTemperature() > 200 || right.getTemperature() > 200 || ahrs.getTempC() > 200;
+	}
+	public boolean isProbablyAboutToRain(){
+		return (ahrs.getBarometricPressure() - startBarometricPressure) > 100;
+	}
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
 		left.set(ControlMode.PercentOutput,speed);

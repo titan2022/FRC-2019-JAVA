@@ -38,6 +38,11 @@ public class ArmSubsystem2 extends Subsystem {
     private double wristSet;
     private boolean manualMode;
     private boolean levelMode;
+
+    private boolean isWristStall = false;
+    private boolean isShoulderStall = false;
+    private long startWristStall = 0;
+    private long startShoulderStall = 0;
     TalonSRX shoulder, shoulderSlave,wrist;
 
     public ArmSubsystem2() {
@@ -50,12 +55,15 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
         shoulderSlave = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
         shoulderSlave.configFactoryDefault();
+
+
+        shoulder.setInverted(true);
+        shoulderSlave.setInverted(true);
+
+        shoulder.setSensorPhase(false);
+        shoulder.setNeutralMode(NeutralMode.Brake);
         shoulderSlave.setNeutralMode(NeutralMode.Brake);
 
-        shoulder.setInverted(false);
-        shoulderSlave.setInverted(true);
-        shoulder.setSensorPhase(true);
-        shoulder.setNeutralMode(NeutralMode.Brake);
         shoulderSlave.follow(shoulder);
         
         shoulder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
@@ -287,7 +295,7 @@ public class ArmSubsystem2 extends Subsystem {
         }
         
        // return wristLimit || wristLimit2;
-       return lowerLimitWrist2.get();
+       return lowerLimitWrist2.get() || lowerLimit.get();
     }
 
     public double getShoulderSpeed(){
@@ -298,7 +306,39 @@ public class ArmSubsystem2 extends Subsystem {
         return wrist.getMotorOutputPercent();
     }
     
-    
+    public boolean isWristStalled(){
+		boolean isStallcondition = wrist.getOutputCurrent() > ConstantsMap.WRIST_STALL;
+		if(isStallcondition && !isWristStall){
+			isWristStall = true;
+			startWristStall = System.currentTimeMillis();
+		}
+		else if(!isStallcondition && isWristStall){
+			isWristStall = false;
+		}
+		if((System.currentTimeMillis() - startWristStall) > ConstantsMap.WRIST_STALL_TIME && isWristStall){
+			return true;
+		}
+		else{
+			return false;
+		}
+    }
+    public boolean isShoulderStalled(){
+		boolean isStallcondition = shoulder.getOutputCurrent() > ConstantsMap.SHOULDER_STALL;
+		if(isStallcondition && !isShoulderStall){
+			isShoulderStall = true;
+			startShoulderStall = System.currentTimeMillis();
+		}
+		else if(!isStallcondition && isShoulderStall){
+			isShoulderStall = false;
+		}
+		if((System.currentTimeMillis() - startShoulderStall) > ConstantsMap.SHOULDER_STALL_TIME && isShoulderStall){
+			return true;
+		}
+		else{
+			return false;
+		}
+    }
+
     @Override
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.

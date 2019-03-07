@@ -18,7 +18,19 @@ public class ConstantsMap {
     public static final double TURTLE_SPEED = 1; //to be determined
     public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
-    public static final double TIP_TOLERANCE = 8; //to be determined
+    public static final double TIP_TOLERANCE = 8;
+    public static final double DRIFT_TOLERANCE = 5; 
+
+    public static final double DRIVE_STALL = 10;
+    public static final double DRIVE_STALL_TIME = 1;
+
+    public static final double WRIST_STALL = 10;
+    public static final double WRIST_STALL_TIME = 1;
+
+    public static final double SHOULDER_STALL = 10;
+    public static final double SHOULDER_STALL_TIME = 1;
+
+
 
     //for line follower
     public static final double DISTANCE_BETWEEN_SENSORS = 6; //inches

@@ -109,6 +109,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
 
         SmartDashboard.putBoolean("Tipping", driveSubsystem.checkTip());
+        SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
+        
+
 
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
