@@ -196,7 +196,7 @@ public class ArmSubsystem2 extends Subsystem {
 
     public void checkWristLimits(){
         if(getWristLowerLimit()){
-            if(getShoulderEncoderAngle()<-40){
+            if(getShoulderEncoderAngle()<-50){
                 wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
             }
             if(wrist.getControlMode() == ControlMode.PercentOutput){

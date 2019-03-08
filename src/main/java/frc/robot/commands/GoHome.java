@@ -37,7 +37,7 @@ public class GoHome extends Command {
     protected boolean isFinished() {
         //return false;
 
-            return Math.abs(armSubsystem.getShoulderEncoderAngle() - ConstantsMap.SHOULDER_MIN_ANGLE)<1;
+            return Math.abs(armSubsystem.getShoulderEncoderAngle() - ConstantsMap.SHOULDER_MIN_ANGLE)<.5 && Math.abs(armSubsystem.getWristEncoderAngle() - ConstantsMap.WRIST_MAX_ANGLE)<.5;
 
         
     }

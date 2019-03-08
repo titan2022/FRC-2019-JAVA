@@ -51,7 +51,9 @@ public class DriveCommand extends Command {
 
 			double speedLeft = XboxMap.left();
 			speedLeft *= -1;
-
+			if(XboxMap.toggleTurtle()){
+				turtlemode = !turtlemode;
+			}
 			if (Math.abs(speedLeft) < 0.1) {
 				speedLeft = 0;
 			}

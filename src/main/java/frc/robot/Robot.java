@@ -20,6 +20,7 @@ import frc.robot.commands.ArmCommand2;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.GoHome;
 import frc.robot.commands.HatchGrabberCommand;
+import frc.robot.commands.WristForceZero;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HatchGrabberSubsystem;
@@ -186,7 +187,7 @@ public class Robot extends TimedRobot {
         // schedule the autonomous command (example)
         armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
 
-
+        new WristForceZero().start();
     }
     
     /**
@@ -205,8 +206,8 @@ public class Robot extends TimedRobot {
         // this line or comment it out.
 
 
-        hgCommand.start();
         armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
+        new WristForceZero().start();
 
         
         //armCommand.start();
