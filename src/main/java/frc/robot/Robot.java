@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     Command armCommand;
     Command hgCommand;
     Command zeroWrist;
-
+    boolean groundCamSelected;
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     Compressor compressor;
@@ -72,15 +72,17 @@ public class Robot extends TimedRobot {
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
         server.startAutomaticCapture(groundCam);
-        
+        groundCamSelected = true;
     }
     public void switchCamera(){
         System.out.println("Switched Cam");
-        if(server.getServer().getSource() == grabCam){
+        if(!groundCamSelected){
             server.getServer().setSource(groundCam);
+            groundCamSelected = true;
         }
         else{
             server.getServer().setSource(grabCam);
+            groundCamSelected = false;  
         }
     }
     
@@ -109,10 +111,13 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
 
         SmartDashboard.putBoolean("Tipping", driveSubsystem.checkTip());
+
+        
         SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
         
-
-
+        SmartDashboard.putBoolean("On Fire", driveSubsystem.isOnFire());
+        SmartDashboard.putBoolean("Cruising Altitude", driveSubsystem.isCruisingAltitude())
+        ;
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
 

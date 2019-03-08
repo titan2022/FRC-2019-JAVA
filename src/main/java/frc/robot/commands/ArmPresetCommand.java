@@ -11,12 +11,14 @@ public class ArmPresetCommand extends Command {
     double wPreset = 1000;
     boolean shoulderFinished;
     boolean levelMode;
+    double startWrist;
     public ArmPresetCommand(double sAngle,double wAngle) {
         // Use requires() here to declare subsystem dependencies
         requires(armSubsystem);
         sPreset = sAngle;
         wPreset = wAngle;
         levelMode = false;
+        //startWrist = (sAngle - armSubsystem.getShoulderEncoderAngle())/2;
 
     }
     public ArmPresetCommand(double sAngle) {
@@ -33,7 +35,7 @@ public class ArmPresetCommand extends Command {
         
         System.out.println("Start Preset: " + sPreset + " Wrist: " + wPreset);
         armSubsystem.setShoulderSetPoint(sPreset);
-        armSubsystem.setWristSetPoint(0);
+        //armSubsystem.setWristSetPoint(0);
     }
     
     // Called repeatedly when this Command is scheduled to run
@@ -42,8 +44,11 @@ public class ArmPresetCommand extends Command {
         if(levelMode){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         }
+        else if(!(Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<4)){
+            armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
+        } 
         else{
-            if(Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2 && !shoulderFinished){
+            if(!shoulderFinished){
                 shoulderFinished = true;
                 armSubsystem.setWristSetPoint(wPreset);
             }
@@ -60,7 +65,7 @@ public class ArmPresetCommand extends Command {
             return true;
         }
         else if(levelMode){
-            return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;
+            return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2 && Math.abs(armSubsystem.getWristEncoderAngle() - armSubsystem.getShoulderEncoderAngle())<2;
         }
         else{
             return Math.abs(armSubsystem.getWristEncoderAngle() - wPreset)<2 && Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<2;

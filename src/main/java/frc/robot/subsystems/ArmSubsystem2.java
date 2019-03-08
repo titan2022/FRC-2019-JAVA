@@ -196,7 +196,9 @@ public class ArmSubsystem2 extends Subsystem {
 
     public void checkWristLimits(){
         if(getWristLowerLimit()){
-            wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+            if(getShoulderEncoderAngle()<-40){
+                wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+            }
             if(wrist.getControlMode() == ControlMode.PercentOutput){
                 if(wrist.getMotorOutputPercent()>0){
                     wrist.set(ControlMode.PercentOutput, 0);
@@ -295,7 +297,7 @@ public class ArmSubsystem2 extends Subsystem {
         }
         
        // return wristLimit || wristLimit2;
-       return lowerLimitWrist2.get() || lowerLimit.get();
+       return lowerLimitWrist2.get() || lowerLimitWrist.get();
     }
 
     public double getShoulderSpeed(){

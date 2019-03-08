@@ -48,8 +48,7 @@ public class DriveSubsystem extends Subsystem {
 		right = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_1);		
 		rightSlave = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_2);
 
-		leftSlave.follow(left);
-		rightSlave.follow(right);
+		
 		
 		//Invert Motors
 		
@@ -65,12 +64,13 @@ public class DriveSubsystem extends Subsystem {
 		
 		//Instantiate Gyro | Gyro automatically calibrates when given power
         ahrs = new AHRS(SPI.Port.kMXP);
-		stop();
+		
 		pdp = new PowerDistributionPanel(11);
 		startBarometricPressure = ahrs.getBarometricPressure();
 		
 		
-		
+		leftSlave.follow(left);
+		rightSlave.follow(right);
 		SmartDashboard.putData(ahrs);
 	} 
 	public void initDefaultCommand() {
