@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
         
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
+        grabCam.setResolution(256, 144);
         server.startAutomaticCapture(groundCam);
         groundCamSelected = true;
     }

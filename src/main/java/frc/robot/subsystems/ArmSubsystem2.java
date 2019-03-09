@@ -43,7 +43,7 @@ public class ArmSubsystem2 extends Subsystem {
     private boolean isShoulderStall = false;
     private long startWristStall = 0;
     private long startShoulderStall = 0;
-    TalonSRX shoulder, shoulderSlave,wrist;
+    TalonSRX shoulder, shoulder2, shoulderSlave,wrist;
 
     public ArmSubsystem2() {
 
@@ -53,18 +53,21 @@ public class ArmSubsystem2 extends Subsystem {
 
 
         shoulder = new TalonSRX(RobotMap.SHOULDER_JOINT_RIGHT_PORT);
-        shoulderSlave = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
-        shoulderSlave.configFactoryDefault();
+        //shoulderSlave = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
+        //shoulderSlave.configFactoryDefault();
+        shoulder2 = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
 
 
         shoulder.setInverted(true);
-        shoulderSlave.setInverted(true);
+        shoulder2.setInverted(true);
 
         shoulder.setSensorPhase(false);
-        shoulder.setNeutralMode(NeutralMode.Brake);
-        shoulderSlave.setNeutralMode(NeutralMode.Brake);
+        shoulder2.setSensorPhase(true);
 
-        shoulderSlave.follow(shoulder);
+        shoulder.setNeutralMode(NeutralMode.Brake);
+        //shoulderSlave.setNeutralMode(NeutralMode.Brake);
+
+        //shoulderSlave.follow(shoulder);
         
         shoulder.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
 											ConstantsMap.kPIDLoopIdx, 
@@ -86,6 +89,31 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder.configMotionCruiseVelocity(ConstantsMap.SHOULDER_VELOCITY, ConstantsMap.kTimeoutMs);
         shoulder.configMotionAcceleration(ConstantsMap.SHOULDER_ACCEL, ConstantsMap.kTimeoutMs);
         
+
+        
+
+
+        shoulder2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
+											ConstantsMap.kPIDLoopIdx, 
+											ConstantsMap.kTimeoutMs);
+        shoulder2.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
+		shoulder2.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, ConstantsMap.kTimeoutMs);
+
+        shoulder2.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		shoulder2.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		shoulder2.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+        shoulder2.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+
+        shoulder2.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
+		shoulder2.config_kF(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kF, ConstantsMap.kTimeoutMs);
+		shoulder2.config_kP(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kP, ConstantsMap.kTimeoutMs);
+		shoulder2.config_kI(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kI, ConstantsMap.kTimeoutMs);
+		shoulder2.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kD, ConstantsMap.kTimeoutMs);
+   
+        shoulder2.configMotionCruiseVelocity(ConstantsMap.SHOULDER_VELOCITY, ConstantsMap.kTimeoutMs);
+        shoulder2.configMotionAcceleration(ConstantsMap.SHOULDER_ACCEL, ConstantsMap.kTimeoutMs);
+
+
         //shoulder.configForwardLimitSwitchSource(LimitSwitchSource., LimitSwitchNormal.NormallyClosed);
         wrist = new TalonSRX(RobotMap.WRIST_JOINT_PORT);
         wrist.setInverted(true);
@@ -126,6 +154,8 @@ public class ArmSubsystem2 extends Subsystem {
     public void setShoulderJointSpeed(double speed) {
         
         shoulder.set(ControlMode.PercentOutput,speed);
+        shoulder2.set(ControlMode.PercentOutput,speed);
+
     }
     public boolean getManualMode(){
         return manualMode;
@@ -189,6 +219,8 @@ public class ArmSubsystem2 extends Subsystem {
         }
         double ticks = angle/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
         shoulder.set(ControlMode.MotionMagic, ticks);
+        shoulder2.set(ControlMode.MotionMagic, ticks);
+
         shoulderSet = ticks;
         checkShoulderLimits();
 
@@ -214,10 +246,14 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public void checkShoulderLimits(){
         if(!lowerLimit.get()){
+            shoulder2.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
+
             shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
             if(shoulder.getControlMode() == ControlMode.PercentOutput){
                 if(shoulder.getMotorOutputPercent()<0){
                     shoulder.set(ControlMode.PercentOutput, 0);
+                    shoulder2.set(ControlMode.PercentOutput, 0);
+
                 }
             }
             else if (shoulder.getControlMode() == ControlMode.MotionMagic){

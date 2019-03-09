@@ -20,6 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -39,6 +40,7 @@ public class DriveSubsystem extends Subsystem {
 	private boolean isStallCurrent = false;;
 	private long startStallCurrent = 0;
 	private double startBarometricPressure;
+	private I2C bus;
 	public DriveSubsystem() {
         System.out.println("Drive Subsystem Init");
 
@@ -47,7 +49,7 @@ public class DriveSubsystem extends Subsystem {
 		leftSlave = new TalonSRX(RobotMap.LEFT_DRIVE_PORT_2);
 		right = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_1);		
 		rightSlave = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_2);
-
+		bus = new I2C(I2C.Port.kOnboard, 0x52);
 		
 		
 		//Invert Motors
@@ -77,7 +79,9 @@ public class DriveSubsystem extends Subsystem {
         // Set the default command for a subsystem here.
     	setDefaultCommand(new DriveCommand());
 	}
-	
+	public double getDistance(){
+		return bus.readOnly(buffer, count)
+	}
 
 	public boolean checkTip(){
 		return (Math.abs(ahrs.getVelocityY()) > ConstantsMap.TIP_TOLERANCE);

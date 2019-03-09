@@ -75,7 +75,8 @@ public class ConstantsMap {
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .2;
 
     //public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
-    public static final Gains wristGains = new Gains(0.2, 0.001, 0, .1, 20, 1.0);
+    //public static final Gains wristGains = new Gains(0.2, 0.001, 0, .1, 20, 1.0);
+    public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
 
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
@@ -91,7 +92,7 @@ public class ConstantsMap {
 
     public static final int SHOULDER_VELOCITY = 26000;
     public static final int SHOULDER_ACCEL = 24000;
-    public static final Gains shoulderGains = new Gains(.2, 0.001, 0, 0.042625, 20, 1.0);
+    public static final Gains shoulderGains = new Gains(.2 , 0.0001, 0, 0.042625, 20, 1.0);
     //public static final Gains shoulderGains = new Gains(.2, 0.0, 0, 0.042625, 0, 1.0);
 
     //For Grabber
@@ -120,7 +121,7 @@ public class ConstantsMap {
     public static final double CARGO_BALL_PRESET = -20.0;
     public static final double CARGO_HATCH_PRESET = -20.0;
 
-    public static final double HATCH_COLLECT_PRESET = -58.0;
+    public static final double HATCH_COLLECT_PRESET = -57.0;
     public static final double BALL_COLLECT_WRIST_PRESET = -5.5;
     public static final double BALL_COLLECT_SHOULDER_PRESET = -47;
 
