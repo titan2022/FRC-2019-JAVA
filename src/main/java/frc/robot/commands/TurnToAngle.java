@@ -5,17 +5,14 @@ import frc.robot.Gains;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveSubsystem;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnToAngle extends Command implements PIDSource, PIDOutput {

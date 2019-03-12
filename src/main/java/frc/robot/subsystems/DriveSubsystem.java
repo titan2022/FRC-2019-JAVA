@@ -16,6 +16,7 @@ import frc.robot.ConstantsMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -74,13 +75,60 @@ public class DriveSubsystem extends Subsystem {
 		leftSlave.follow(left);
 		rightSlave.follow(right);
 		SmartDashboard.putData(ahrs);
+
+		left.setSensorPhase(true);
+		right.setSensorPhase(true);
+
+		left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+											ConstantsMap.kPIDLoopIdx, 
+											ConstantsMap.kTimeoutMs);
+        left.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
+		left.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, ConstantsMap.kTimeoutMs);
+
+        left.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		left.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		left.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+        left.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+
+        left.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
+		left.config_kF(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kF, ConstantsMap.kTimeoutMs);
+		left.config_kP(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kP, ConstantsMap.kTimeoutMs);
+		left.config_kI(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kI, ConstantsMap.kTimeoutMs);
+		left.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kD, ConstantsMap.kTimeoutMs);
+   
+        left.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
+        left.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
+
+
+		
+
+		right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+											ConstantsMap.kPIDLoopIdx, 
+											ConstantsMap.kTimeoutMs);
+        right.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
+		right.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, ConstantsMap.kTimeoutMs);
+
+        right.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		right.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		right.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+        right.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+
+        right.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
+		right.config_kF(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kF, ConstantsMap.kTimeoutMs);
+		right.config_kP(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kP, ConstantsMap.kTimeoutMs);
+		right.config_kI(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kI, ConstantsMap.kTimeoutMs);
+		right.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kD, ConstantsMap.kTimeoutMs);
+   
+        right.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
+        right.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
 	} 
 	public void initDefaultCommand() {
         // Set the default command for a subsystem here.
     	setDefaultCommand(new DriveCommand());
 	}
 	public double getDistance(){
-		return bus.readOnly(buffer, count)
+		//return bus.readOnly(buffer, count);
+		return 0;
 	}
 
 	public boolean checkTip(){

@@ -68,12 +68,14 @@ public class DriveCommand extends Command {
 				speedRight *= ConstantsMap.TURTLE_SPEED;
 			}
 			if(armSubsystem.getShoulderEncoderAngle()>0){
-				speedLeft *= .6;
-				speedRight *= .6;
+				speedLeft *= .75;
+				speedRight *= .75;
+			
 
 			}
-			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
-			driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
+			
+			driveSubsystem.setLeftSpeed(speedLeft);
+			driveSubsystem.setRightSpeed(speedRight);
 
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
@@ -109,6 +111,9 @@ public class DriveCommand extends Command {
 		SmartDashboard.putNumber("LEft Count",driveSubsystem.getLeftEncoderCount());
 		SmartDashboard.putNumber("Right Distance",driveSubsystem.getRightEncoderDistance());
 		SmartDashboard.putNumber("LEft Disatance",driveSubsystem.getLeftEncoderDistance());
+		SmartDashboard.putBoolean("Turtle", turtlemode);
+		SmartDashboard.putBoolean("Brake Mode", brakeState);
+
     }
     
     // Make this return true when this Command no longer needs to run execute()

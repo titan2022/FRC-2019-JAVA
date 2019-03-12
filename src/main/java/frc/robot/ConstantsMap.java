@@ -21,6 +21,13 @@ public class ConstantsMap {
     public static final double TIP_TOLERANCE = 8;
     public static final double DRIFT_TOLERANCE = 5; 
 
+    public static final Gains driveGains = new Gains(1, 0.0, 0, 0, 0, 1.0);
+    public static final Gains turnGains = new Gains(.2, 0.0, .1, 0, 0, 1.0);
+    public static final int DRIVE_VELOCITY = 3400;
+    public static final int DRIVE_ACCEL = 3400;
+
+
+
     public static final double DRIVE_STALL = 10;
     public static final double DRIVE_STALL_TIME = 1;
 

@@ -8,6 +8,8 @@
 package frc.robot;
 
 
+import edu.wpi.cscore.HttpCamera;
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
     public static HatchGrabberSubsystem hatchGrabberSubsystem = new HatchGrabberSubsystem();
 
     UsbCamera groundCam,grabCam;
+   // HttpCamera grabCam;
     Command autonomousCommand;
     Command driveCommand;
     Command followLineCommand;
@@ -53,6 +56,7 @@ public class Robot extends TimedRobot {
     Compressor compressor;
     public boolean debugMode;
     Command preset;
+    int count = 0;
     /**
     * This function is run when the robot is first started up and should be
     * used for any initialization code.
@@ -72,9 +76,12 @@ public class Robot extends TimedRobot {
         
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
-        grabCam.setResolution(256, 144);
+        grabCam.setResolution(600, 480);
+        
         server.startAutomaticCapture(groundCam);
         groundCamSelected = true;
+        //grabCam = new HttpCamera("Vision Process", "http://10.20.22.207:1181/?action=stream/mjpeg");
+
     }
     public void switchCamera(){
         System.out.println("Switched Cam");
@@ -106,7 +113,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
-
         SmartDashboard.putBoolean("Debug Mode", debugMode);
 
         SmartDashboard.putBoolean("Manual Mode", armSubsystem2.getManualMode());
@@ -114,12 +120,26 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putBoolean("Tipping", driveSubsystem.checkTip());
 
+        count++;
+        if(count>10){
+            SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
         
-        SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
+            SmartDashboard.putBoolean("On Fire", driveSubsystem.isOnFire());
+            SmartDashboard.putBoolean("Cruising Altitude", driveSubsystem.isCruisingAltitude());
+            SmartDashboard.putBoolean("Is Probably About to Rain", driveSubsystem.isProbablyAboutToRain());
+
+            SmartDashboard.putBoolean("Drive Stall Detected", driveSubsystem.isStalled());
+            SmartDashboard.putBoolean("Shoulder Stall Detected", armSubsystem2.isShoulderStalled());
+            SmartDashboard.putBoolean("Wrist Stall Detected", armSubsystem2.isWristStalled());
+
+
+
+            count = 0;
+        }
         
-        SmartDashboard.putBoolean("On Fire", driveSubsystem.isOnFire());
-        SmartDashboard.putBoolean("Cruising Altitude", driveSubsystem.isCruisingAltitude())
-        ;
+        
+
+
         armSubsystem2.checkShoulderLimits();
         armSubsystem2.checkWristLimits();
 
