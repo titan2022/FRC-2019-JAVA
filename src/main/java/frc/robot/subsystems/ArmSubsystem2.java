@@ -116,7 +116,7 @@ public class ArmSubsystem2 extends Subsystem {
 
         //shoulder.configForwardLimitSwitchSource(LimitSwitchSource., LimitSwitchNormal.NormallyClosed);
         wrist = new TalonSRX(RobotMap.WRIST_JOINT_PORT);
-        wrist.setInverted(true);
+        wrist.setInverted(false);
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
 											ConstantsMap.kPIDLoopIdx, 
