@@ -60,7 +60,7 @@ public class ConstantsMap {
     //For ArmSubsystem
     public static final int kSlotIdx = 0;
     public static final int kPIDLoopIdx = 0;
-    public static final int kTimeoutMs = 30;
+    public static final int kTimeoutMs = 30; 
 
     
 
