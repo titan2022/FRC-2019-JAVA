@@ -68,7 +68,7 @@ public class ConstantsMap {
     public static final double SHOULDER_SPEED_MULT = .1;
     public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
     //public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63);
-    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63 * (38.0/18.0));
+    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 100 * (38.0/18.0));
 
     public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
     public static final double WRIST_MIN_ANGLE_UP = -60.0;
@@ -78,14 +78,14 @@ public class ConstantsMap {
 
     public static final double WRIST_IN_ANGLE = 60.0;
 
-    public static final int WRIST_VELOCITY = 18000;
-    public static final int WRIST_ACCEL = (int)Math.floor(18000.0*2.0/3.0);
+    public static final int WRIST_VELOCITY = 1000;
+    public static final int WRIST_ACCEL = 1000;
     public static final int  WRIST_FOLLOW_DISTANCE = 20;
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .2;
 
-    //public static final Gains wristGains = new Gains(0.2, 0.0, 0.0, 0.2, 0, 1.0);
+    public static final Gains wristGains = new Gains(0.01, 0.0, 0.0, 0.0, 0, 1.0);
     //public static final Gains wristGains = new Gains(0.2, 0.001, 0, .1, 20, 1.0);
-    public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
+    //public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
 
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks

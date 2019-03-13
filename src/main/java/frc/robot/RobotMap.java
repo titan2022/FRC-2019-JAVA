@@ -23,10 +23,11 @@ public class RobotMap {
    
     public static final int SHOULDER_JOINT_RIGHT_PORT = 6;
     public static final int SHOULDER_JOINT_LEFT_PORT = 5;
-    public static final int WRIST_JOINT_PORT = 7;
+    public static final int WRIST_JOINT_LEFT_PORT = 7;
+    public static final int WRIST_JOINT_RIGHT_PORT = 9;
 
     public static final int GRAB_SPIN_1 = 8;
-    public static final int GRAB_SPIN_2 = 9;
+    //public static final int GRAB_SPIN_2 = 9;
 
 
 

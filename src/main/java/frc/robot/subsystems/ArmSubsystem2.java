@@ -43,7 +43,7 @@ public class ArmSubsystem2 extends Subsystem {
     private boolean isShoulderStall = false;
     private long startWristStall = 0;
     private long startShoulderStall = 0;
-    TalonSRX shoulder, shoulder2, shoulderSlave,wrist;
+    TalonSRX shoulder, shoulder2, shoulderSlave, wrist, wristSlave, wrist2;
 
     public ArmSubsystem2() {
 
@@ -115,9 +115,19 @@ public class ArmSubsystem2 extends Subsystem {
 
 
         //shoulder.configForwardLimitSwitchSource(LimitSwitchSource., LimitSwitchNormal.NormallyClosed);
-        wrist = new TalonSRX(RobotMap.WRIST_JOINT_PORT);
-        wrist.setInverted(false);
+        wrist = new TalonSRX(RobotMap.WRIST_JOINT_LEFT_PORT);
+        wrist2 = new TalonSRX(RobotMap.WRIST_JOINT_RIGHT_PORT);
+
+        wrist.setInverted(true);
+        wrist2.setInverted(false);
+
+        wrist.setSensorPhase(false);
+        //wrist2.setSensorPhase(true);
+
         wrist.setNeutralMode(NeutralMode.Brake);
+        wrist2.setNeutralMode(NeutralMode.Brake);
+        wrist2.follow(wrist);
+
         wrist.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
 											ConstantsMap.kPIDLoopIdx, 
                                             ConstantsMap.kTimeoutMs);
@@ -137,7 +147,29 @@ public class ArmSubsystem2 extends Subsystem {
 		wrist.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.wristGains.kD, ConstantsMap.kTimeoutMs);
    
         wrist.configMotionCruiseVelocity(ConstantsMap.WRIST_VELOCITY, ConstantsMap.kTimeoutMs);
-        wrist.configMotionAcceleration(ConstantsMap.WRIST_ACCEL, ConstantsMap.kTimeoutMs);
+        wrist.configMotionAcceleration(ConstantsMap.WRIST_ACCEL, ConstantsMap.kTimeoutMs);     
+
+/* 
+        wrist2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
+											ConstantsMap.kPIDLoopIdx, 
+											ConstantsMap.kTimeoutMs);
+        wrist2.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
+		wrist2.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, ConstantsMap.kTimeoutMs);
+
+        wrist2.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		wrist2.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		wrist2.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+        wrist2.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+
+        wrist2.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
+		wrist2.config_kF(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kF, ConstantsMap.kTimeoutMs);
+		wrist2.config_kP(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kP, ConstantsMap.kTimeoutMs);
+		wrist2.config_kI(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kI, ConstantsMap.kTimeoutMs);
+		wrist2.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.shoulderGains.kD, ConstantsMap.kTimeoutMs);
+   
+        wrist2.configMotionCruiseVelocity(ConstantsMap.SHOULDER_VELOCITY, ConstantsMap.kTimeoutMs);
+        wrist2.configMotionAcceleration(ConstantsMap.SHOULDER_ACCEL, ConstantsMap.kTimeoutMs);
+ */
 
         //upperLimit = new DigitalInput(RobotMap.UPPER_ARM_LIMIT_PORT);
         //lowerLimit = new DigitalInput(RobotMap.LOWER_ARM_LIMIT_PORT);
@@ -171,6 +203,7 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public void setWristJointSpeed(double speed) {
         wrist.set(ControlMode.PercentOutput,speed);
+        //wrist2.set(ControlMode.PercentOutput, speed);
     }
     public void setWristSetPoint(double angle){
         if(shoulder.getControlMode() == ControlMode.MotionMagic){
@@ -208,6 +241,7 @@ public class ArmSubsystem2 extends Subsystem {
         double ticks = angle/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         
         wrist.set(ControlMode.MotionMagic, ticks);
+        //wrist2.set(ControlMode.MotionMagic, ticks);
         wristSet = ticks;
     }
     public void setShoulderSetPoint(double angle){
@@ -230,10 +264,14 @@ public class ArmSubsystem2 extends Subsystem {
         if(getWristLowerLimit()){
             if(getShoulderEncoderAngle()<-50){
                 wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+                //wrist2.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+
             }
             if(wrist.getControlMode() == ControlMode.PercentOutput){
                 if(wrist.getMotorOutputPercent()>0){
                     wrist.set(ControlMode.PercentOutput, 0);
+                    //wrist2.set(ControlMode.PercentOutput, 0);
+
                 }
             }
             else if (wrist.getControlMode() == ControlMode.MotionMagic){
@@ -289,6 +327,8 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public void zeroWrist() {
         wrist.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+        //wrist2.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+
     }
     public void zeroShoulder() {
         shoulder.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);

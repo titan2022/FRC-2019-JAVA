@@ -38,8 +38,8 @@ public class HatchGrabberSubsystem extends Subsystem {
         //releasePiston1 = new Solenoid(5);
 
         motor1 = new TalonSRX(RobotMap.GRAB_SPIN_1);
-        motor2 = new TalonSRX(RobotMap.GRAB_SPIN_2);
-        motor1.setInverted(true);
+        //motor2 = new TalonSRX(RobotMap.GRAB_SPIN_2);
+        //motor1.setInverted(true);
 
     }
 
@@ -60,17 +60,17 @@ public class HatchGrabberSubsystem extends Subsystem {
     }
     public void intakeWheels(){
         motor1.set(ControlMode.PercentOutput, ConstantsMap.BALL_INTAKE_SPEED);
-        motor2.set(ControlMode.PercentOutput, ConstantsMap.BALL_INTAKE_SPEED);
+        //motor2.set(ControlMode.PercentOutput, ConstantsMap.BALL_INTAKE_SPEED);
 
     }
     public void outakeWheels(){
         motor1.set(ControlMode.PercentOutput, -ConstantsMap.BALL_OUTTAKE_SPEED);
-        motor2.set(ControlMode.PercentOutput, -ConstantsMap.BALL_OUTTAKE_SPEED);
+        //motor2.set(ControlMode.PercentOutput, -ConstantsMap.BALL_OUTTAKE_SPEED);
 
     }
     public void stopWheels(){
         motor1.set(ControlMode.PercentOutput, 0);
-        motor2.set(ControlMode.PercentOutput, 0);
+        //motor2.set(ControlMode.PercentOutput, 0);
     }
     
     @Override
