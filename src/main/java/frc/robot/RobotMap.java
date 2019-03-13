@@ -44,6 +44,6 @@ public class RobotMap {
     public static final int RELEASE_PISTON_1_R = 0; */
     public static final int HATCH_PISTON_F = 4;
     public static final int HATCH_PISTON_R = 5;
-    public static final int RELEASE_PISTON_1_F = 7;
-    public static final int RELEASE_PISTON_1_R = 6;
+    public static final int RELEASE_PISTON_1_F = 6;
+    public static final int RELEASE_PISTON_1_R = 7;
 }
