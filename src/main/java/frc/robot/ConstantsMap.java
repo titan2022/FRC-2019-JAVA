@@ -84,6 +84,8 @@ public class ConstantsMap {
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .2;
 
     public static final Gains wristGains = new Gains(0.12, 0.0005, 0.0, 0.00, 20, 1.0);
+    public static final double WRIST_TOLERANCE = .2;
+
     //public static final Gains wristGains = new Gains(0.13, 0.0005, 0.0, 0.0341, 0, 1.0);
     //public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
 
@@ -102,6 +104,8 @@ public class ConstantsMap {
     public static final int SHOULDER_VELOCITY = 26000;
     public static final int SHOULDER_ACCEL = 24000;
     public static final Gains shoulderGains = new Gains(.2 , 0.0001, 0, 0.042625, 20, 1.0);
+    public static final double SHOULDER_TOLERANCE = .2;
+
     //public static final Gains shoulderGains = new Gains(.2, 0.0, 0, 0.042625, 0, 1.0);
 
     //For Grabber

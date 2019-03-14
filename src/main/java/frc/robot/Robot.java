@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
-        SmartDashboard.putNumber("Shoulder Set", armSubsystem2.getShoulderSetPoint());
+        SmartDashboard.putNumber("Shoulder Set", armSubsystem2.getRightShoulderSetPoint());
         SmartDashboard.putNumber("Wrist Set", armSubsystem2.getWristSetPoint());
 
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());

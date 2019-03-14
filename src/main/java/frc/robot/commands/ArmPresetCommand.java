@@ -48,7 +48,7 @@ public class ArmPresetCommand extends Command {
         else if(levelMode){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         }
-        else if(!(Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<.5)){
+        else if(!armSubsystem.isShoulderAtSetPoint()){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         } 
         else{
@@ -69,10 +69,10 @@ public class ArmPresetCommand extends Command {
             return true;
         }
         else if(levelMode){
-            return Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<.2 && Math.abs(armSubsystem.getWristEncoderAngle() + armSubsystem.getShoulderEncoderAngle())<.2;
+            return armSubsystem.isShoulderAtSetPoint() && Math.abs(armSubsystem.getWristEncoderAngle() + armSubsystem.getShoulderEncoderAngle())<ConstantsMap.WRIST_TOLERANCE;
         }
         else{
-            return Math.abs(armSubsystem.getWristEncoderAngle() - wPreset)<.2 && Math.abs(armSubsystem.getShoulderEncoderAngle() - sPreset)<.2;
+            return armSubsystem.isShoulderAtSetPoint() && armSubsystem.isWristAtSetPoint();
         }
         
     }

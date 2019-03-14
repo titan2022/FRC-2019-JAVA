@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.ConstantsMap;
 import frc.robot.Robot;
 
 import frc.robot.subsystems.ArmSubsystem2;
@@ -15,7 +16,8 @@ public class WristForceZero extends Command {
     @Override
     protected void initialize() {
         System.out.println("Wrist Zero Started");
-        armSubsystem.setWristJointSpeed(.6);      
+        //armSubsystem.setWristJointSpeed(.6);      
+        armSubsystem.setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);
         armSubsystem.setShoulderSetPoint(armSubsystem.getShoulderEncoderAngle());
          
     }
@@ -23,7 +25,9 @@ public class WristForceZero extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-       
+       if(armSubsystem.isWristAtSetPoint()){
+           armSubsystem.setWristJointSpeed(.4);
+       }
     }
     
     

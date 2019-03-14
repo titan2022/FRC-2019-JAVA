@@ -158,12 +158,7 @@ public class ArmSubsystem2 extends Subsystem {
         levelMode = false;
     }
     
-    public void setShoulderJointSpeed(double speed) {
-        
-        shoulder.set(ControlMode.PercentOutput,speed);
-        shoulder2.set(ControlMode.PercentOutput,speed);
-
-    }
+    //Modes
     public boolean getManualMode(){
         return manualMode;
     }
@@ -176,10 +171,14 @@ public class ArmSubsystem2 extends Subsystem {
     public void toggleLevelMode(){
         levelMode =  !levelMode;
     }
+
+    //Wrist Stuff
+    
     public void setWristJointSpeed(double speed) {
         wrist.set(ControlMode.PercentOutput,speed);
         //wrist2.set(ControlMode.PercentOutput, speed);
     }
+    
     public void setWristSetPoint(double angle){
         if(shoulder.getControlMode() == ControlMode.MotionMagic){
             
@@ -219,21 +218,7 @@ public class ArmSubsystem2 extends Subsystem {
         //wrist2.set(ControlMode.MotionMagic, ticks);
         wristSet = ticks;
     }
-    public void setShoulderSetPoint(double angle){
-        if(angle>ConstantsMap.SHOULDER_MAX_ANGLE){
-            angle =ConstantsMap.SHOULDER_MAX_ANGLE;
-        }
-        if(angle<ConstantsMap.SHOULDER_MIN_ANGLE){
-            angle =ConstantsMap.SHOULDER_MIN_ANGLE;
-        }
-        double ticks = angle/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
-        shoulder.set(ControlMode.MotionMagic, ticks);
-        shoulder2.set(ControlMode.MotionMagic, ticks);
-
-        shoulderSet = ticks;
-        checkShoulderLimits();
-
-    }
+   
 
     public void checkWristLimits(){
         if(getWristLowerLimit()){
@@ -256,43 +241,14 @@ public class ArmSubsystem2 extends Subsystem {
                 }
             }
         }
-    }
-    public void checkShoulderLimits(){
-        if(!lowerLimit.get()){
-
-            if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_MIN_ANGLE + 30){
-                shoulder2.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
-                shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
-
+        if(getWristEncoderAngle()<ConstantsMap.WRIST_MIN_ANGLE_UP){
+            if(wrist.getActiveTrajectoryVelocity() < 0){
+                
+                setWristJointSpeed(0);
             }
-
-            if(shoulder.getControlMode() == ControlMode.PercentOutput){
-                if(shoulder.getMotorOutputPercent()<0){
-                    shoulder.set(ControlMode.PercentOutput, 0);
-                    shoulder2.set(ControlMode.PercentOutput, 0);
-
-                }
-            }
-            else if (shoulder.getControlMode() == ControlMode.MotionMagic){
-                if(shoulder.getActiveTrajectoryVelocity() < 0){
-                    setShoulderSetPoint(ConstantsMap.SHOULDER_MIN_ANGLE);
-                }
-            }
-            
-            
         }
-   }
+    }
 
-
-    public double getShoulderEncoderAngle() {
-        return getShoulderTicks()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
-    }
-    public double getShoulderTicks(){
-        return shoulder.getSelectedSensorPosition();
-    }
-    public double getShoulderSetPoint(){
-        return shoulder.getActiveTrajectoryPosition()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
-    }
     public double getWristSetPoint(){
         return wrist.getActiveTrajectoryPosition()* ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
 
@@ -301,24 +257,16 @@ public class ArmSubsystem2 extends Subsystem {
     public double getWristEncoderAngle() {
         return getWristTicks()* ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
     }
+
     public double getWristTicks(){
         return wrist.getSelectedSensorPosition();
     }
+
     public void zeroWrist() {
         wrist.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
         //wrist2.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
 
     }
-    public void zeroShoulder() {
-        shoulder.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
-    }
-    
-
-    public boolean getShoulderLowerLimit(){
-        return !lowerLimit.get();
-    }
-
-
 
     public boolean getWristLowerLimit(){
         double currentTime = System.currentTimeMillis();
@@ -355,14 +303,6 @@ public class ArmSubsystem2 extends Subsystem {
        return lowerLimitWrist2.get() || lowerLimitWrist.get();
     }
 
-    public double getShoulderSpeed(){
-        return shoulder.getMotorOutputPercent();
-    }
-
-    public double getWristSpeed(){
-        return wrist.getMotorOutputPercent();
-    }
-    
     public boolean isWristStalled(){
 		boolean isStallcondition = wrist.getOutputCurrent() > ConstantsMap.WRIST_STALL;
 		if(isStallcondition && !isWristStall){
@@ -379,6 +319,115 @@ public class ArmSubsystem2 extends Subsystem {
 			return false;
 		}
     }
+
+    public double getWristSpeed(){
+        return wrist.getMotorOutputPercent();
+    }
+    public boolean isWristAtSetPoint(){
+        return Math.abs(getWristSetPoint()-getWristEncoderAngle()) < ConstantsMap.WRIST_TOLERANCE;
+
+
+    }
+
+    //Shoulder Stuff
+
+    public void setShoulderJointSpeed(double speed) {
+        
+        shoulder.set(ControlMode.PercentOutput,speed);
+        shoulder2.set(ControlMode.PercentOutput,speed);
+
+    }
+    public void setShoulderSetPoint(double angle){
+        if(angle>ConstantsMap.SHOULDER_MAX_ANGLE){
+            angle =ConstantsMap.SHOULDER_MAX_ANGLE;
+        }
+        if(angle<ConstantsMap.SHOULDER_MIN_ANGLE){
+            angle =ConstantsMap.SHOULDER_MIN_ANGLE;
+        }
+        double ticks = angle/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+        shoulder.set(ControlMode.MotionMagic, ticks);
+        shoulder2.set(ControlMode.MotionMagic, ticks);
+
+        shoulderSet = ticks;
+        checkShoulderLimits();
+
+    }
+
+    public void checkShoulderLimits(){
+        if(!lowerLimit.get()){
+            if(getShoulderEncoderAngle()<ConstantsMap.SHOULDER_MIN_ANGLE + 30){
+                shoulder2.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
+                shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK));
+
+            }
+
+            if(shoulder.getControlMode() == ControlMode.PercentOutput){
+                if(shoulder.getMotorOutputPercent()<0){
+                    shoulder.set(ControlMode.PercentOutput, 0);
+                    shoulder2.set(ControlMode.PercentOutput, 0);
+
+                }
+            }
+            else if (shoulder.getControlMode() == ControlMode.MotionMagic){
+                if(shoulder.getActiveTrajectoryVelocity() < 0){
+                    setShoulderSetPoint(ConstantsMap.SHOULDER_MIN_ANGLE);
+                }
+            }         
+            
+        }
+   }
+    
+    public double getRightShoulderTicks(){
+        return shoulder.getSelectedSensorPosition();
+    }
+    public double getLeftShoulderTicks(){
+        return shoulder2.getSelectedSensorPosition();
+    }
+   
+
+    public double getRightShoulderEncoderAngle() {
+        return getRightShoulderTicks()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+    }
+    public double getLeftShoulderEncoderAngle() {
+        return getLeftShoulderTicks()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+    }    
+    public double getShoulderEncoderAngle(){
+        return (getRightShoulderEncoderAngle() + getLeftShoulderEncoderAngle())/2;
+    }
+    public double getRightShoulderSetPoint(){
+        return shoulder.getActiveTrajectoryPosition()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+    }
+    public double getLeftShoulderSetPoint(){
+        return shoulder2.getActiveTrajectoryPosition()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+    }
+
+    
+    public void zeroShoulder() {
+        shoulder.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+        shoulder2.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+
+    }    
+
+    public boolean getShoulderLowerLimit(){
+        return !lowerLimit.get();
+    }
+
+
+
+   
+
+    public double getShoulderSpeed(){
+        return shoulder.getMotorOutputPercent();
+    }
+
+    
+    public boolean isShoulderAtSetPoint(){
+        boolean right = Math.abs(getRightShoulderSetPoint()-getRightShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        boolean left = Math.abs(getLeftShoulderSetPoint()-getLeftShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        return left && right;
+
+    }
+    
     public boolean isShoulderStalled(){
 		boolean isStallcondition = shoulder.getOutputCurrent() > ConstantsMap.SHOULDER_STALL;
 		if(isStallcondition && !isShoulderStall){

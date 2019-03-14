@@ -128,8 +128,6 @@ public class ArmCommand2 extends Command {
     protected void interrupted() {
         System.out.println("Arm Command Intrupted");
 
-        armSubsystem.setShoulderJointSpeed(0);
-        armSubsystem.setWristJointSpeed(0);;
 
     }
 }
