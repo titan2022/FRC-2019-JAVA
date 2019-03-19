@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class DriveSubsystem extends Subsystem {
-	private TalonSRX left,right;
+	private TalonSRX left,right, leftScrew, rightScrew;
 	private VictorSPX leftSlave, rightSlave;
 
 	private double leftEncoderDist, rightEncoderDist, leftEncoderRate, rightEncoderRate, angle;
@@ -121,7 +121,20 @@ public class DriveSubsystem extends Subsystem {
 		right.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kD, ConstantsMap.kTimeoutMs);
    
         right.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
-        right.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
+		right.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
+		
+		leftScrew.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+											   ConstantsMap.kPIDLoopIdx,
+											   ConstantsMap.kTimeoutMs);
+		leftScrew.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		leftScrew.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		leftScrew.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+		leftScrew.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+		
+		leftScrew.config_kF(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kF, ConstantsMap.kTimeoutMs);
+		leftScrew.config_kP(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kP, ConstantsMap.kTimeoutMs);
+		leftScrew.config_kI(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kI, ConstantsMap.kTimeoutMs);
+		leftScrew.config_kD(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kD, ConstantsMap.kTimeoutMs);
 	} 
 	public void initDefaultCommand() {
         // Set the default command for a subsystem here.
@@ -254,6 +267,11 @@ public class DriveSubsystem extends Subsystem {
 		left.set(ControlMode.PercentOutput,0);
 		right.set(ControlMode.PercentOutput,0);
 		
+	}
+
+	public void setScrewVelocitySetpoint(double sp) {
+		leftScrew.set(ControlMode.Velocity,sp);
+		rightScrew.set(ControlMode.Velocity,sp);
 	}
 
 	@Override

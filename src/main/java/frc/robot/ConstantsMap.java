@@ -86,6 +86,10 @@ public class ConstantsMap {
     public static final Gains wristGains = new Gains(0.12, 0.0005, 0.0, 0.00, 20, 1.0);
     public static final double WRIST_TOLERANCE = .2;
 
+    // TODO: ALL OF THIS
+    public static final Gains SCREW_GAINS = new Gains(0.25, 0.001, 20, 1023.0/7200.0, 300, 1.00);    
+    public static final double HAB_SHOULDER_RAISE_SPEED = 5;
+    
     //public static final Gains wristGains = new Gains(0.13, 0.0005, 0.0, 0.0341, 0, 1.0);
     //public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
 
