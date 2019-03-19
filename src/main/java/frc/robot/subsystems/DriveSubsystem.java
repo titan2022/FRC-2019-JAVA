@@ -34,6 +34,9 @@ public class DriveSubsystem extends Subsystem {
 	private TalonSRX left,right;
 	private VictorSPX leftSlave, rightSlave;
 
+	private double leftEncoderDist, rightEncoderDist, leftEncoderRate, rightEncoderRate, angle;
+	private int leftEncoderCount, rightEncoderCount;
+
 	private AHRS ahrs;
 	private PowerDistributionPanel pdp;
 	private boolean isStallCurrent = false;;
@@ -167,7 +170,6 @@ public class DriveSubsystem extends Subsystem {
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
 		left.set(ControlMode.PercentOutput,speed);
-		
 	}	
 	
 	//sets the speed for both of the right motors
@@ -176,11 +178,11 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public double getLeftSpeed() {		
-		return left.getSelectedSensorVelocity(0);
+		return leftEncoderRate * -1;
 	}	
 	
 	public double getRightSpeed() {		
-		return right.getSelectedSensorVelocity(0);		
+		return rightEncoderRate * -1;	
 	}
 	
 	public void tankDrive(double leftSpeed, double rightSpeed){
@@ -208,26 +210,26 @@ public class DriveSubsystem extends Subsystem {
 	
 	//Get Encoder Distances
 	public double getRightEncoderDistance(){
-		return right.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		return rightEncoderDist;
 	}	
 	public double getLeftEncoderDistance(){
-		return left.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		return leftEncoderDist;
 	}
 	
 	//Get Encoder counts
 	public int getLeftEncoderCount(){
-		return left.getSelectedSensorPosition(0)* -1;
+		return leftEncoderCount;
 	}	
 	public int getRightEncoderCount(){
-		return right.getSelectedSensorPosition(0)* -1;
+		return rightEncoderCount;
 	}
 	
 	//Get Encoder Rates
 	public double getRightEncoderRate(){
-		return right.getSelectedSensorVelocity(0)* -1;
+		return rightEncoderRate;
 	}	
 	public double getLeftEncoderRate(){
-		return left.getSelectedSensorVelocity(0)* -1;
+		return leftEncoderRate;
 	}
 	
 	//reset encoders
@@ -241,7 +243,7 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public double getGyroAngle(){
-		return ahrs.getAngle(); 
+		return angle;
 	}
 
 	public void resetGyro() {
@@ -252,5 +254,16 @@ public class DriveSubsystem extends Subsystem {
 		left.set(ControlMode.PercentOutput,0);
 		right.set(ControlMode.PercentOutput,0);
 		
+	}
+
+	@Override
+	public void periodic() {
+		angle = ahrs.getAngle();
+		rightEncoderDist = right.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		leftEncoderDist = left.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		rightEncoderCount = right.getSelectedSensorPosition(0)* -1;
+		leftEncoderCount = left.getSelectedSensorPosition(0)* -1;
+		leftEncoderRate = left.getSelectedSensorVelocity(0)* -1;
+		rightEncoderRate = right.getSelectedSensorVelocity(0)* -1;
 	}
 }
