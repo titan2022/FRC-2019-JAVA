@@ -27,7 +27,8 @@ public class ArmSubsystem2 extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
-
+    public double wristAngle, wristSpeed, leftShoulderAngle, rightShoulderAngle, shoulderSpeed;
+    public int wristCount, leftShoulderCount, rightShoulderCount;
 
     private DigitalInput lowerLimit, lowerLimitWrist, lowerLimitWrist2;
     private double wristLimitStartTime,wristLimitStartTime2;
@@ -255,11 +256,11 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
     public double getWristEncoderAngle() {
-        return getWristTicks()* ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
+        return wristAngle;
     }
 
     public double getWristTicks(){
-        return wrist.getSelectedSensorPosition();
+        return wristCount;
     }
 
     public void zeroWrist() {
@@ -321,7 +322,7 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
     public double getWristSpeed(){
-        return wrist.getMotorOutputPercent();
+        return wristSpeed;
     }
     public boolean isWristAtSetPoint(){
         return Math.abs(getWristSetPoint()-getWristEncoderAngle()) < ConstantsMap.WRIST_TOLERANCE;
@@ -378,18 +379,18 @@ public class ArmSubsystem2 extends Subsystem {
    }
     
     public double getRightShoulderTicks(){
-        return shoulder.getSelectedSensorPosition();
+        return rightShoulderCount;
     }
     public double getLeftShoulderTicks(){
-        return shoulder2.getSelectedSensorPosition();
+        return leftShoulderCount;
     }
    
 
     public double getRightShoulderEncoderAngle() {
-        return getRightShoulderTicks()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+        return rightShoulderAngle;
     }
     public double getLeftShoulderEncoderAngle() {
-        return getLeftShoulderTicks()* ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+        return leftShoulderAngle;
     }    
     public double getShoulderEncoderAngle(){
         return (getRightShoulderEncoderAngle() + getLeftShoulderEncoderAngle())/2;
@@ -466,5 +467,17 @@ public class ArmSubsystem2 extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
          setDefaultCommand(new ArmCommand2());
+    }
+
+    @Override
+    public void periodic() {
+        wristCount = wrist.getSelectedSensorPosition();
+        leftShoulderCount = shoulder2.getSelectedSensorPosition();
+        rightShoulderCount = shoulder.getSelectedSensorPosition();
+        wristAngle = wristCount * ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
+        leftShoulderAngle = leftShoulderCount * ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+        rightShoulderAngle = rightShoulderCount * ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
+        shoulderSpeed = shoulder.getMotorOutputPercent();
+        wristSpeed = wrist.getMotorOutputPercent();
     }
 }
