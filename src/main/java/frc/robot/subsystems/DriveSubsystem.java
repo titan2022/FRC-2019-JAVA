@@ -18,7 +18,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.I2C;
@@ -31,10 +31,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class DriveSubsystem extends Subsystem {
-
-
-	private TalonSRX left,leftSlave,right,rightSlave;
-
+	private TalonSRX left,right;
+	private VictorSPX leftSlave, rightSlave;
 
 	private AHRS ahrs;
 	private PowerDistributionPanel pdp;
@@ -47,9 +45,9 @@ public class DriveSubsystem extends Subsystem {
 
 		//Instantiate motors		
 		left = new TalonSRX(RobotMap.LEFT_DRIVE_PORT_1);
-		leftSlave = new TalonSRX(RobotMap.LEFT_DRIVE_PORT_2);
+		leftSlave = new VictorSPX(RobotMap.LEFT_DRIVE_PORT_2);
 		right = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_1);		
-		rightSlave = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_2);
+		rightSlave = new VictorSPX(RobotMap.RIGHT_DRIVE_PORT_2);
 		bus = new I2C(I2C.Port.kOnboard, 0x52);
 		
 		
