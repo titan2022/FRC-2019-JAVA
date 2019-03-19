@@ -2,15 +2,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.ConstantsMap;
+import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class Hab3Command extends Command {
+public class Hab3ClimbCommand extends Command {
     DriveSubsystem driveSubsystem = Robot.driveSubsystem;
     ArmSubsystem2 armSubsystem = Robot.armSubsystem2; 
 
-    public Hab3Command() {
+    public Hab3ClimbCommand() {
         requires(driveSubsystem);
         requires(armSubsystem);
     }
@@ -32,7 +33,7 @@ public class Hab3Command extends Command {
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
-        return false;
+        return !(Robot.debugMode && OI.controlPanel1.getRawButton(5));
     }
     
     // Called once after isFinished returns true

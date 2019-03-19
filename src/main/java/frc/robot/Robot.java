@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
     Compressor compressor;
-    public boolean debugMode;
+    public static boolean debugMode;
     Command preset;
     int count = 0;
     /**
@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
         armCommand = new ArmCommand2();
         
         server = CameraServer.getInstance();
-        debugMode = false;
+        Robot.debugMode = false;
         
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
-        SmartDashboard.putBoolean("Debug Mode", debugMode);
+        SmartDashboard.putBoolean("Debug Mode", Robot.debugMode);
 
         SmartDashboard.putBoolean("Manual Mode", armSubsystem2.getManualMode());
         SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
@@ -159,9 +159,9 @@ public class Robot extends TimedRobot {
 
         
         if(ControlPanelMap.toggleDebug()){
-            debugMode = !debugMode;
+            Robot.debugMode = !Robot.debugMode;
             oi.unbindButtons();
-            if(debugMode){
+            if(Robot.debugMode){
                 oi.debugMode();
             }
             else{
@@ -169,13 +169,13 @@ public class Robot extends TimedRobot {
             }
             
         }
-        if(ControlPanelMap.toggleManual() && debugMode){
+        if(ControlPanelMap.toggleManual() && Robot.debugMode){
             armSubsystem2.toggleManualMode();
         }
-        if(ControlPanelMap.toggleLevel() && debugMode){
+        if(ControlPanelMap.toggleLevel() && Robot.debugMode){
             armSubsystem2.toggleLevelMode();
         }
-        if(ControlPanelMap.forceZero() && debugMode){
+        if(ControlPanelMap.forceZero() && Robot.debugMode){
             armSubsystem2.zeroShoulder();
             armSubsystem2.zeroWrist();
         }
@@ -192,7 +192,6 @@ public class Robot extends TimedRobot {
     @Override
     public void disabledInit() {
         XboxMap.stopRumble();
-
         armSubsystem2.setShoulderJointSpeed(0);
     }
     
