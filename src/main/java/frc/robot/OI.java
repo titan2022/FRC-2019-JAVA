@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.commands.ArmPresetCommand;
 import frc.robot.commands.ArmZero;
 import frc.robot.commands.GoHome;
+import frc.robot.commands.Hab3ClimbCommand;
 import frc.robot.commands.WristForceZero;
 
 
@@ -111,6 +112,8 @@ public class OI {
 		hatchCollectPreset.whenPressed(new ArmZero());
 
 		goHome.whenPressed(new GoHome());
+		// TODO: make this the same button as the one which continues to climb when held down
+		rocketBallPreset2.whenPressed(new Hab3ClimbCommand());
 	}
 
 	public void unbindButtons() {
