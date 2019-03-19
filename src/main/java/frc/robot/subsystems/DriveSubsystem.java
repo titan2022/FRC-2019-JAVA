@@ -259,10 +259,10 @@ public class DriveSubsystem extends Subsystem {
 	@Override
 	public void periodic() {
 		angle = ahrs.getAngle();
-		rightEncoderDist = right.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
-		leftEncoderDist = left.getSelectedSensorPosition(0)* -1 * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 		rightEncoderCount = right.getSelectedSensorPosition(0)* -1;
 		leftEncoderCount = left.getSelectedSensorPosition(0)* -1;
+		rightEncoderDist = rightEncoderDist * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		leftEncoderDist = leftEncoderDist * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
 		leftEncoderRate = left.getSelectedSensorVelocity(0)* -1;
 		rightEncoderRate = right.getSelectedSensorVelocity(0)* -1;
 	}
