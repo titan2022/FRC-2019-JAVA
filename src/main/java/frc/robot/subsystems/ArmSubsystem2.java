@@ -263,7 +263,7 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
     public void zeroWrist() {
-        wrist.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+        wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK), ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
         //wrist2.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
 
     }
@@ -325,8 +325,9 @@ public class ArmSubsystem2 extends Subsystem {
     }
     public boolean isWristAtSetPoint(){
         return Math.abs(getWristSetPoint()-getWristEncoderAngle()) < ConstantsMap.WRIST_TOLERANCE;
-
-
+    }
+    public boolean isWristAtSetPoint(double setPoint){
+        return Math.abs(setPoint-getWristEncoderAngle()) < ConstantsMap.WRIST_TOLERANCE;
     }
 
     //Shoulder Stuff
@@ -349,7 +350,6 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder2.set(ControlMode.MotionMagic, ticks);
 
         shoulderSet = ticks;
-        checkShoulderLimits();
 
     }
 
@@ -403,8 +403,8 @@ public class ArmSubsystem2 extends Subsystem {
 
     
     public void zeroShoulder() {
-        shoulder.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
-        shoulder2.setSelectedSensorPosition(0, ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+        shoulder.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK), ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
+        shoulder2.setSelectedSensorPosition((int)(ConstantsMap.SHOULDER_MIN_ANGLE/ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK), ConstantsMap.kPIDLoopIdx, ConstantsMap.kTimeoutMs);
 
     }    
 
@@ -420,11 +420,28 @@ public class ArmSubsystem2 extends Subsystem {
         return shoulder.getMotorOutputPercent();
     }
 
-    
+    public boolean isShoulderAtSetPoint(double setPoint){
+        boolean right = Math.abs(setPoint-getRightShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        boolean left = Math.abs(setPoint-getLeftShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        return left && right;
+
+    }
     public boolean isShoulderAtSetPoint(){
         boolean right = Math.abs(getRightShoulderSetPoint()-getRightShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
         boolean left = Math.abs(getLeftShoulderSetPoint()-getLeftShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
         return left && right;
+
+    }
+    public boolean isLeftShoulderAtSetPoint(){
+       // boolean right = Math.abs(getRightShoulderSetPoint()-getRightShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        boolean left = Math.abs(getLeftShoulderSetPoint()-getLeftShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        return left;
+
+    }
+    public boolean isRightShoulderAtSetPoint(){
+        boolean right = Math.abs(getRightShoulderSetPoint()-getRightShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        //boolean left = Math.abs(getLeftShoulderSetPoint()-getLeftShoulderEncoderAngle()) < ConstantsMap.SHOULDER_TOLERANCE;
+        return right;
 
     }
     

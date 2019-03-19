@@ -40,5 +40,8 @@ public class ControlPanelMap {
 	public static boolean toggleManual() {	
 		return oi.controlPanel1.getRawButtonPressed(9);
 	}
+	public static boolean forceZero() {	
+		return oi.controlPanel1.getRawButtonPressed(3);
+	}
 
 }

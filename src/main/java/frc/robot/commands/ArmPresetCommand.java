@@ -12,6 +12,8 @@ public class ArmPresetCommand extends Command {
     double wPreset = 1000;
     boolean shoulderFinished;
     boolean levelMode;
+    boolean initialized = false;
+    boolean shoulderDone = false;
     double startWrist;
     public ArmPresetCommand(double sAngle,double wAngle) {
         // Use requires() here to declare subsystem dependencies
@@ -37,6 +39,8 @@ public class ArmPresetCommand extends Command {
         System.out.println("Start Preset: " + sPreset + " Wrist: " + wPreset);
         armSubsystem.setShoulderSetPoint(sPreset);
         //armSubsystem.setWristSetPoint(0);
+        initialized = true;
+        shoulderFinished = false;
     }
     
     // Called repeatedly when this Command is scheduled to run
@@ -48,14 +52,12 @@ public class ArmPresetCommand extends Command {
         else if(levelMode){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         }
-        else if(!armSubsystem.isShoulderAtSetPoint()){
+        else if(!armSubsystem.isShoulderAtSetPoint(sPreset) && !shoulderFinished){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         } 
-        else{
-            //if(!shoulderFinished){
-            //    shoulderFinished = true;
-                armSubsystem.setWristSetPoint(wPreset);
-           // }
+        else{            
+                shoulderFinished = true;
+                armSubsystem.setWristSetPoint(wPreset);            
         }
         //armSubsyste
 
@@ -69,10 +71,10 @@ public class ArmPresetCommand extends Command {
             return true;
         }
         else if(levelMode){
-            return armSubsystem.isShoulderAtSetPoint() && Math.abs(armSubsystem.getWristEncoderAngle() + armSubsystem.getShoulderEncoderAngle())<ConstantsMap.WRIST_TOLERANCE;
+            return initialized && armSubsystem.isShoulderAtSetPoint(sPreset) && Math.abs(armSubsystem.getWristEncoderAngle() + armSubsystem.getShoulderEncoderAngle())<ConstantsMap.WRIST_TOLERANCE;
         }
         else{
-            return armSubsystem.isShoulderAtSetPoint() && armSubsystem.isWristAtSetPoint();
+            return initialized && armSubsystem.isShoulderAtSetPoint(sPreset) && armSubsystem.isWristAtSetPoint(wPreset);
         }
         
     }

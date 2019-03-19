@@ -49,7 +49,6 @@ public class Robot extends TimedRobot {
     Command followLineCommand;
     Command armCommand;
     Command hgCommand;
-    Command zeroWrist;
     boolean groundCamSelected;
     SendableChooser<Command> chooser = new SendableChooser<>();
     CameraServer server;
@@ -107,7 +106,12 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
-        SmartDashboard.putNumber("Shoulder Set", armSubsystem2.getRightShoulderSetPoint());
+        SmartDashboard.putNumber("Shoulder Right Angle", armSubsystem2.getRightShoulderEncoderAngle());
+        SmartDashboard.putNumber("Shoulder Left Angle", armSubsystem2.getLeftShoulderEncoderAngle());
+
+        SmartDashboard.putNumber("Shoulder Right Set", armSubsystem2.getRightShoulderSetPoint());
+        SmartDashboard.putNumber("Shoulder Left Set", armSubsystem2.getRightShoulderSetPoint());
+
         SmartDashboard.putNumber("Wrist Set", armSubsystem2.getWristSetPoint());
 
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
@@ -119,6 +123,18 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Level Mode", armSubsystem2.getLevelMode());
 
         SmartDashboard.putBoolean("Tipping", driveSubsystem.checkTip());
+
+
+        SmartDashboard.putBoolean("Left At Set", armSubsystem2.isLeftShoulderAtSetPoint());
+        SmartDashboard.putBoolean("Right At Set", armSubsystem2.isRightShoulderAtSetPoint());
+        SmartDashboard.putBoolean("Shoulder At Set", armSubsystem2.isShoulderAtSetPoint());
+
+
+        //SmartDashboard.putBoolean("Right Shoulder Set", armSubsystem2.getLevelMode());
+
+
+        armSubsystem2.checkShoulderLimits();
+        armSubsystem2.checkWristLimits();
 
         count++;
         if(count>10){
@@ -132,17 +148,16 @@ public class Robot extends TimedRobot {
             SmartDashboard.putBoolean("Shoulder Stall Detected", armSubsystem2.isShoulderStalled());
             SmartDashboard.putBoolean("Wrist Stall Detected", armSubsystem2.isWristStalled());
 
-
+            
 
             count = 0;
+
         }
         
         
 
 
-        armSubsystem2.checkShoulderLimits();
-        armSubsystem2.checkWristLimits();
-
+        
         if(ControlPanelMap.toggleDebug()){
             debugMode = !debugMode;
             oi.unbindButtons();
@@ -159,6 +174,10 @@ public class Robot extends TimedRobot {
         }
         if(ControlPanelMap.toggleLevel() && debugMode){
             armSubsystem2.toggleLevelMode();
+        }
+        if(ControlPanelMap.forceZero() && debugMode){
+            armSubsystem2.zeroShoulder();
+            armSubsystem2.zeroWrist();
         }
         if((ControlPanelMap.switchCam()  ||  XboxMap.switchCam())){
             switchCamera();

@@ -135,7 +135,8 @@ public class ConstantsMap {
     public static final double CARGO_HATCH_PRESET = -20.0;
 
     public static final double HATCH_COLLECT_PRESET = -57.0;
-    public static final double BALL_COLLECT_WRIST_PRESET = -5.5;
+    public static final double BALL_COLLECT_WRIST_PRESET = -10
+    ;
     public static final double BALL_COLLECT_SHOULDER_PRESET = -47;
 
     
