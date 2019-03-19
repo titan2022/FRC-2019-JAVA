@@ -52,6 +52,8 @@ public class DriveSubsystem extends Subsystem {
 		right = new TalonSRX(RobotMap.RIGHT_DRIVE_PORT_1);		
 		rightSlave = new VictorSPX(RobotMap.RIGHT_DRIVE_PORT_2);
 		bus = new I2C(I2C.Port.kOnboard, 0x52);
+		leftScrew = new TalonSRX(RobotMap.LEFT_SCREW_PORT);
+		rightScrew = new TalonSRX(RobotMap.RIGHT_SCREW_PORT);
 		
 		
 		//Invert Motors
