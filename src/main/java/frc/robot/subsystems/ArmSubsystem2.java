@@ -28,7 +28,8 @@ public class ArmSubsystem2 extends Subsystem {
     // here. Call these from Commands.
 
     public double wristAngle, wristSpeed, leftShoulderAngle, rightShoulderAngle, shoulderSpeed;
-    public int wristCount, leftShoulderCount, rightShoulderCount;
+    
+    public int wristCount, oldWristCount, leftShoulderCount, rightShoulderCount;
 
     private DigitalInput lowerLimit, lowerLimitWrist, lowerLimitWrist2;
     private double wristLimitStartTime,wristLimitStartTime2;
@@ -58,7 +59,7 @@ public class ArmSubsystem2 extends Subsystem {
         //shoulderSlave.configFactoryDefault();
         shoulder2 = new TalonSRX(RobotMap.SHOULDER_JOINT_LEFT_PORT);
 
-
+        
         shoulder.setInverted(true);
         shoulder2.setInverted(true);
 
@@ -91,7 +92,9 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder.configMotionAcceleration(ConstantsMap.SHOULDER_ACCEL, ConstantsMap.kTimeoutMs);
         
 
-        
+        shoulder.configPeakCurrentLimit(40);
+		shoulder.configContinuousCurrentLimit(30);
+		shoulder.enableCurrentLimit(true);
 
 
         shoulder2.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute,
@@ -115,12 +118,17 @@ public class ArmSubsystem2 extends Subsystem {
         shoulder2.configMotionAcceleration(ConstantsMap.SHOULDER_ACCEL, ConstantsMap.kTimeoutMs);
 
 
+        
+
+        shoulder2.configPeakCurrentLimit(40);
+		shoulder2.configContinuousCurrentLimit(30);
+		shoulder2.enableCurrentLimit(true);
         //shoulder.configForwardLimitSwitchSource(LimitSwitchSource., LimitSwitchNormal.NormallyClosed);
         wrist = new TalonSRX(RobotMap.WRIST_JOINT_LEFT_PORT);
         wrist2 = new TalonSRX(RobotMap.WRIST_JOINT_RIGHT_PORT);
 
-        wrist.setInverted(true);
-        wrist2.setInverted(false);
+        wrist.setInverted(false);
+        wrist2.setInverted(true);
 
         wrist.setSensorPhase(false);
         //wrist2.setSensorPhase(true);
@@ -151,6 +159,8 @@ public class ArmSubsystem2 extends Subsystem {
 
 
         lowerLimit.setName("LowerWristLimit");
+        oldWristCount = wrist.getSelectedSensorPosition();
+        periodic();
 
         setWristSetPoint(getWristEncoderAngle());
         setShoulderSetPoint(getShoulderEncoderAngle());
@@ -222,12 +232,15 @@ public class ArmSubsystem2 extends Subsystem {
    
 
     public void checkWristLimits(){
+        
         if(getWristLowerLimit()){
-            if(getShoulderEncoderAngle()<-50){
-                wrist.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
+           // if(getShoulderEncoderAngle()<-50){
+               int zero = (int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK);
+                wrist.setSelectedSensorPosition(zero);
+                oldWristCount = zero;
                 //wrist2.setSelectedSensorPosition((int)(ConstantsMap.WRIST_MAX_ANGLE/ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK));
 
-            }
+            //}
             if(wrist.getControlMode() == ControlMode.PercentOutput){
                 if(wrist.getMotorOutputPercent()>0){
                     wrist.set(ControlMode.PercentOutput, 0);
@@ -241,6 +254,10 @@ public class ArmSubsystem2 extends Subsystem {
                     setWristSetPoint(ConstantsMap.WRIST_MAX_ANGLE);
                 }
             }
+        }
+        else if(Math.abs(oldWristCount-wristCount)>(90.0/ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK)){
+            wrist.setSelectedSensorPosition(oldWristCount);
+
         }
         if(getWristEncoderAngle()<ConstantsMap.WRIST_MIN_ANGLE_UP){
             if(wrist.getActiveTrajectoryVelocity() < 0){
@@ -471,13 +488,18 @@ public class ArmSubsystem2 extends Subsystem {
 
     @Override
     public void periodic() {
-        wristCount = wrist.getSelectedSensorPosition();
-        leftShoulderCount = shoulder2.getSelectedSensorPosition();
-        rightShoulderCount = shoulder.getSelectedSensorPosition();
+        wristCount = wrist.getSelectedSensorPosition(0);
+        leftShoulderCount = shoulder2.getSelectedSensorPosition(0);
+        rightShoulderCount = shoulder.getSelectedSensorPosition(0);
         wristAngle = wristCount * ConstantsMap.WRIST_ENCODER_ANGLE_PER_TICK;
         leftShoulderAngle = leftShoulderCount * ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
         rightShoulderAngle = rightShoulderCount * ConstantsMap.SHOULDER_ENCODER_ANGLE_PER_TICK;
         shoulderSpeed = shoulder.getMotorOutputPercent();
-        wristSpeed = wrist.getMotorOutputPercent();
+        wristSpeed = wrist.getMotorOutputPercent(); 
+        checkWristLimits();
+        checkShoulderLimits();
+        oldWristCount = wristCount;
+
+        
     }
 }

@@ -27,15 +27,12 @@ import edu.wpi.first.wpilibj.SPI;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- *
- */
 public class DriveSubsystem extends Subsystem {
 	private TalonSRX left,right, leftScrew, rightScrew;
 	private VictorSPX leftSlave, rightSlave;
 
-	private double leftEncoderDist, rightEncoderDist, leftEncoderRate, rightEncoderRate, angle;
-	private int leftEncoderCount, rightEncoderCount;
+	private double leftEncoderDist, rightEncoderDist, angle,leftScrewDist,rightScrewDist;
+	private int leftEncoderCount, rightEncoderCount, leftScrewCount, rightScrewCount;
 
 	private AHRS ahrs;
 	private PowerDistributionPanel pdp;
@@ -55,17 +52,7 @@ public class DriveSubsystem extends Subsystem {
 		leftScrew = new TalonSRX(RobotMap.LEFT_SCREW_PORT);
 		rightScrew = new TalonSRX(RobotMap.RIGHT_SCREW_PORT);
 		
-		
-		//Invert Motors
-		
-		right.setInverted(true);
-		rightSlave.setInverted(true);
-		
-		//right3.setInverted(false);
 
-		//Instantiate Encoders
-		left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
-		right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
 
 		
 		//Instantiate Gyro | Gyro automatically calibrates when given power
@@ -73,14 +60,32 @@ public class DriveSubsystem extends Subsystem {
 		
 		pdp = new PowerDistributionPanel(11);
 		startBarometricPressure = ahrs.getBarometricPressure();
-		
-		
-		leftSlave.follow(left);
-		rightSlave.follow(right);
 		SmartDashboard.putData(ahrs);
 
-		left.setSensorPhase(true);
-		right.setSensorPhase(true);
+	
+	
+		setupDrive();
+		//setupScrew();	 
+	} 
+	public void setupDrive(){
+
+		//Invert Motors
+	
+		right.setInverted(true);
+		rightSlave.setInverted(true);
+		
+		//right3.setInverted(false);
+
+		//Instantiate Encoders
+		/* left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0);
+		right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 0); */
+
+
+		leftSlave.follow(left);
+		rightSlave.follow(right);
+
+		/* left.setSensorPhase(false);
+		right.setSensorPhase(false);
 
 		left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
 											ConstantsMap.kPIDLoopIdx, 
@@ -100,61 +105,99 @@ public class DriveSubsystem extends Subsystem {
 		left.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kD, ConstantsMap.kTimeoutMs);
    
         left.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
-        left.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
+		left.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
+ */
 
 
-		
-
+		left.configPeakCurrentLimit(60);
+		left.configContinuousCurrentLimit(50);
+		left.enableCurrentLimit(true);
+		/* 
 		right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-											ConstantsMap.kPIDLoopIdx, 
-											ConstantsMap.kTimeoutMs);
-        right.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
+		ConstantsMap.kPIDLoopIdx, 
+		ConstantsMap.kTimeoutMs);
+		right.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, ConstantsMap.kTimeoutMs);
 		right.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, ConstantsMap.kTimeoutMs);
 
-        right.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		right.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
 		right.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
 		right.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
-        right.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+		right.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
 
-        right.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
+		right.selectProfileSlot(ConstantsMap.kSlotIdx, ConstantsMap.kPIDLoopIdx);
 		right.config_kF(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kF, ConstantsMap.kTimeoutMs);
 		right.config_kP(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kP, ConstantsMap.kTimeoutMs);
 		right.config_kI(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kI, ConstantsMap.kTimeoutMs);
 		right.config_kD(ConstantsMap.kSlotIdx, ConstantsMap.driveGains.kD, ConstantsMap.kTimeoutMs);
-   
-        right.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
-		right.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs);
-		
+
+		right.configMotionCruiseVelocity(ConstantsMap.DRIVE_VELOCITY, ConstantsMap.kTimeoutMs);
+		right.configMotionAcceleration(ConstantsMap.DRIVE_ACCEL, ConstantsMap.kTimeoutMs); */
+
+		right.configPeakCurrentLimit(60);
+		right.configContinuousCurrentLimit(50);
+		right.enableCurrentLimit(true);
+	}
+	public void setupScrew(){
+		leftScrew.configFactoryDefault();
+		leftScrew.setNeutralMode(NeutralMode.Brake);
+
+		leftScrew.setInverted(false);
+		leftScrew.overrideLimitSwitchesEnable(true);
 		leftScrew.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
-											   ConstantsMap.kPIDLoopIdx,
-											   ConstantsMap.kTimeoutMs);
+				ConstantsMap.kPIDLoopIdx,
+				ConstantsMap.kTimeoutMs);
 		leftScrew.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
 		leftScrew.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
 		leftScrew.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
 		leftScrew.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
-		
+
 		leftScrew.config_kF(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kF, ConstantsMap.kTimeoutMs);
 		leftScrew.config_kP(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kP, ConstantsMap.kTimeoutMs);
 		leftScrew.config_kI(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kI, ConstantsMap.kTimeoutMs);
 		leftScrew.config_kD(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS.kD, ConstantsMap.kTimeoutMs);
-	} 
-	public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-    	setDefaultCommand(new DriveCommand());
+
+
+		leftScrew.setSelectedSensorPosition(0);
+
+		rightScrew.configFactoryDefault();
+		rightScrew.setNeutralMode(NeutralMode.Brake);
+
+
+		rightScrew.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative,
+				ConstantsMap.kPIDLoopIdx,
+				ConstantsMap.kTimeoutMs);
+		rightScrew.configNominalOutputForward(0, ConstantsMap.kTimeoutMs);
+		rightScrew.configNominalOutputReverse(0, ConstantsMap.kTimeoutMs);
+		rightScrew.configPeakOutputForward(1, ConstantsMap.kTimeoutMs);
+		rightScrew.configPeakOutputReverse(-1, ConstantsMap.kTimeoutMs);
+
+		rightScrew.config_kF(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS2.kF, ConstantsMap.kTimeoutMs);
+		rightScrew.config_kP(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS2.kP, ConstantsMap.kTimeoutMs);
+		rightScrew.config_kI(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS2.kI, ConstantsMap.kTimeoutMs);
+		rightScrew.config_kD(ConstantsMap.kPIDLoopIdx, ConstantsMap.SCREW_GAINS2.kD, ConstantsMap.kTimeoutMs);
+	
+		rightScrew.setSelectedSensorPosition(0);
+
 	}
+	
 	public double getDistance(){
 		//return bus.readOnly(buffer, count);
 		return 0;
 	}
 
 	public boolean checkTip(){
-		return (Math.abs(ahrs.getVelocityY()) > ConstantsMap.TIP_TOLERANCE);
+		return (Math.abs(ahrs.getRoll()) > ConstantsMap.TIP_TOLERANCE) || (Math.abs(ahrs.getPitch()) > ConstantsMap.TIP_TOLERANCE);
+		//return false;
+
 	}
 	public boolean checkDrift(){
-		return (Math.abs(ahrs.getRoll()) > ConstantsMap.DRIFT_TOLERANCE);
+		//return (Math.abs(ahrs.getRoll()) > ConstantsMap.DRIFT_TOLERANCE);
+		return false;
+
 	}    
 	public double getVoltage(){
 		return pdp.getVoltage();
+		//return 12;
 	}
 	public boolean isStalled(){
 		boolean isStallcondition = left.getOutputCurrent() > ConstantsMap.DRIVE_STALL || right.getOutputCurrent() > ConstantsMap.DRIVE_STALL;
@@ -173,14 +216,19 @@ public class DriveSubsystem extends Subsystem {
 		}
 	}
 	public boolean isCruisingAltitude(){
-		return ahrs.getAltitude() > 350000;
+		//return ahrs.getAltitude() > 350000;
+		return false;
 	}
 
 	public boolean isOnFire(){
-		return left.getTemperature() > 200 || right.getTemperature() > 200 || ahrs.getTempC() > 200;
+		//return left.getTemperature() > 200 || right.getTemperature() > 200 || ahrs.getTempC() > 200;
+		return false;
+
 	}
 	public boolean isProbablyAboutToRain(){
-		return (ahrs.getBarometricPressure() - startBarometricPressure) > 100;
+		//return (ahrs.getBarometricPressure() - startBarometricPressure) > 100;
+		return false;
+
 	}
 	//sets the speed for both of the left motors
 	public void setLeftSpeed(double speed) {
@@ -191,14 +239,25 @@ public class DriveSubsystem extends Subsystem {
 	public void setRightSpeed (double speed) {
 		right.set(ControlMode.PercentOutput,speed);
 	}
+
+	public void setLeftSpeedControl(double speed) {
+		speed *= ConstantsMap.DRIVE_VELOCITY;
+		left.set(ControlMode.Velocity,speed);
+	}	
 	
-	public double getLeftSpeed() {		
+	//sets the speed for both of the right motors
+	public void setRightSpeedControl (double speed) {
+		speed *= ConstantsMap.DRIVE_VELOCITY;
+		right.set(ControlMode.Velocity,speed);
+	}
+	
+	/* public double getLeftSpeed() {		
 		return leftEncoderRate * -1;
 	}	
 	
 	public double getRightSpeed() {		
 		return rightEncoderRate * -1;	
-	}
+	} */
 	
 	public void tankDrive(double leftSpeed, double rightSpeed){
 		setLeftSpeed(leftSpeed);
@@ -239,14 +298,14 @@ public class DriveSubsystem extends Subsystem {
 		return rightEncoderCount;
 	}
 	
-	//Get Encoder Rates
+	/* //Get Encoder Rates
 	public double getRightEncoderRate(){
 		return rightEncoderRate;
 	}	
 	public double getLeftEncoderRate(){
 		return leftEncoderRate;
 	}
-	
+	 */
 	//reset encoders
 	public void resetEncoders(){
 		left.getSensorCollection().setQuadraturePosition(0, 0);
@@ -271,19 +330,76 @@ public class DriveSubsystem extends Subsystem {
 		
 	}
 
+	//HAB STUFF
+
 	public void setScrewVelocitySetpoint(double sp) {
-		leftScrew.set(ControlMode.Velocity,sp);
+		//leftScrew.set(ControlMode.Velocity,sp);
 		rightScrew.set(ControlMode.Velocity,sp);
 	}
 
+	public void setScrewSpeed(double sp) {
+		leftScrew.set(ControlMode.PercentOutput,sp);
+		rightScrew.set(ControlMode.PercentOutput,sp);
+	}
+
+	public void stopScrew() {
+		System.out.println("Stop Screw");
+		leftScrew.set(ControlMode.PercentOutput,0);
+		rightScrew.set(ControlMode.PercentOutput,0);
+	}
+
+	/**
+	 * @return the rightScrewDist
+	 */
+	public double getRightScrewDist() {
+		return rightScrewDist;
+	}
+	/**
+	 * @return the leftScrewDist
+	 */
+	public double getLeftScrewDist() {
+		return leftScrewDist;
+	}
+	/**
+	 * @return the leftScrewCount
+	 */
+	public int getLeftScrewCount() {
+		return leftScrewCount;
+	}
+	/**
+	 * @return the rightScrewCount
+	 */
+	public int getRightScrewCount() {
+		return rightScrewCount;
+	}
+
+	public void checkSlave(){
+		if(Math.abs(leftScrewCount-rightScrewCount)>ConstantsMap.SCREW_TOLERANCE){
+			leftScrew.set(ControlMode.Position, rightScrewCount);
+		}
+	}
+	@Override
+	public void initDefaultCommand() {
+        // Set the default command for a subsystem here.
+    	setDefaultCommand(new DriveCommand());
+	}
+	
 	@Override
 	public void periodic() {
+
 		angle = ahrs.getAngle();
-		rightEncoderCount = right.getSelectedSensorPosition(0)* -1;
-		leftEncoderCount = left.getSelectedSensorPosition(0)* -1;
-		rightEncoderDist = rightEncoderDist * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
-		leftEncoderDist = leftEncoderDist * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
-		leftEncoderRate = left.getSelectedSensorVelocity(0)* -1;
-		rightEncoderRate = right.getSelectedSensorVelocity(0)* -1;
+		/* rightEncoderCount = right.getSelectedSensorPosition(0);
+		leftEncoderCount = left.getSelectedSensorPosition(0);
+		rightEncoderDist = rightEncoderCount * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+		leftEncoderDist = leftEncoderCount * ConstantsMap.DRIVE_ENCODER_DIST_PER_TICK;
+
+		rightScrewCount = rightScrew.getSelectedSensorPosition(0);
+		leftScrewCount = leftScrew.getSelectedSensorPosition(0);
+		rightScrewDist = (double)rightScrewCount * ConstantsMap.SCREW_INCHES_PER_TICK;
+		leftScrewDist = (double)leftScrewCount * ConstantsMap.SCREW_INCHES_PER_TICK;
+
+		checkSlave(); */
+
+		
 	}
 }

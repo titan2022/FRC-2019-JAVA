@@ -20,16 +20,16 @@ public class RobotMap {
     public static final int RIGHT_DRIVE_PORT_1 = 1;
     public static final int RIGHT_DRIVE_PORT_2 = 2;
 
-    public static final int LEFT_SCREW_PORT = 12;
+    public static final int LEFT_SCREW_PORT = 14;
     public static final int RIGHT_SCREW_PORT = 13;
    
     public static final int SHOULDER_JOINT_RIGHT_PORT = 6;
     public static final int SHOULDER_JOINT_LEFT_PORT = 5;
-    public static final int WRIST_JOINT_LEFT_PORT = 7;
-    public static final int WRIST_JOINT_RIGHT_PORT = 9;
+    public static final int WRIST_JOINT_LEFT_PORT = 8;
+    public static final int WRIST_JOINT_RIGHT_PORT = 7;
 
-    public static final int GRAB_SPIN_1 = 8;
-    //public static final int GRAB_SPIN_2 = 9;
+    public static final int GRAB_SPIN_1 = 9;
+    public static final int GRAB_SPIN_2 = 10;
 
 
 
@@ -40,12 +40,15 @@ public class RobotMap {
     public static final int LOWER_WRIST_LIMIT_PORT2 = 3;
 
 
-    /* public static final int HATCH_PISTON_F = 3;
-    public static final int HATCH_PISTON_R = 1;
-    public static final int RELEASE_PISTON_1_F = 2;
-    public static final int RELEASE_PISTON_1_R = 0; */
-    public static final int HATCH_PISTON_F = 6;
+    public static final int HATCH_PISTON_F = 1;
+    public static final int HATCH_PISTON_R = 3;
+    public static final int RELEASE_PISTON_1_F = 0;
+    public static final int RELEASE_PISTON_1_R = 2;
+
+    /* public static final int HATCH_PISTON_F = 6;
     public static final int HATCH_PISTON_R = 7;
     public static final int RELEASE_PISTON_1_F = 4;
     public static final int RELEASE_PISTON_1_R = 5;
+} */
+
 }

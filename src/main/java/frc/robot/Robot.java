@@ -8,12 +8,16 @@
 package frc.robot;
 
 
+import java.lang.reflect.Field;
+
 import edu.wpi.cscore.HttpCamera;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -60,26 +64,31 @@ public class Robot extends TimedRobot {
     * This function is run when the robot is first started up and should be
     * used for any initialization code.
     */
+
+    public Robot(){
+        super(.05);
+    }
     @Override
     public void robotInit() {
         oi = new OI();
         
+        
+        
         // chooser.addOption("My Auto", new MyAutoCommand());
-        driveCommand = new DriveCommand();
         //followLineCommand = new FollowLineCommand();
         hgCommand = new HatchGrabberCommand();
-        armCommand = new ArmCommand2();
-        
-        server = CameraServer.getInstance();
         Robot.debugMode = false;
+
+        server = CameraServer.getInstance();
         
         groundCam = new UsbCamera("GroundCam", 0);
         grabCam = new UsbCamera("GrabCam", 1);
         grabCam.setResolution(600, 480);
         
         server.startAutomaticCapture(groundCam);
-        groundCamSelected = true;
+        groundCamSelected = true; 
         //grabCam = new HttpCamera("Vision Process", "http://10.20.22.207:1181/?action=stream/mjpeg");
+        
 
     }
     public void switchCamera(){
@@ -105,6 +114,7 @@ public class Robot extends TimedRobot {
     
     public void robotPeriodic() {
         //Print out encoder values for testing on Arm leveling
+
         SmartDashboard.putNumber("Shoulder Angle", armSubsystem2.getShoulderEncoderAngle());
         SmartDashboard.putNumber("Shoulder Right Angle", armSubsystem2.getRightShoulderEncoderAngle());
         SmartDashboard.putNumber("Shoulder Left Angle", armSubsystem2.getLeftShoulderEncoderAngle());
@@ -113,9 +123,15 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Shoulder Left Set", armSubsystem2.getRightShoulderSetPoint());
 
         SmartDashboard.putNumber("Wrist Set", armSubsystem2.getWristSetPoint());
-
         SmartDashboard.putNumber("Wrist Angle", armSubsystem2.getWristEncoderAngle());
         SmartDashboard.putBoolean("Wrist Limit", armSubsystem2.getWristLowerLimit());
+
+        SmartDashboard.putNumber("Left Screw Dist", driveSubsystem.getLeftScrewDist());
+        SmartDashboard.putNumber("Right Screw Dist", driveSubsystem.getRightScrewDist());
+        SmartDashboard.putNumber("Left Screw Count", driveSubsystem.getLeftScrewCount());
+        SmartDashboard.putNumber("Right Screw Count", driveSubsystem.getRightScrewCount());
+
+
         SmartDashboard.putBoolean("Arm Limit", armSubsystem2.getShoulderLowerLimit());
         SmartDashboard.putBoolean("Debug Mode", Robot.debugMode);
 
@@ -128,17 +144,23 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Left At Set", armSubsystem2.isLeftShoulderAtSetPoint());
         SmartDashboard.putBoolean("Right At Set", armSubsystem2.isRightShoulderAtSetPoint());
         SmartDashboard.putBoolean("Shoulder At Set", armSubsystem2.isShoulderAtSetPoint());
+ 
 
+        SmartDashboard.putBoolean("Right Shoulder Set", armSubsystem2.getLevelMode()); 
 
-        //SmartDashboard.putBoolean("Right Shoulder Set", armSubsystem2.getLevelMode());
-
-
-        armSubsystem2.checkShoulderLimits();
-        armSubsystem2.checkWristLimits();
+		SmartDashboard.putNumber("Right Distance",driveSubsystem.getRightEncoderDistance());
+		SmartDashboard.putNumber("Left Distance",driveSubsystem.getLeftEncoderDistance());
+		
 
         count++;
         if(count>10){
-            SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
+
+
+
+
+
+
+            /* SmartDashboard.putBoolean("Drifting", driveSubsystem.checkDrift());
         
             SmartDashboard.putBoolean("On Fire", driveSubsystem.isOnFire());
             SmartDashboard.putBoolean("Cruising Altitude", driveSubsystem.isCruisingAltitude());
@@ -146,14 +168,14 @@ public class Robot extends TimedRobot {
 
             SmartDashboard.putBoolean("Drive Stall Detected", driveSubsystem.isStalled());
             SmartDashboard.putBoolean("Shoulder Stall Detected", armSubsystem2.isShoulderStalled());
-            SmartDashboard.putBoolean("Wrist Stall Detected", armSubsystem2.isWristStalled());
+            SmartDashboard.putBoolean("Wrist Stall Detected", armSubsystem2.isWristStalled()); */
 
             
 
             count = 0;
 
         }
-        
+         
         
 
 
@@ -197,7 +219,7 @@ public class Robot extends TimedRobot {
     
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
+            Scheduler.getInstance().run();
     }
     
     /**
@@ -246,7 +268,10 @@ public class Robot extends TimedRobot {
 
 
         armSubsystem2.setShoulderSetPoint(armSubsystem2.getShoulderEncoderAngle());
-        new WristForceZero().start();
+        if(armSubsystem2.getShoulderEncoderAngle()<ConstantsMap.SHOULDER_MIN_ANGLE+10){
+            new WristForceZero().start();
+        }
+        
 
         
         //armCommand.start();
@@ -262,7 +287,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         
-        SmartDashboard.putBoolean("Arm Control", armCommand.isRunning());
+      
 
         if(driveSubsystem.checkTip()){
             new GoHome().start();

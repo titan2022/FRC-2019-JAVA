@@ -29,6 +29,9 @@ public class XboxMap {
 	public static boolean toggleBrakes(){
 		return oi.xbox.getBumperPressed(Hand.kRight);
 	}
+	public static boolean toggleTurtleAdvanced(){
+		return oi.xbox.getBumperPressed(Hand.kLeft);
+	}
 	public static boolean toggleTurtle(){
 		return oi.xbox.getYButtonPressed();
 	}

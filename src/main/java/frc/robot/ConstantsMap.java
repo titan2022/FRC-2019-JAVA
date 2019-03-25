@@ -18,10 +18,10 @@ public class ConstantsMap {
     public static final double TURTLE_SPEED = .6; //to be determined
     public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
 
-    public static final double TIP_TOLERANCE = 8;
+    public static final double TIP_TOLERANCE = 15;
     public static final double DRIFT_TOLERANCE = 5; 
 
-    public static final Gains driveGains = new Gains(1, 0.0, 0, 0, 0, 1.0);
+    public static final Gains driveGains = new Gains(.2, 0.0, 0, 0, 0, 1.0);
     public static final Gains turnGains = new Gains(.2, 0.0, .1, 0, 0, 1.0);
     public static final int DRIVE_VELOCITY = 3400;
     public static final int DRIVE_ACCEL = 3400;
@@ -71,7 +71,8 @@ public class ConstantsMap {
     public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 100 * (38.0/18.0));
 
     public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
-    public static final double WRIST_MIN_ANGLE_UP = -60.0;
+    //public static final double WRIST_MIN_ANGLE_UP = -60.0;
+    public static final double WRIST_MIN_ANGLE_UP = -180.0;
 
     //public static final double WRIST_MAX_ANGLE = 80.0;
     public static final double WRIST_MAX_ANGLE = 88.0;
@@ -83,13 +84,13 @@ public class ConstantsMap {
     public static final int  WRIST_FOLLOW_DISTANCE = 20;
     public static final double WRIST_CHANGE_SETPOINT_SPEED = .2;
 
-    public static final Gains wristGains = new Gains(0.12, 0.0005, 0.0, 0.00, 20, 1.0);
+    public static final Gains wristGains = new Gains(0.1, 0, 0.00035, 0.00, 100, 1.0);
+    //public static final Gains wristGains = new Gains(0.1, .0005, 0, 0, 100, 1.0);
+
     public static final double WRIST_TOLERANCE = .2;
 
     // TODO: ALL OF THIS
-    public static final Gains SCREW_GAINS = new Gains(0.25, 0.001, 20, 1023.0/7200.0, 300, 1.00);    
-    public static final double HAB_SHOULDER_RAISE_SPEED = 5;
-    
+   
     //public static final Gains wristGains = new Gains(0.13, 0.0005, 0.0, 0.0341, 0, 1.0);
     //public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
 
@@ -98,6 +99,8 @@ public class ConstantsMap {
     public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 49 * 5);
 
     public static final double SHOULDER_GEAR_RATIO = 350.0;
+    //public static final double SHOULDER_MIN_ANGLE = -100.0;
+    
     public static final double SHOULDER_MIN_ANGLE = -67.0;
     public static final double SHOULDER_MAX_ANGLE = 50.0;
     
@@ -108,6 +111,9 @@ public class ConstantsMap {
     public static final int SHOULDER_VELOCITY = 26000;
     public static final int SHOULDER_ACCEL = 24000;
     public static final Gains shoulderGains = new Gains(.2 , 0.0001, 0, 0.042625, 20, 1.0);
+
+    //public static final Gains shoulderGains = new Gains(.22, 0.0001, 0.01, 0.042625, 100, 1.0);
+
     public static final double SHOULDER_TOLERANCE = .2;
 
     //public static final Gains shoulderGains = new Gains(.2, 0.0, 0, 0.042625, 0, 1.0);
@@ -133,18 +139,33 @@ public class ConstantsMap {
     public static final double ROCKET_HATCH_PRESET_3 = 34;
     public static final double ROCKET_BALL_PRESET_1 = -35;
     public static final double ROCKET_BALL_PRESET_2 = 5;
-    public static final double ROCKET_BALL_PRESET_3 = 46;
+    public static final double ROCKET_BALL_PRESET_3 = 49;
 
     public static final double CARGO_BALL_PRESET = -20.0;
     public static final double CARGO_HATCH_PRESET = -20.0;
 
     public static final double HATCH_COLLECT_PRESET = -57.0;
-    public static final double BALL_COLLECT_WRIST_PRESET = -10
-    ;
+    public static final double BALL_COLLECT_WRIST_PRESET = -10;
     public static final double BALL_COLLECT_SHOULDER_PRESET = -47;
 
     
     public static final double GO_HOME_PRESET = SHOULDER_MIN_ANGLE;   
+
+
+
+    //Hab Constants
+    public static final double SCREW_INCHES_PER_TICK = ((18.0/74.0)/(4.0))/4096.0;
+    public static final double SCREW_MAX_EXTENSION = 19.5;
+
+    public static final Gains SCREW_GAINS = new Gains(0, 0, 0, 0.05, 0, 1.00);    
+    public static final Gains SCREW_GAINS2 = new Gains(0, 0, 0, 0.05, 0, 1.00);    
+
+    public static final double HAB_SHOULDER_RAISE_SPEED = 5;
+    public static final double HAB_WRIST_ANGLE= 100;
+
+    public static final double SCREW_SPEED= 21000;
+    public static final double SCREW_TOLERANCE= 10;
+
 
 
 }

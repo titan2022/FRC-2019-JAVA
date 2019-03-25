@@ -55,9 +55,10 @@ public class ArmPresetCommand extends Command {
         else if(!armSubsystem.isShoulderAtSetPoint(sPreset) && !shoulderFinished){
             armSubsystem.setWristSetPoint(-armSubsystem.getShoulderEncoderAngle()); 
         } 
-        else{            
+        else{        
+                if(!shoulderFinished)    armSubsystem.setWristSetPoint(wPreset);  
                 shoulderFinished = true;
-                armSubsystem.setWristSetPoint(wPreset);            
+          
         }
         //armSubsyste
 

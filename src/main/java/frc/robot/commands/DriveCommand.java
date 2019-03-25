@@ -28,7 +28,7 @@ public class DriveCommand extends Command {
 	boolean brakeState = false;
 	boolean rumble;
 	long lastPressed = 0;
-
+	boolean turtleAdvanced = false;
 	
     public DriveCommand() {
 		requires(driveSubsystem);
@@ -49,34 +49,13 @@ public class DriveCommand extends Command {
     protected void execute() {   
   
 
-			double speedLeft = XboxMap.left();
-			speedLeft *= -1;
+			
 			if(XboxMap.toggleTurtle()){
 				turtlemode = !turtlemode;
 			}
-			if (Math.abs(speedLeft) < 0.1) {
-				speedLeft = 0;
+			if(XboxMap.toggleTurtleAdvanced()){
+				turtleAdvanced = !turtleAdvanced;
 			}
-
-			double speedRight = XboxMap.right();
-			//speedRight *= -1;
-			if(Math.abs(speedRight) < 0.1){
-				speedRight = 0; 
-			}
-			if(turtlemode) {
-				speedLeft *= ConstantsMap.TURTLE_SPEED;
-				speedRight *= ConstantsMap.TURTLE_SPEED;
-			}
-			if(armSubsystem.getShoulderEncoderAngle()>0){
-				speedLeft *= .75;
-				speedRight *= .75;
-			
-
-			}
-			
-			driveSubsystem.setLeftSpeed(speedLeft);
-			driveSubsystem.setRightSpeed(speedRight);
-
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
 			if(XboxMap.toggleBrakes()){  
@@ -100,21 +79,50 @@ public class DriveCommand extends Command {
 				rumble = false;
 			}
 
-		
-		//Putting Data up
-    	displayData();
+
+			double speedLeft = XboxMap.left();
+			speedLeft *= -1;
+			double speedRight = XboxMap.right();
+			//speedRight *= -1;
+			if(Math.abs(speedRight) < 0.1){
+				speedRight = 0; 
+			}
+			if (Math.abs(speedLeft) < 0.1) {
+				speedLeft = 0;
+			}
+			if(turtlemode) {
+				speedLeft *= ConstantsMap.TURTLE_SPEED;
+				speedRight *= ConstantsMap.TURTLE_SPEED;
+			}
+			if(armSubsystem.getShoulderEncoderAngle()>0){
+				speedLeft *= .75;
+				speedRight *= .75;
+			
+
+			}
+			
+			if(!turtleAdvanced){
+				driveSubsystem.setLeftSpeed(speedLeft);
+				driveSubsystem.setRightSpeed(speedRight);
+			}
+			else{
+				driveSubsystem.setLeftSpeedControl(speedLeft);
+				driveSubsystem.setRightSpeedControl(speedRight);
+
+			}
+			
+
+			
+
+			SmartDashboard.putBoolean("Turtle", turtlemode);
+			SmartDashboard.putBoolean("Turtle Advanced", turtleAdvanced);
+
+			SmartDashboard.putBoolean("Brake Mode", brakeState);
+
 
     }
 
-    protected void displayData(){
-    	SmartDashboard.putNumber("Right Count",driveSubsystem.getRightEncoderCount());
-		SmartDashboard.putNumber("LEft Count",driveSubsystem.getLeftEncoderCount());
-		SmartDashboard.putNumber("Right Distance",driveSubsystem.getRightEncoderDistance());
-		SmartDashboard.putNumber("LEft Disatance",driveSubsystem.getLeftEncoderDistance());
-		SmartDashboard.putBoolean("Turtle", turtlemode);
-		SmartDashboard.putBoolean("Brake Mode", brakeState);
 
-    }
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {

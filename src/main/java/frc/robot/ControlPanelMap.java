@@ -43,5 +43,7 @@ public class ControlPanelMap {
 	public static boolean forceZero() {	
 		return oi.controlPanel1.getRawButtonPressed(3);
 	}
-
+	public static boolean stopClimb(){
+		return OI.controlPanel1.getRawButtonPressed(5);
+	}
 }
