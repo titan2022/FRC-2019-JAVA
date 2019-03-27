@@ -10,6 +10,7 @@ package frc.robot.commands;
 import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.XboxMap;
+import frc.robot.subsystems.ArmSubsystem2;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.ConstantsMap;
 import edu.wpi.first.wpilibj.command.Command;
@@ -21,14 +22,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveCommand extends Command {
 	
 	DriveSubsystem driveSubsystem = Robot.driveSubsystem;
+	ArmSubsystem2 armSubsystem = Robot.armSubsystem2;
 	OI oi = Robot.oi;
 	boolean turtlemode = false;	
 	boolean brakeState = false;
+	boolean rumble;
 	long lastPressed = 0;
-	FollowLineCommand fLC = new FollowLineCommand();
+	boolean turtleAdvanced = false;
 	
     public DriveCommand() {
-    	requires(driveSubsystem);
+		requires(driveSubsystem);
+		
+		//Set follow Line command booleans 
     }
     
     // Called just before this Command runs the first time
@@ -36,52 +41,25 @@ public class DriveCommand extends Command {
     	System.out.println("Drive Comand init");
     	driveSubsystem.resetEncoders();
 		driveSubsystem.resetGyro();
-		fLC.initialize();
+		//System.out.println(lineSubsystem.getData());	
+		rumble = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {   
-    	//Normal Driving
-    	/*if(attack3Map.turtleButton()) {
-    		turtlemode = !turtlemode;
-		} */
+  
 
-		if(!fLC.isFinished()) {
-			if(XboxMap.interruptFollowLine()) {
-				fLC.kill();//Make this a thing
-			}else{
-				fLC.execute();
+			
+			if(XboxMap.toggleTurtle()){
+				turtlemode = !turtlemode;
 			}
-		}	
-		else {
-			double speedLeft = XboxMap.left();
-			speedLeft *= -1;
-			if(Math.abs(speedLeft) < 0.1){
-				speedLeft = 0;
+			if(XboxMap.toggleTurtleAdvanced()){
+				turtleAdvanced = !turtleAdvanced;
 			}
-			if(XboxMap.shiftHigh()) {
-				driveSubsystem.shiftHigh();
-			}
-			if(XboxMap.shiftLow()) {
-				driveSubsystem.shiftLow();
-			}
-			double speedRight = XboxMap.right();
-			//speedRight *= -1;
-			if(Math.abs(speedRight) < 0.1){
-				speedRight = 0; 
-			}
-			if(turtlemode) {
-				speedLeft *= ConstantsMap.TURTLE_SPEED;
-				speedRight *= ConstantsMap.TURTLE_SPEED;
-			}
-			driveSubsystem.setLeftSpeed(speedLeft*ConstantsMap.TURTLE_SPEED);
-			driveSubsystem.setRightSpeed(speedRight*ConstantsMap.TURTLE_SPEED);
-
 			//Auto Brake Mode
 			//attack3Map.startAutoBrakerSystem();
-			if(XboxMap.startAutoBrakerSystem() && (System.currentTimeMillis() - lastPressed) > 200){  
+			if(XboxMap.toggleBrakes()){  
 				brakeState = !brakeState;
-				lastPressed = System.currentTimeMillis();
 			}
 			if(brakeState){
 				driveSubsystem.enableBrake();
@@ -89,25 +67,62 @@ public class DriveCommand extends Command {
 			else if(!brakeState){
 				driveSubsystem.disableBrake();
 			}
-		}
 
 
-    	
-    	//Putting Data up
-    	displayData();
+			if(driveSubsystem.getVoltage()<6.8){
+				lastPressed = System.currentTimeMillis();
+				XboxMap.startRumble();
+				rumble = true;
+			}
+			else if(rumble && ((System.currentTimeMillis()-lastPressed)>500)){
+				XboxMap.stopRumble();
+				rumble = false;
+			}
+
+
+			double speedLeft = XboxMap.left();
+			speedLeft *= -1;
+			double speedRight = XboxMap.right();
+			//speedRight *= -1;
+			if(Math.abs(speedRight) < 0.1){
+				speedRight = 0; 
+			}
+			if (Math.abs(speedLeft) < 0.1) {
+				speedLeft = 0;
+			}
+			if(turtlemode) {
+				speedLeft *= ConstantsMap.TURTLE_SPEED;
+				speedRight *= ConstantsMap.TURTLE_SPEED;
+			}
+			if(armSubsystem.getShoulderEncoderAngle()>0){
+				speedLeft *= .75;
+				speedRight *= .75;
+			
+
+			}
+			
+			if(!turtleAdvanced){
+				driveSubsystem.setLeftSpeed(speedLeft);
+				driveSubsystem.setRightSpeed(speedRight);
+			}
+			else{
+				driveSubsystem.setLeftSpeedControl(speedLeft);
+				driveSubsystem.setRightSpeedControl(speedRight);
+
+			}
+			
+
+			
+
+			SmartDashboard.putBoolean("Turtle", turtlemode);
+			SmartDashboard.putBoolean("Turtle Advanced", turtleAdvanced);
+
+			SmartDashboard.putBoolean("Brake Mode", brakeState);
+
 
     }
 
-    protected void displayData(){
-    	SmartDashboard.putNumber("Left Encoder Count: ", driveSubsystem.getLeftEncoderCount());
-    	SmartDashboard.putNumber("Left Encoder Distance: ", driveSubsystem.getLeftEncoderDistance());
-    	SmartDashboard.putNumber("Left Encoder Rate: ", driveSubsystem.getLeftEncoderRate());
-    	SmartDashboard.putNumber("Right Encoder Count: ", driveSubsystem.getRightEncoderCount());
-    	SmartDashboard.putNumber("Right Encoder Distance: ", driveSubsystem.getRightEncoderDistance());
-    	SmartDashboard.putNumber("Right Encoder Rate: ", driveSubsystem.getRightEncoderRate());
-    	SmartDashboard.putNumber("Gyro Angle: ", driveSubsystem.getGyroAngle());
-    	SmartDashboard.putBoolean("AutoBrake", brakeState);
-    }
+
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
@@ -119,7 +134,9 @@ public class DriveCommand extends Command {
     }
     // Called once after isFinished returns true
     protected void end() {
-    	driveSubsystem.stop();
+		driveSubsystem.stop();
+		System.out.println("Drive Command Stopped");
+
     }
 
     // Called when another command which requires one or more of the same

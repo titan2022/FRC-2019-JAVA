@@ -7,75 +7,41 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+
+
+
 public class XboxMap {
 	static OI oi = Robot.oi;
 	
-	//Drive commands
-	public static boolean startAutoBrakerSystem(){
-		return oi.xbox.getRightBumperValue();
-	}
-	
-//	public boolean controlDriverGear() {
-//		return oi.xbox.getLeftBumperValue();
-//	}
-//	
-	//Grabber commands 
-//	public double controlUpperGrabberOut(){
-//		return oi.xbox.getRightTriggers();
-//	}
-//	
-//	public double controlUpperGrabberIn(){
-//		return oi.xbox.getLeftTriggers();
-//	}
-
-	//Elevator commands
-	public static double controlWristJoint() {
-		return oi.xbox.getRightY();
-	}
-	
-	public static double controlShoulderJoint() {
-		return oi.xbox.getLeftY();
-	}
-
-	public static boolean enableWristLevelling() {
-		return oi.xbox.getBValue();
-	}
-
-	//TODO Map to Buttons
-	public static boolean enableCargoPreset() {
-		return true;
-	}
-
-	public static boolean enableLevel2Preset() {
-		return true;
-	}
-
-	public static boolean enableLevel3Preset() {
-		return true;
-	}
-
-	//Universal stop command
-	public static boolean stopSystem() {
-		return oi.xbox.getBackValue();
-	}
-
-	public static boolean shiftLow() {
-		return oi.ps4.getBValue();
-	}
-	public static boolean shiftHigh() {
-		return oi.ps4.getAValue();
-	}
-	
-	
+	//Driving Controls 
 	public static double right() {
-		return oi.ps4.getRightY();
+		return -oi.xbox.getY(Hand.kRight);
 	}
 	
+	public static boolean switchCam() {
+		return oi.xbox.getAButtonPressed();
+	}
 	public static double left() {
-		return oi.ps4.getLeftY();
+		return oi.xbox.getY(Hand.kLeft);
 	}
-
-	public static boolean interruptFollowLine() {
-		return false;
+	public static boolean toggleBrakes(){
+		return oi.xbox.getBumperPressed(Hand.kRight);
 	}
+	public static boolean toggleTurtleAdvanced(){
+		return oi.xbox.getBumperPressed(Hand.kLeft);
+	}
+	public static boolean toggleTurtle(){
+		return oi.xbox.getYButtonPressed();
+	}
+	public static void startRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 1);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 1);
+	}
+	public static void stopRumble(){
+		oi.xbox.setRumble(RumbleType.kLeftRumble, 0);
+		oi.xbox.setRumble(RumbleType.kRightRumble, 0);
+	}
+	
 }

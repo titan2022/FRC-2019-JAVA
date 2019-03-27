@@ -11,42 +11,161 @@ package frc.robot;
  * Add your docs here.
  */
 public class ConstantsMap {
-    public static final double ROBOT_WHEEL_RADIUS_INCHES = Float.NaN; //inches
-    public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 256; //ticks
+
+    public static final double ROBOT_WHEEL_RADIUS_INCHES = 2; //inches
+    public static final double DRIVE_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
     public static final double DRIVE_ENCODER_DIST_PER_TICK = ((ROBOT_WHEEL_RADIUS_INCHES * 2 * Math.PI)/(DRIVE_ENCODER_TICKS_PER_ROTATION)); //inches 
-    public static final double TURTLE_SPEED = Float.NaN; //to be determined
-    public static final double JOYSTICK_SENSITIVITY = Float.NaN; //to be determined
+    public static final double TURTLE_SPEED = .6; //to be determined
+    public static final double JOYSTICK_SENSITIVITY = .1; //to be determined
+
+    public static final double TIP_TOLERANCE = 15;
+    public static final double DRIFT_TOLERANCE = 5; 
+
+    public static final Gains driveGains = new Gains(.2, 0.0, 0, 0, 0, 1.0);
+    public static final Gains turnGains = new Gains(.2, 0.0, .1, 0, 0, 1.0);
+    public static final int DRIVE_VELOCITY = 3400;
+    public static final int DRIVE_ACCEL = 3400;
+
+
+
+    public static final double DRIVE_STALL = 10;
+    public static final double DRIVE_STALL_TIME = 1;
+
+    public static final double WRIST_STALL = 10;
+    public static final double WRIST_STALL_TIME = 1;
+
+    public static final double SHOULDER_STALL = 10;
+    public static final double SHOULDER_STALL_TIME = 1;
+
+
 
     //for line follower
     public static final double DISTANCE_BETWEEN_SENSORS = 6; //inches
+    public static final double DISTANCE_BETWEEN_SENSOR_CAMERAS = .5;//inches 
     public static final double ROBOT_WIDTH = 26; //inches
     public static final double ROBOT_LENGTH = 32; //inches
     public static final double APPROACH_TIME = 1.0d; //seconds
+    public static final double APPROACH_SPEED = .12; //inches per second
+    public static final double ANGLE_TOLLERANCE = 0.25; //degrees
+    public static final double TURN_SPEED = .5; //inches per second
+    public static final double BLACK_WHITE_CUTOFF = 220; //some units idk
+    public static final double SENSOR_AVERAGE_TOLERANCE_HIGH = 1.0d;
+    public static final double SENSOR_AVERAGE_TOLERANCE_LOW = 0.1d;
+    public static final double SENSOR_AVERAGE_CENTER = 3.5d;
+    public static final double VISION_THRESHOLD = 0.5; //degrees
+
+    public static final double LOW_CUTOFF = 210;
+    public static final double HIGH_CUTOFF = 230;
 
     //For ArmSubsystem
-    public static final double WRIST_ZERO_KP = 1;
-    public static final double WRIST_ZERO_KI = 1;
-    public static final double WRIST_ZERO_KD = 1;
-    public static final double WRIST_ZERO_KF = 0;
+    public static final int kSlotIdx = 0;
+    public static final int kPIDLoopIdx = 0;
+    public static final int kTimeoutMs = 30;
 
-    public static final double WRIST_SPEED_MULT = .5;
+    
+
+    public static final double WRIST_SPEED_MULT = .1;
     public static final double SHOULDER_SPEED_MULT = .1;
+    public static final double WRIST_ENCODER_TICKS_PER_ROTATION = 4096;
+    //public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 63);
+    public static final double WRIST_ENCODER_ANGLE_PER_TICK = 360/((double)WRIST_ENCODER_TICKS_PER_ROTATION * 100 * (38.0/18.0));
+
+    public static final double WRIST_MIN_ANGLE_DOWN = -10.0;
+    //public static final double WRIST_MIN_ANGLE_UP = -60.0;
+    public static final double WRIST_MIN_ANGLE_UP = -180.0;
+
+    //public static final double WRIST_MAX_ANGLE = 80.0;
+    public static final double WRIST_MAX_ANGLE = 88.0;
+
+    public static final double WRIST_IN_ANGLE = 60.0;
+
+    public static final int WRIST_VELOCITY = 30000;
+    public static final int WRIST_ACCEL = 30000*2;
+    public static final int  WRIST_FOLLOW_DISTANCE = 20;
+    public static final double WRIST_CHANGE_SETPOINT_SPEED = .2;
+
+    public static final Gains wristGains = new Gains(0.1, 0, 0.00035, 0.00, 100, 1.0);
+    //public static final Gains wristGains = new Gains(0.1, .0005, 0, 0, 100, 1.0);
+
+    public static final double WRIST_TOLERANCE = .2;
+
+    // TODO: ALL OF THIS
+   
+    //public static final Gains wristGains = new Gains(0.13, 0.0005, 0.0, 0.0341, 0, 1.0);
+    //public static final Gains wristGains = new Gains(0.21, 0.0005, 0, 0, 20, 1.0);
+
 
     public static final int SHOULDER_ENCODER_TICKS_PER_ROTATION = 4096; //ticks
+    public static final double SHOULDER_ENCODER_ANGLE_PER_TICK = 360/((double)SHOULDER_ENCODER_TICKS_PER_ROTATION * 49 * 5);
+
     public static final double SHOULDER_GEAR_RATIO = 350.0;
-    public static final double SHOULDER_MIN_ANGLE = 23.0;
-    public static final double SHOULDER_MAX_ANGLE = 121.0;
+    //public static final double SHOULDER_MIN_ANGLE = -100.0;
+    
+    public static final double SHOULDER_MIN_ANGLE = -67.0;
+    public static final double SHOULDER_MAX_ANGLE = 50.0;
+    
+    public static final int  SHOULDER_FOLLOW_DISTANCE = 20;
+    public static final double SHOULDER_CHANGE_SETPOINT_SPEED = .2;
+    public static final int  SHOULDER_WRIST_FOLD_ANGLE  = -65;
 
-    public static final double SHOULDER_MV_KP = 1.0;
-    public static final double SHOULDER_MV_KI = 1.0;
-    public static final double SHOULDER_MV_KD = 1.0;
-    public static final double SHOULDER_MV_KF = 1.0;
+    public static final int SHOULDER_VELOCITY = 26000;
+    public static final int SHOULDER_ACCEL = 24000;
+    public static final Gains shoulderGains = new Gains(.2 , 0.0001, 0, 0.042625, 20, 1.0);
 
-    public static final double SHOULDER_OFFSET = 23.5; //to be changed if needed
-    public static final double WRIST_OFFSET = 0; //to be changed
+    //public static final Gains shoulderGains = new Gains(.22, 0.0001, 0.01, 0.042625, 100, 1.0);
 
-    //Tolerances
-    public static final double WRIST_TOLERANCE = Float.NaN; //to be determined
-    public static final double SHOULDER_TOLERANCE = Float.NaN; //to be determined
+    public static final double SHOULDER_TOLERANCE = .2;
+
+    //public static final Gains shoulderGains = new Gains(.2, 0.0, 0, 0.042625, 0, 1.0);
+
+    //For Grabber
+    public static final double BALL_INTAKE_SPEED = 1;
+    public static final double BALL_OUTTAKE_SPEED = 1;
+
+
+
+    //Follow line pid values
+    public static final double PID_PERCENT_TOLERANCE = .01;
+    public static final double PID_OUTPUT_MAX = .25;
+    public static final double PID_PROPORTION_CONSTANT = 1;
+    public static final double PID_INTEGRAL_CONSTANT = .2;
+    public static final double PID_DERIVATIVE_CONSTANT = .001;
+    public static final double PID_INPUT_MAX = 180;
+
+    // PRESETS!!!
+    public static final boolean isHatchGrabber = true;
+    public static final double ROCKET_HATCH_PRESET_1 = -57;
+    public static final double ROCKET_HATCH_PRESET_2 = -10.0;
+    public static final double ROCKET_HATCH_PRESET_3 = 34;
+    public static final double ROCKET_BALL_PRESET_1 = -35;
+    public static final double ROCKET_BALL_PRESET_2 = 5;
+    public static final double ROCKET_BALL_PRESET_3 = 49;
+
+    public static final double CARGO_BALL_PRESET = -20.0;
+    public static final double CARGO_HATCH_PRESET = -20.0;
+
+    public static final double HATCH_COLLECT_PRESET = -57.0;
+    public static final double BALL_COLLECT_WRIST_PRESET = -10;
+    public static final double BALL_COLLECT_SHOULDER_PRESET = -47;
+
+    
+    public static final double GO_HOME_PRESET = SHOULDER_MIN_ANGLE;   
+
+
+
+    //Hab Constants
+    public static final double SCREW_INCHES_PER_TICK = ((18.0/74.0)/(4.0))/4096.0;
+    public static final double SCREW_MAX_EXTENSION = 19.5;
+
+    public static final Gains SCREW_GAINS = new Gains(0, 0, 0, 0.05, 0, 1.00);    
+    public static final Gains SCREW_GAINS2 = new Gains(0, 0, 0, 0.05, 0, 1.00);    
+
+    public static final double HAB_SHOULDER_RAISE_SPEED = 5;
+    public static final double HAB_WRIST_ANGLE= 100;
+
+    public static final double SCREW_SPEED= 21000;
+    public static final double SCREW_TOLERANCE= 10;
+
+
 
 }
